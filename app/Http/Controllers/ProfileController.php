@@ -8,9 +8,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\OrdenTrabajo;
 
 class ProfileController extends Controller
 {
+    /**
+     * Display the user's profile.
+     */
+    public function show(Request $request): View
+    {
+        $user = $request->user();
+
+        // Contar órdenes totales para admins y técnicos
+        $ordenesCount = ($user->role === 'admin' || $user->role === 'tecnico')
+            ? OrdenTrabajo::count()
+            : 0;
+
+        // Calcular tiempo como miembro en años
+        $memberSinceYears = \Carbon\Carbon::parse($user->created_at)->diffInYears(now());
+        if ($memberSinceYears === 0) {
+            $memberSinceYears = 1;
+        }
+
+        return view('profile.show', [
+            'user' => $user,
+            'ordenesCount' => $ordenesCount,
+            'memberSinceYears' => $memberSinceYears,
+            'rating' => 4.9, // Placeholder - puede venir de una tabla de ratings
+        ]);
+    }
+
     /**
      * Display the user's profile form.
      */
