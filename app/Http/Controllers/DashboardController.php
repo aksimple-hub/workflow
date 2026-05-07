@@ -26,9 +26,9 @@ class DashboardController extends Controller
         }
 
         if ($user->role === 'tecnico') {
-            // Corregido: buscar por tecnico_id en lugar de cliente_id
-            $ordenes = OrdenTrabajo::where('tecnico_id', $user->id)
-                ->whereIn('estado', ['asignada', 'en_curso'])
+            // Filtrar por el usuario_id del técnico autenticado
+            $ordenes = OrdenTrabajo::where('usuario_id', $user->id)
+                ->whereIn('estado', ['asignada', 'pendiente', 'en_curso', 'en_camino'])
                 ->orderBy('prioridad', 'desc')
                 ->get();
 

@@ -38,7 +38,7 @@ class OrdenTrabajoController extends Controller
 
         $validated = $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
-            'tecnico_id' => 'nullable|exists:users,id',
+            'usuario_id' => 'nullable|exists:users,id',
             'titulo'     => 'required|string|max:255',
             'descripcion'=> 'nullable|string',
             'prioridad'  => 'required|in:baja,media,alta',
@@ -47,13 +47,13 @@ class OrdenTrabajoController extends Controller
         OrdenTrabajo::create([
             'uuid'         => (string) Str::uuid(),
             'cliente_id'   => $validated['cliente_id'],
-            'tecnico_id'   => $validated['tecnico_id'],
+            'usuario_id'   => $validated['usuario_id'],
             'titulo'       => $validated['titulo'],
             'descripcion'  => $validated['descripcion'],
             'prioridad'    => $validated['prioridad'],
             // Lógica de estados inicial
-            'estado'       => $request->tecnico_id ? 'pendiente' : 'abierta',
-            'fecha_asignacion' => $request->tecnico_id ? now() : null,
+            'estado'       => $request->usuario_id ? 'pendiente' : 'abierta',
+            'fecha_asignacion' => $request->usuario_id ? now() : null,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Orden de trabajo creada y asignada correctamente.');
@@ -69,7 +69,7 @@ class OrdenTrabajoController extends Controller
         ]);
 
         // Verificar que el técnico solo modifique sus órdenes
-        if (Auth::user()->role === 'tecnico' && $orden->tecnico_id !== Auth::id()) {
+        if (Auth::user()->role === 'tecnico' && $orden->usuario_id !== Auth::id()) {
             abort(403, 'No tienes permiso para actualizar esta orden.');
         }
 
@@ -83,17 +83,28 @@ class OrdenTrabajoController extends Controller
     // Muestra el formulario de cierre (Pantalla 6/7)
     public function showCierre(OrdenTrabajo $orden)
     {
-        if (Auth::user()->role === 'tecnico' && $orden->tecnico_id !== Auth::id()) {
+        if (Auth::user()->role === 'tecnico' && $orden->usuario_id !== Auth::id()) {
             abort(403, 'No tienes permiso para cerrar esta orden.');
         }
 
         return view('tecnico.cierre', compact('orden'));
     }
 
+    // Muestra el detalle y timeline de la orden (Pantalla 6)
+    public function show(OrdenTrabajo $orden)
+    {
+        if (Auth::user()->role === 'tecnico' && $orden->usuario_id !== Auth::id()) {
+            abort(403, 'No tienes permiso para ver esta orden.');
+        }
+
+        $orden->load('cliente');
+        return view('tecnico.detalle', compact('orden'));
+    }
+
     // Procesa el cierre de la orden
     public function cerrar(Request $request, OrdenTrabajo $orden)
     {
-        if (Auth::user()->role === 'tecnico' && $orden->tecnico_id !== Auth::id()) {
+        if (Auth::user()->role === 'tecnico' && $orden->usuario_id !== Auth::id()) {
             abort(403, 'No autorizado');
         }
 
