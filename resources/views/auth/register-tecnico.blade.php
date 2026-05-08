@@ -12,9 +12,9 @@
             </div>
 
             <div class="text-center w-full max-w-sm mx-auto">
-                <h1 class="text-4xl font-bold mb-4">Área de Clientes</h1>
+                <h1 class="text-4xl font-bold mb-4">Únete a nuestro equipo</h1>
                 <p class="text-blue-100 leading-relaxed mb-12">
-                    Crea tu cuenta de cliente para solicitar y gestionar tus servicios de forma eficiente.
+                    Completa tu registro como técnico y comienza a gestionar tus servicios de forma eficiente.
                 </p>
 
                 <div class="space-y-4 text-left w-full">
@@ -23,7 +23,7 @@
                         <div id="indicator-1" class="w-10 h-10 bg-white text-[#214371] rounded-full flex items-center justify-center font-bold">1</div>
                         <div>
                             <h4 class="font-bold">Datos Personales</h4>
-                            <p class="text-xs text-blue-200">Información básica y contacto</p>
+                            <p class="text-xs text-blue-200">Información básica</p>
                         </div>
                     </div>
                     <!-- Step 2 Nav -->
@@ -32,6 +32,14 @@
                         <div>
                             <h4 class="font-bold">Credenciales</h4>
                             <p class="text-xs text-blue-200">Acceso y seguridad</p>
+                        </div>
+                    </div>
+                    <!-- Step 3 Nav -->
+                    <div id="container-3" onclick="goToStep(3)" class="bg-white/5 hover:bg-white/10 rounded-xl p-4 flex items-center gap-4 border border-transparent cursor-pointer transition-colors">
+                        <div id="indicator-3" class="w-10 h-10 bg-white/20 text-white rounded-full flex items-center justify-center font-bold transition-colors">3</div>
+                        <div>
+                            <h4 class="font-bold">Información Profesional</h4>
+                            <p class="text-xs text-blue-200">Experiencia y especialidad</p>
                         </div>
                     </div>
                 </div>
@@ -44,7 +52,7 @@
             <div class="w-full max-w-2xl bg-white p-10 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100">
                 <div class="mb-8">
                     <h2 id="step-title" class="text-3xl font-bold text-[#1E3A5F]">Datos Personales</h2>
-                    <p id="step-subtitle" class="text-gray-500">Ingresa tu información básica y de contacto</p>
+                    <p id="step-subtitle" class="text-gray-500">Ingresa tu información básica</p>
                 </div>
 
                 @if ($errors->any())
@@ -62,28 +70,29 @@
                     <span class="text-sm font-medium"></span>
                 </div>
 
-                <form id="registro-form" method="POST" action="{{ route('register') }}">
+                <form id="registro-form" method="POST" action="{{ route('register.tecnico.store') }}" enctype="multipart/form-data">
                     @csrf
 
                     <!-- STEP 1: Datos Personales -->
                     <div id="step-1" class="step-content">
-                        <div class="mb-6">
-                            <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Nombre / Empresa *</label>
-                            <input type="text" name="name" value="{{ old('name') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <!-- Nombre -->
+                            <div>
+                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Nombre *</label>
+                                <input type="text" name="name" value="{{ old('name') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                            </div>
+                            <!-- Apellidos -->
+                            <div>
+                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Apellidos *</label>
+                                <input type="text" name="apellidos" value="{{ old('apellidos') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <!-- Tipo y Documento -->
+                            <!-- DNI / NIE -->
                             <div>
-                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Documento *</label>
-                                <div class="flex">
-                                    <select name="tipo_documento" class="w-24 h-12 px-2 bg-gray-50 border border-gray-200 rounded-l-xl focus:ring-2 focus:ring-[#10b981] border-r-0 text-sm font-medium text-gray-700 focus:outline-none">
-                                        <option value="DNI">DNI</option>
-                                        <option value="NIE">NIE</option>
-                                        <option value="CIF">CIF</option>
-                                    </select>
-                                    <input type="text" name="dni_cif" value="{{ old('dni_cif') }}" class="flex-1 w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-r-xl focus:ring-2 focus:ring-[#10b981]" placeholder="Número..." required />
-                                </div>
+                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">DNI / NIE *</label>
+                                <input type="text" name="dni_nie" value="{{ old('dni_nie') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
                             </div>
                             <!-- Teléfono -->
                             <div>
@@ -129,8 +138,37 @@
                             <button type="button" onclick="goToStep(1)" class="text-sm font-medium text-gray-600 hover:text-[#1E3A5F]">
                                 &larr; Volver
                             </button>
+                            <button type="button" onclick="goToStep(3)" class="bg-[#10B981] hover:bg-[#059669] text-white px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2">
+                                Siguiente <span class="text-xl leading-none">&rarr;</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Info Profesional -->
+                    <div id="step-3" class="step-content hidden">
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Foto de Perfil (Opcional)</label>
+                            <div class="w-full border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onclick="document.getElementById('foto_perfil').click()">
+                                <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                </svg>
+                                <span class="text-sm text-gray-500 font-medium">Haz clic para subir una foto</span>
+                                <p class="text-xs text-gray-400 mt-1">PNG, JPG hasta 2MB</p>
+                                <input type="file" id="foto_perfil" name="foto_perfil" class="hidden" accept="image/*" />
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Experiencia y Especialidad (Opcional)</label>
+                            <textarea name="experiencia" class="w-full h-24 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]">{{ old('experiencia') }}</textarea>
+                        </div>
+
+                        <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
+                            <button type="button" onclick="goToStep(2)" class="text-sm font-medium text-gray-600 hover:text-[#1E3A5F]">
+                                &larr; Volver
+                            </button>
                             <button type="submit" class="bg-[#214371] hover:bg-[#152e50] text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl">
-                                Registrar Cuenta
+                                Registrarme Completamente
                             </button>
                         </div>
                     </div>
@@ -145,7 +183,7 @@
     </div>
 
     <script>
-        const totalSteps = 2;
+        const totalSteps = 3;
 
         function goToStep(step) {
             // Hide error box when switching steps manually
@@ -169,14 +207,16 @@
             document.getElementById('step-' + step).classList.remove('hidden');
             
             const titles = {
-                1: ['Datos Personales', 'Ingresa tu información básica y de contacto'],
-                2: ['Credenciales', 'Crea tu acceso seguro']
+                1: ['Datos Personales', 'Ingresa tu información básica'],
+                2: ['Credenciales', 'Crea tu acceso seguro'],
+                3: ['Información Profesional', 'Detalla tu experiencia y especialidad']
             };
             document.getElementById('step-title').innerText = titles[step][0];
             document.getElementById('step-subtitle').innerText = titles[step][1];
         }
 
         document.getElementById('registro-form').addEventListener('submit', function(e) {
+            // Validacion manual para todos los pasos
             if (!this.checkValidity()) {
                 e.preventDefault();
                 
@@ -194,6 +234,7 @@
                         errorBox.querySelector('span').innerText = 'Por favor, rellena los campos marcados en rojo en este paso.';
                         
                         invalidElements.forEach(el => {
+                            // Añadir bordes rojos solo a los campos inválidos
                             if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                                 el.classList.add('border-red-500', 'ring-1', 'ring-red-500');
                                 el.addEventListener('input', function() {
@@ -204,12 +245,14 @@
                             }
                         });
                         
+                        // Forzar reporte nativo del navegador tras saltar de pestaña
                         setTimeout(() => firstInvalid.reportValidity(), 50);
                     }
                 }
             }
         });
 
+        // Inicio
         goToStep(1);
     </script>
 </x-guest-layout>

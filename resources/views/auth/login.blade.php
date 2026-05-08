@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="flex min-h-screen bg-white">
+    <div class="flex min-h-screen bg-white relative">
 
         <div class="hidden lg:flex lg:w-7/12 bg-[#214371] p-16 flex-col justify-center items-center text-white relative">
             <div class="bg-white px-8 py-4 rounded-xl mb-12 shadow-lg">
@@ -96,8 +96,11 @@
                     </form>
                 </div>
 
-                <p class="mt-10 text-center text-gray-600">
-                    ¿Problemas para acceder? <a href="#" class="text-blue-700 font-bold">Contacta con soporte</a>
+                <p class="mt-8 text-center text-gray-600">
+                    ¿No tienes una cuenta? <a href="{{ route('register') }}" class="text-[#10b981] font-bold hover:underline">Regístrate como cliente</a> o <a href="{{ route('register.tecnico') }}" class="text-[#214371] font-bold hover:underline">como técnico</a>
+                </p>
+                <p class="mt-4 text-center text-gray-600">
+                    ¿Problemas para acceder? <a href="#" class="text-blue-700 font-bold hover:underline">Contacta con soporte</a>
                 </p>
                 <p class="mt-12 text-center text-xs text-gray-400 tracking-wide uppercase">
                     Workflow v2.0 © 2026 - Sistema de Gestión de Servicios [cite: 322]

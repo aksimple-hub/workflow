@@ -34,18 +34,72 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'dni_cif' => ['required', 'string', 'max:20', 'unique:clientes,dni_cif'],
+            'telefono' => ['required', 'string', 'max:20'],
+            'direccion' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'cliente',
+            'is_approved' => false,
+        ]);
+
+        \App\Models\Cliente::create([
+            'id' => $user->id,
+            'nombre' => $request->name,
+            'dni_cif' => $request->dni_cif,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user); // No auto-login until approved
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('login', absolute: false))->with('status', 'Tu cuenta ha sido registrada y está pendiente de validación por un administrador.');
+    }
+    public function createTecnico(): View
+    {
+        return view('auth.register-tecnico');
+    }
+
+    public function storeTecnico(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'apellidos' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'dni_nie' => ['required', 'string', 'max:20', 'unique:tecnicos,dni_nie'],
+            'telefono' => ['required', 'string', 'max:20'],
+            'direccion' => ['required', 'string', 'max:255'],
+            'experiencia' => ['nullable', 'string'],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'tecnico',
+            'is_approved' => false,
+        ]);
+
+        \App\Models\Tecnico::create([
+            'id' => $user->id,
+            'nombre' => $request->name,
+            'apellidos' => $request->apellidos,
+            'dni_nie' => $request->dni_nie,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
+            'experiencia' => $request->experiencia,
+        ]);
+
+        event(new Registered($user));
+
+        return redirect(route('login', absolute: false))->with('status', 'Tu cuenta de técnico ha sido registrada y está pendiente de validación por un administrador.');
     }
 }
