@@ -27,8 +27,13 @@ Route::middleware('auth')->group(function () {
     
     // Rutas adicionales de Admin
     Route::get('/tecnicos', [DashboardController::class, 'tecnicos'])->name('admin.tecnicos');
+    Route::get('/tecnicos/create', [DashboardController::class, 'createTecnico'])->name('admin.tecnicos.create');
+    Route::post('/tecnicos', [DashboardController::class, 'storeTecnico'])->name('admin.tecnicos.store');
     Route::get('/tecnicos/{id}', [DashboardController::class, 'tecnicoShow'])->name('admin.tecnico.show');
     Route::get('/clientes-lista', [DashboardController::class, 'clientes'])->name('admin.clientes');
+    Route::get('/clientes-lista/create', [DashboardController::class, 'createCliente'])->name('admin.clientes.create');
+    Route::post('/clientes-lista', [DashboardController::class, 'storeCliente'])->name('admin.clientes.store');
+    Route::post('/usuarios/{id}/validate', [DashboardController::class, 'validateUser'])->name('admin.users.validate');
     Route::get('/clientes-lista/{id}', [DashboardController::class, 'clienteShow'])->name('admin.cliente.show');
     Route::get('/historial', [DashboardController::class, 'historial'])->name('admin.historial');
     Route::get('/ordenes-detalle/{id}', [DashboardController::class, 'ordenShow'])->name('admin.orden.show');
@@ -41,6 +46,12 @@ Route::middleware('auth')->group(function () {
 
     // Rutas para Cliente (Nueva Solicitud)
     Route::view('/solicitud/nueva', 'cliente.nueva-solicitud')->name('solicitud.nueva');
+});
+
+// Rutas de registro de técnicos (públicas)
+Route::middleware('guest')->group(function () {
+    Route::get('/registro-tecnico', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'createTecnico'])->name('register.tecnico');
+    Route::post('/registro-tecnico', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'storeTecnico'])->name('register.tecnico.store');
 });
 
 require __DIR__.'/auth.php';

@@ -86,4 +86,71 @@ class DashboardController extends Controller
         $orden = OrdenTrabajo::with(['cliente', 'tecnico'])->findOrFail($id);
         return view('admin.orden-show', compact('orden'));
     }
+
+    public function createTecnico()
+    {
+        return view('admin.tecnicos-create');
+    }
+
+    public function storeTecnico(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        \App\Models\User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role' => 'tecnico',
+            'is_approved' => true,
+        ]);
+
+        return redirect()->route('admin.tecnicos')->with('success', 'Técnico creado correctamente.');
+    }
+
+    public function validateUser($id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+        $user->update(['is_approved' => true]);
+        return redirect()->back()->with('success', 'Usuario validado correctamente.');
+    }
+
+    public function createCliente()
+    {
+        return view('admin.clientes-create');
+    }
+
+    public function storeCliente(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'dni_cif' => 'required|string|unique:clientes',
+            'telefono' => 'required|string',
+            'direccion' => 'nullable|string',
+        ]);
+
+        $user = \App\Models\User::create([
+            'name' => $request->nombre,
+            'email' => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role' => 'cliente',
+            'is_approved' => true,
+        ]);
+
+        \App\Models\Cliente::create([
+            'id' => $user->id,
+            'nombre' => $request->nombre,
+            'dni_cif' => $request->dni_cif,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
+        ]);
+
+        return redirect()->route('admin.clientes')->with('success', 'Cliente creado correctamente.');
+    }
 }
