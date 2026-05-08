@@ -65,15 +65,15 @@
 
     <!-- Logout / Perfil Area -->
     <div class="p-4 border-t border-[#2C5282]">
-        <div class="flex items-center gap-3 mb-4 px-2">
-            <div class="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white font-bold">
+        <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 mb-4 p-2 rounded-lg hover:bg-[#2C5282] transition-colors cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white font-bold flex-shrink-0">
                 {{ substr(auth()->user()->name, 0, 1) }}
             </div>
             <div class="overflow-hidden">
                 <p class="text-sm font-medium text-white truncate">{{ auth()->user()->name }}</p>
                 <p class="text-xs text-gray-400 truncate">{{ auth()->user()->email }}</p>
             </div>
-        </div>
+        </a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="flex items-center justify-center gap-2 w-full py-2 rounded-lg text-gray-300 hover:bg-red-500 hover:text-white transition-colors">
