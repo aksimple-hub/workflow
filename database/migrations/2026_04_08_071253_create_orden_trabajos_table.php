@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('orden_trabajos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cliente_id')->constrained()->onDelete('cascade');
+            $table->foreignId('usuario_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('titulo');
             $table->text('descripcion');
             $table->enum('prioridad', ['baja', 'media', 'alta'])->default('media');
-            $table->enum('estado', ['pendiente', 'en_proceso', 'completada', 'cancelada'])->default('pendiente');
+            $table->enum('estado', ['asignada', 'pendiente', 'en_curso', 'en_camino', 'en_proceso', 'completada', 'finalizada', 'cancelada'])->default('pendiente');
             $table->dateTime('fecha_entrega_prevista')->nullable();
+            $table->dateTime('fecha_asignacion')->nullable();
             $table->timestamps();
         });
     }
