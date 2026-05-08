@@ -1,0 +1,59 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="flex h-screen bg-[#F5F7FA]">
+    @include('components.sidebar')
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-4xl font-medium text-[#1E3A5F]">Técnicos Registrados</h1>
+                <p class="text-base text-gray-500 mt-1">Gestión del personal de campo</p>
+            </div>
+            <button class="bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                + Nuevo Técnico
+            </button>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-6">
+            <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-[#F5F7FA] text-gray-500 text-sm border-b border-gray-200">
+                            <th class="px-6 py-4 font-medium">ID</th>
+                            <th class="px-6 py-4 font-medium">Nombre Completo</th>
+                            <th class="px-6 py-4 font-medium">Email</th>
+                            <th class="px-6 py-4 font-medium">Estado</th>
+                            <th class="px-6 py-4 font-medium text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-gray-100">
+                        @forelse($tecnicos as $tecnico)
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 font-medium text-[#1E3A5F]">#{{ $tecnico->id }}</td>
+                            <td class="px-6 py-4 text-gray-700 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-[#1E3A5F] text-white flex items-center justify-center font-bold text-xs">
+                                    {{ substr($tecnico->name, 0, 1) }}
+                                </div>
+                                {{ $tecnico->name }}
+                            </td>
+                            <td class="px-6 py-4 text-gray-500">{{ $tecnico->email }}</td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-[#D1FAE5] text-[#065F46]">Activo</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="{{ route('admin.tecnico.show', $tecnico->id) }}" class="text-[#1D4ED8] hover:underline font-medium">Ver detalles</a>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center text-gray-500">No hay técnicos registrados.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+@endsection
