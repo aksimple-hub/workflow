@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@test.com',
             'password' => bcrypt('password'),
             'role' => 'admin',
+            'is_approved' => true,
         ]);
 
         // Crear un Técnico de prueba (ID 2)
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'tecnico@test.com',
             'password' => bcrypt('password'),
             'role' => 'tecnico',
+            'is_approved' => true,
         ]);
 
         // Crear un Cliente de prueba (ID 3)
@@ -37,6 +39,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'cliente@test.com',
             'password' => bcrypt('password'),
             'role' => 'cliente',
+            'is_approved' => true,
         ]);
 
         // Insertar el cliente correspondiente en la tabla clientes (forzando ID 3 para que coincida con el usuario)
