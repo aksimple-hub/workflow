@@ -15,7 +15,7 @@ class DashboardController extends Controller
         if ($user->role === 'admin') {
             $stats = [
                 'total' => OrdenTrabajo::count(),
-                'pendientes' => OrdenTrabajo::where('estado', 'abierta')->count(),
+                'pendientes' => OrdenTrabajo::where('estado', 'pendiente')->count(),
                 'en_curso' => OrdenTrabajo::where('estado', 'en_curso')->count(),
                 'finalizadas' => OrdenTrabajo::where('estado', 'finalizada')->count(),
             ];

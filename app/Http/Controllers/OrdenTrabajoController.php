@@ -52,7 +52,7 @@ class OrdenTrabajoController extends Controller
             'descripcion'  => $validated['descripcion'],
             'prioridad'    => $validated['prioridad'],
             // Lógica de estados inicial
-            'estado'       => $request->usuario_id ? 'pendiente' : 'abierta',
+            'estado'       => $request->usuario_id ? 'asignada' : 'pendiente',
             'fecha_asignacion' => $request->usuario_id ? now() : null,
         ]);
 
