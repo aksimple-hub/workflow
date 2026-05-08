@@ -95,17 +95,32 @@ class DashboardController extends Controller
     public function storeTecnico(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'name' => ['required', 'string', 'max:255'],
+            'apellidos' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'dni_nie' => ['required', 'string', 'max:20', 'unique:tecnicos,dni_nie'],
+            'telefono' => ['required', 'string', 'max:20'],
+            'direccion' => ['required', 'string', 'max:255'],
+            'experiencia' => ['nullable', 'string'],
         ]);
 
-        \App\Models\User::create([
+        $user = \App\Models\User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'role' => 'tecnico',
             'is_approved' => true,
+        ]);
+
+        \App\Models\Tecnico::create([
+            'id' => $user->id,
+            'nombre' => $request->name,
+            'apellidos' => $request->apellidos,
+            'dni_nie' => $request->dni_nie,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
+            'experiencia' => $request->experiencia,
         ]);
 
         return redirect()->route('admin.tecnicos')->with('success', 'Técnico creado correctamente.');
