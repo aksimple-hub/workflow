@@ -25,6 +25,15 @@ Route::middleware('auth')->group(function () {
     // Rutas para Admin (Gestión de órdenes)
     Route::resource('ordenes', OrdenTrabajoController::class)->except(['show', 'edit', 'destroy']);
     
+    // Rutas adicionales de Admin
+    Route::get('/tecnicos', [DashboardController::class, 'tecnicos'])->name('admin.tecnicos');
+    Route::get('/tecnicos/{id}', [DashboardController::class, 'tecnicoShow'])->name('admin.tecnico.show');
+    Route::get('/clientes-lista', [DashboardController::class, 'clientes'])->name('admin.clientes');
+    Route::get('/clientes-lista/{id}', [DashboardController::class, 'clienteShow'])->name('admin.cliente.show');
+    Route::get('/historial', [DashboardController::class, 'historial'])->name('admin.historial');
+    Route::get('/ordenes-detalle/{id}', [DashboardController::class, 'ordenShow'])->name('admin.orden.show');
+    Route::get('/configuracion', [DashboardController::class, 'configuracion'])->name('admin.configuracion');
+    
     // Rutas para Técnico (Estados y Cierre)
     Route::patch('/ordenes/{orden}/estado', [OrdenTrabajoController::class, 'updateEstado'])->name('ordenes.update-estado');
     Route::get('/ordenes/{orden}/cierre', [OrdenTrabajoController::class, 'showCierre'])->name('ordenes.cierre');

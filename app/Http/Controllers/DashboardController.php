@@ -43,4 +43,47 @@ class DashboardController extends Controller
             return view('cliente.solicitudes', compact('ordenes'));
         }
     }
+
+    public function tecnicos()
+    {
+        $tecnicos = \App\Models\User::where('role', 'tecnico')->get();
+        return view('admin.tecnicos', compact('tecnicos'));
+    }
+
+    public function clientes()
+    {
+        $clientes = \App\Models\Cliente::all();
+        return view('admin.clientes', compact('clientes'));
+    }
+
+    public function historial()
+    {
+        $ordenes = OrdenTrabajo::with(['cliente', 'tecnico'])->orderBy('updated_at', 'desc')->get();
+        return view('admin.historial', compact('ordenes'));
+    }
+
+    public function configuracion()
+    {
+        return view('admin.configuracion');
+    }
+
+    public function tecnicoShow($id)
+    {
+        $tecnico = \App\Models\User::where('role', 'tecnico')->findOrFail($id);
+        $ordenes = OrdenTrabajo::where('usuario_id', $tecnico->id)->latest()->take(5)->get();
+        return view('admin.tecnico-show', compact('tecnico', 'ordenes'));
+    }
+
+    public function clienteShow($id)
+    {
+        $cliente = \App\Models\Cliente::findOrFail($id);
+        $ordenes = OrdenTrabajo::where('cliente_id', $cliente->id)->latest()->take(5)->get();
+        return view('admin.cliente-show', compact('cliente', 'ordenes'));
+    }
+
+    public function ordenShow($id)
+    {
+        $orden = OrdenTrabajo::with(['cliente', 'tecnico'])->findOrFail($id);
+        return view('admin.orden-show', compact('orden'));
+    }
 }
