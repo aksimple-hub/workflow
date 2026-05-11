@@ -32,31 +32,62 @@ class OrdenTrabajoController extends Controller
 
     public function store(Request $request)
     {
-        if (Auth::user()->role !== 'admin') {
+        $user = Auth::user();
+
+        // Permitir acceso a admin y cliente
+        if ($user->role !== 'admin' && $user->role !== 'cliente') {
             abort(403, 'No autorizado');
         }
 
-        $validated = $request->validate([
-            'cliente_id' => 'required|exists:clientes,id',
-            'usuario_id' => 'nullable|exists:users,id',
-            'titulo'     => 'required|string|max:255',
-            'descripcion'=> 'nullable|string',
-            'prioridad'  => 'required|in:baja,media,alta',
-        ]);
+        // Para clientes, asignar automáticamente su cliente_id
+        if ($user->role === 'cliente') {
+            $validated = $request->validate([
+                'titulo'     => 'required|string|max:255',
+                'descripcion'=> 'nullable|string',
+                'prioridad'  => 'required|in:baja,media,alta',
+            ]);
+            
+            // Si el cliente no tiene un cliente_id asociado, crear uno automáticamente
+            if (!$user->cliente_id) {
+                $cliente = Cliente::create([
+                    'nombre'   => $user->name,
+                    'email'    => $user->email,
+                    'dni_cif'  => 'AUTO_' . $user->id, // Valor por defecto
+                    'telefono' => 'N/A',
+                    'direccion' => 'N/A',
+                ]);
+                $user->update(['cliente_id' => $cliente->id]);
+                $cliente_id = $cliente->id;
+            } else {
+                $cliente_id = $user->cliente_id;
+            }
+            $usuario_id = null;
+        } else {
+            // Para admin, puede seleccionar cliente y técnico
+            $validated = $request->validate([
+                'cliente_id' => 'required|exists:clientes,id',
+                'usuario_id' => 'nullable|exists:users,id',
+                'titulo'     => 'required|string|max:255',
+                'descripcion'=> 'nullable|string',
+                'prioridad'  => 'required|in:baja,media,alta',
+            ]);
+            $cliente_id = $validated['cliente_id'];
+            $usuario_id = $validated['usuario_id'];
+        }
 
         OrdenTrabajo::create([
             'uuid'         => (string) Str::uuid(),
-            'cliente_id'   => $validated['cliente_id'],
-            'usuario_id'   => $validated['usuario_id'],
+            'cliente_id'   => $cliente_id,
+            'usuario_id'   => $usuario_id,
             'titulo'       => $validated['titulo'],
             'descripcion'  => $validated['descripcion'],
             'prioridad'    => $validated['prioridad'],
             // Lógica de estados inicial
-            'estado'       => $request->usuario_id ? 'asignada' : 'pendiente',
-            'fecha_asignacion' => $request->usuario_id ? now() : null,
+            'estado'       => $usuario_id ? 'asignada' : 'pendiente',
+            'fecha_asignacion' => $usuario_id ? now() : null,
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Orden de trabajo creada y asignada correctamente.');
+        return redirect()->route('dashboard')->with('success', 'Orden de trabajo creada correctamente.');
     }
 
     public function updateEstado(Request $request, OrdenTrabajo $orden)
@@ -125,5 +156,29 @@ class OrdenTrabajoController extends Controller
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Orden finalizada correctamente.');
+    }
+
+    // Cancelar/eliminar una orden
+    public function destroy(OrdenTrabajo $orden)
+    {
+        $user = Auth::user();
+
+        // Solo el cliente propietario o admin puede cancelar
+        if ($user->role === 'cliente' && $orden->cliente_id !== $user->cliente_id) {
+            abort(403, 'No tienes permiso para cancelar esta orden.');
+        }
+
+        if ($user->role !== 'admin' && $user->role !== 'cliente') {
+            abort(403, 'No autorizado');
+        }
+
+        // Solo se pueden cancelar órdenes que no están en progreso
+        if ($orden->estado === 'en_proceso' || $orden->estado === 'en_camino' || $orden->estado === 'finalizada') {
+            abort(403, 'No puedes cancelar una orden en progreso o finalizada.');
+        }
+
+        $orden->update(['estado' => 'cancelada']);
+
+        return redirect()->route('dashboard')->with('success', 'Solicitud cancelada correctamente.');
     }
 }

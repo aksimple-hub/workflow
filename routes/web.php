@@ -22,8 +22,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('clientes', ClienteController::class);
     
-    // Rutas para Admin (Gestión de órdenes)
-    Route::resource('ordenes', OrdenTrabajoController::class)->except(['show', 'edit', 'destroy']);
+    // Rutas para Admin (Gestión de órdenes) y Cliente (Nueva solicitud)
+    Route::resource('ordenes', OrdenTrabajoController::class)->except(['show', 'edit']);
     
     // Rutas adicionales de Admin
     Route::get('/tecnicos', [DashboardController::class, 'tecnicos'])->name('admin.tecnicos');
