@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     
     // Rutas para Técnico (Estados y Cierre)
     Route::patch('/ordenes/{orden}/estado', [OrdenTrabajoController::class, 'updateEstado'])->name('ordenes.update-estado');
+    Route::patch('/ordenes/{orden}/tecnico', [OrdenTrabajoController::class, 'assignTecnico'])->name('ordenes.assign-tecnico');
     Route::get('/ordenes/{orden}/cierre', [OrdenTrabajoController::class, 'showCierre'])->name('ordenes.cierre');
     Route::post('/ordenes/{orden}/cerrar', [OrdenTrabajoController::class, 'cerrar'])->name('ordenes.cerrar');
 

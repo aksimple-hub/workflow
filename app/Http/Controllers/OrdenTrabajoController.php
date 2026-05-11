@@ -181,4 +181,32 @@ class OrdenTrabajoController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Solicitud cancelada correctamente.');
     }
+
+    // Asignar o cambiar técnico a una orden existente
+    public function assignTecnico(Request $request, OrdenTrabajo $orden)
+    {
+        // Solo admin puede asignar técnicos
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'No autorizado');
+        }
+
+        $validated = $request->validate([
+            'usuario_id' => 'required|exists:users,id',
+        ]);
+
+        // Verificar que el usuario seleccionado sea técnico
+        $tecnico = User::findOrFail($validated['usuario_id']);
+        if ($tecnico->role !== 'tecnico') {
+            return back()->withErrors(['usuario_id' => 'El usuario seleccionado no es un técnico.']);
+        }
+
+        // Actualizar la orden
+        $orden->update([
+            'usuario_id' => $validated['usuario_id'],
+            'estado' => 'asignada',
+            'fecha_asignacion' => now(),
+        ]);
+
+        return back()->with('success', 'Técnico ' . $tecnico->name . ' asignado correctamente a la orden.');
+    }
 }

@@ -50,9 +50,9 @@
                     </div>
 
                     <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
-                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Asignación</h3>
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Asignación de Técnico</h3>
                         @if($orden->tecnico)
-                            <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-3 mb-4">
                                 <div class="w-10 h-10 rounded-full bg-[#1E3A5F] text-white flex items-center justify-center font-bold">
                                     {{ substr($orden->tecnico->name, 0, 1) }}
                                 </div>
@@ -61,9 +61,40 @@
                                     <p class="text-xs text-gray-500">Técnico de Campo</p>
                                 </div>
                             </div>
+                            <p class="text-xs text-gray-500 mb-4">Asignado el {{ $orden->fecha_asignacion?->translatedFormat('d M Y H:i') }}</p>
                         @else
-                            <p class="text-sm text-gray-500">Sin técnico asignado</p>
-                            <a href="{{ route('ordenes.create') }}" class="mt-4 block w-full text-center bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-lg text-sm transition-colors">Asignar Ahora</a>
+                            <p class="text-sm text-gray-500 mb-4">Sin técnico asignado</p>
+                        @endif
+                        
+                        <!-- Formulario para asignar/cambiar técnico -->
+                        @php
+                            $tecnicos = \App\Models\User::where('role', 'tecnico')->get();
+                        @endphp
+                        
+                        @if($tecnicos->count() > 0)
+                        <form action="{{ route('ordenes.assign-tecnico', $orden) }}" method="POST" class="space-y-3">
+                            @csrf
+                            @method('PATCH')
+                            
+                            <div>
+                                <label for="usuario_id" class="block text-sm font-medium text-[#1E3A5F] mb-2">Seleccionar Técnico</label>
+                                <select id="usuario_id" name="usuario_id" required
+                                    class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-2 focus:outline-none transition-colors text-sm appearance-none">
+                                    <option value="" disabled {{ !$orden->tecnico ? 'selected' : '' }}>Elige un técnico...</option>
+                                    @foreach($tecnicos as $tecnico)
+                                        <option value="{{ $tecnico->id }}" {{ $orden->usuario_id === $tecnico->id ? 'selected' : '' }}>
+                                            {{ $tecnico->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                {{ $orden->tecnico ? 'Cambiar Técnico' : 'Asignar Técnico' }}
+                            </button>
+                        </form>
+                        @else
+                        <p class="text-sm text-red-600">No hay técnicos disponibles para asignar.</p>
                         @endif
                     </div>
                 </div>
