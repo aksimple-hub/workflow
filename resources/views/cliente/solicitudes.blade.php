@@ -48,6 +48,17 @@
                                 <span class="px-3 py-1 text-xs font-semibold rounded-full bg-[#DBEAFE] text-[#1D4ED8] border border-[#BFDBFE]">En Proceso</span>
                             @endif
                         </div>
+
+                        <!-- Botón de eliminar (solo para órdenes no finalizadas ni canceladas) -->
+                        @if($orden->estado !== 'finalizada' && $orden->estado !== 'cancelada')
+                        <form action="{{ route('ordenes.destroy', $orden) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta solicitud?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-600 hover:text-red-800 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors text-sm font-medium">
+                                Cancelar
+                            </button>
+                        </form>
+                        @endif
                     </div>
                 </div>
                 @empty

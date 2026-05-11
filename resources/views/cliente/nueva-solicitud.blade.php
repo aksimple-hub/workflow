@@ -21,8 +21,7 @@
             <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
                 <form action="{{ route('ordenes.store') }}" method="POST">
                     @csrf
-                    <!-- Enviamos el ID del cliente logueado (podría hacerse en el controlador, pero mantenemos compatibilidad) -->
-                    <input type="hidden" name="cliente_id" value="{{ auth()->id() }}">
+                    <!-- El cliente_id se asigna automáticamente desde la sesión del usuario -->
                     
                     <div class="grid grid-cols-2 gap-6">
                         <!-- Título (Ocupa 2 columnas) -->

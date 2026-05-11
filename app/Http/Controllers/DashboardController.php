@@ -36,7 +36,7 @@ class DashboardController extends Controller
         }
 
         if ($user->role === 'cliente') {
-            $ordenes = OrdenTrabajo::where('cliente_id', $user->id)
+            $ordenes = OrdenTrabajo::where('cliente_id', $user->cliente_id)
                 ->latest()
                 ->get();
 
