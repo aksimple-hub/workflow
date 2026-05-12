@@ -46,8 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/ordenes/{orden}/cierre', [OrdenTrabajoController::class, 'showCierre'])->name('ordenes.cierre');
     Route::post('/ordenes/{orden}/cerrar', [OrdenTrabajoController::class, 'cerrar'])->name('ordenes.cerrar');
 
-    // Rutas para Cliente (Nueva Solicitud)
+    // Rutas para Cliente (Nueva Solicitud + Detalle)
     Route::get('/solicitud/nueva', [OrdenTrabajoController::class, 'nuevaSolicitud'])->name('solicitud.nueva');
+    Route::get('/mis-servicios/{orden}', [OrdenTrabajoController::class, 'showCliente'])->name('cliente.orden.show');
 
     // Rutas para Técnico
     Route::get('/mi-historial', [DashboardController::class, 'historialTecnico'])->name('tecnico.historial');

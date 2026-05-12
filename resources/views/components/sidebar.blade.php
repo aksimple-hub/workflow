@@ -7,12 +7,15 @@
     <!-- Navigation -->
     <nav class="flex-1 py-6 px-4 space-y-2">
         
-        <!-- Link Dashboard / Agenda -->
+        <!-- Link Dashboard / Agenda / Mis Servicios -->
         <a href="{{ route('dashboard') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('dashboard') ? 'bg-[#10B981] text-white' : 'text-gray-300 hover:bg-[#2C5282] hover:text-white' }}">
             @if(auth()->user()->role === 'tecnico')
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 <span class="font-medium text-sm">Mi Agenda</span>
+            @elseif(auth()->user()->role === 'cliente')
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                <span class="font-medium text-sm">Mis Servicios</span>
             @else
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                 <span class="font-medium text-sm">Dashboard</span>
@@ -62,11 +65,16 @@
         @endif
 
         @if(auth()->user()->role === 'cliente')
-        <!-- Link Nueva Solicitud (Cliente) -->
+        <!-- Links Cliente -->
         <a href="{{ route('solicitud.nueva') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('solicitud.nueva') ? 'bg-[#10B981] text-white' : 'text-gray-300 hover:bg-[#2C5282] hover:text-white' }}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
             <span class="font-medium text-sm">Nueva Solicitud</span>
+        </a>
+        <a href="{{ route('dashboard') }}#historial"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-gray-300 hover:bg-[#2C5282] hover:text-white">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="font-medium text-sm">Historial</span>
         </a>
         @endif
 

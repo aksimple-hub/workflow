@@ -16,7 +16,7 @@ class DashboardController extends Controller
             $stats = [
                 'total' => OrdenTrabajo::count(),
                 'pendientes' => OrdenTrabajo::where('estado', 'pendiente')->count(),
-                'en_curso' => OrdenTrabajo::where('estado', 'en_curso')->count(),
+                'en_curso' => OrdenTrabajo::where('estado', 'en_proceso')->count(),
                 'finalizadas' => OrdenTrabajo::where('estado', 'finalizada')->count(),
             ];
             
@@ -28,7 +28,7 @@ class DashboardController extends Controller
         if ($user->role === 'tecnico') {
             // Filtrar por el usuario_id del técnico autenticado
             $ordenes = OrdenTrabajo::where('usuario_id', $user->id)
-                ->whereIn('estado', ['asignada', 'pendiente', 'en_curso', 'en_camino'])
+                ->whereIn('estado', ['asignada', 'pendiente', 'en_camino', 'en_proceso'])
                 ->orderBy('prioridad', 'desc')
                 ->get();
 
@@ -36,18 +36,21 @@ class DashboardController extends Controller
         }
 
         if ($user->role === 'cliente') {
-            $ordenes = OrdenTrabajo::with(['tecnico.perfil'])
+            $todas = OrdenTrabajo::with(['tecnico.perfil', 'cliente'])
                 ->where('cliente_id', $user->cliente_id)
                 ->latest()
                 ->get();
 
+            $ordenActiva = $todas->whereNotIn('estado', ['finalizada', 'cancelada'])->first();
+            $historial   = $todas->where('estado', 'finalizada')->values();
+
             $stats = [
-                'total'      => $ordenes->count(),
-                'en_proceso' => $ordenes->whereNotIn('estado', ['finalizada', 'cancelada'])->count(),
-                'finalizadas' => $ordenes->where('estado', 'finalizada')->count(),
+                'total'      => $todas->count(),
+                'en_proceso' => $todas->whereNotIn('estado', ['finalizada', 'cancelada'])->count(),
+                'finalizadas' => $historial->count(),
             ];
 
-            return view('cliente.solicitudes', compact('ordenes', 'stats'));
+            return view('cliente.solicitudes', compact('todas', 'ordenActiva', 'historial', 'stats'));
         }
     }
 
