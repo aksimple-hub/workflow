@@ -107,16 +107,20 @@
                                     <p class="text-gray-600 text-sm mt-2">{{ __('Órdenes Gestionadas') }}</p>
                                 </div>
                                 <div class="text-center">
-                                    <p class="text-4xl font-bold text-gray-900">{{ $memberSinceYears }}</p>
-                                    <p class="text-gray-600 text-sm mt-2">{{ __('año' . ($memberSinceYears !== 1 ? 's' : '') }} {{ __('Miembro desde') }}</p>
+                                    <p class="text-4xl font-bold text-gray-900">{{ $memberSince }}</p>
+                                    <p class="text-gray-600 text-sm mt-2">Miembro desde</p>
                                 </div>
                                 <div class="text-center">
-                                    <p class="text-4xl font-bold text-green-600">{{ $rating }}</p>
+                                    @if($rating)
+                                        <p class="text-4xl font-bold text-green-600">{{ $rating }}</p>
+                                    @else
+                                        <p class="text-4xl font-bold text-gray-300">—</p>
+                                    @endif
                                     <p class="text-gray-600 text-sm mt-2">
                                         <svg class="inline w-4 h-4 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
-                                        {{ __('Valoración') }}
+                                        Valoración media
                                     </p>
                                 </div>
                             </div>

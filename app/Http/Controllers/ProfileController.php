@@ -19,22 +19,48 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // Contar órdenes totales para admins y técnicos
-        $ordenesCount = ($user->role === 'admin' || $user->role === 'tecnico')
-            ? OrdenTrabajo::count()
-            : 0;
-
-        // Calcular tiempo como miembro en años
-        $memberSinceYears = \Carbon\Carbon::parse($user->created_at)->diffInYears(now());
-        if ($memberSinceYears === 0) {
-            $memberSinceYears = 1;
+        // Órdenes según rol
+        if ($user->role === 'tecnico') {
+            $ordenesCount = OrdenTrabajo::where('usuario_id', $user->id)->count();
+        } elseif ($user->role === 'cliente') {
+            $ordenesCount = OrdenTrabajo::where('cliente_id', $user->cliente_id)->count();
+        } else {
+            $ordenesCount = OrdenTrabajo::count();
         }
 
+        // Tiempo como miembro legible (días / meses / años)
+        $interval = $user->created_at->toDateTime()->diff(new \DateTime());
+        $totalDays = (int) $interval->days; // ->days = total de días (entero puro de PHP)
+
+        if ($totalDays < 1) {
+            $memberSince = 'hoy';
+        } elseif ($totalDays < 30) {
+            $memberSince = $totalDays . ($totalDays === 1 ? ' día' : ' días');
+        } elseif ($interval->y === 0) {
+            $meses = $interval->m;
+            $memberSince = $meses . ($meses === 1 ? ' mes' : ' meses');
+        } else {
+            $anios = $interval->y;
+            $memberSince = $anios . ($anios === 1 ? ' año' : ' años');
+        }
+
+        // Valoración real desde el campo satisfaccion (1-5)
+        if ($user->role === 'tecnico') {
+            $avgRaw = OrdenTrabajo::where('usuario_id', $user->id)
+                ->whereNotNull('satisfaccion')->avg('satisfaccion');
+        } elseif ($user->role === 'cliente') {
+            $avgRaw = OrdenTrabajo::where('cliente_id', $user->cliente_id)
+                ->whereNotNull('satisfaccion')->avg('satisfaccion');
+        } else {
+            $avgRaw = OrdenTrabajo::whereNotNull('satisfaccion')->avg('satisfaccion');
+        }
+        $rating = $avgRaw ? round($avgRaw, 1) : null;
+
         return view('profile.show', [
-            'user' => $user,
+            'user'         => $user,
             'ordenesCount' => $ordenesCount,
-            'memberSinceYears' => $memberSinceYears,
-            'rating' => 4.9, // Placeholder - puede venir de una tabla de ratings
+            'memberSince'  => $memberSince,
+            'rating'       => $rating,
         ]);
     }
 
