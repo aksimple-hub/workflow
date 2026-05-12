@@ -178,6 +178,18 @@ class OrdenTrabajoController extends Controller
         return view('tecnico.cierre', compact('orden'));
     }
 
+    // Detalle de orden para el cliente
+    public function showCliente(OrdenTrabajo $orden)
+    {
+        $user = Auth::user();
+        if ($user->role !== 'cliente' || $orden->cliente_id !== $user->cliente_id) {
+            abort(403);
+        }
+
+        $orden->load(['tecnico.perfil', 'cliente', 'Material']);
+        return view('cliente.orden-detalle', compact('orden'));
+    }
+
     // Muestra el detalle y timeline de la orden (Pantalla 6)
     public function show(OrdenTrabajo $orden)
     {
@@ -199,7 +211,7 @@ class OrdenTrabajoController extends Controller
         $request->validate([
             'observaciones'    => 'required|string',
             'recomendaciones'  => 'nullable|string',
-            'satisfaccion'     => 'nullable|in:satisfecho,neutral,insatisfecho',
+            'satisfaccion'     => 'nullable|integer|min:1|max:5',
             'hora_inicio'      => 'nullable|date_format:H:i',
             'hora_fin'         => 'nullable|date_format:H:i',
             'firma_base64'     => 'nullable|string',

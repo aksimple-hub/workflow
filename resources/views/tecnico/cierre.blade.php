@@ -137,17 +137,19 @@
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
                             <h2 class="text-base font-semibold text-[#1E3A5F] mb-1">Satisfacción del Cliente</h2>
                             <p class="text-xs text-gray-400 mb-4">¿El cliente está satisfecho con el servicio?</p>
-                            <div class="grid grid-cols-3 gap-3">
-                                @foreach([['satisfecho','😊','Satisfecho','#10B981'],['neutral','😐','Neutral','#D97706'],['insatisfecho','😤','Insatisfecho','#EF4444']] as [$val,$emoji,$label,$color])
-                                <label class="satisfaccion-option cursor-pointer" data-color="{{ $color }}">
-                                    <input type="radio" name="satisfaccion" value="{{ $val }}" class="sr-only">
-                                    <div class="flex flex-col items-center gap-1.5 border-2 border-gray-200 rounded-xl py-3 transition-all hover:border-gray-300 option-box">
-                                        <span class="text-2xl">{{ $emoji }}</span>
-                                        <span class="text-xs font-medium text-gray-600 option-label">{{ $label }}</span>
-                                    </div>
-                                </label>
-                                @endforeach
+                            <div class="flex items-center gap-2" id="star-rating">
+                                @for($i = 1; $i <= 5; $i++)
+                                <button type="button" data-value="{{ $i }}"
+                                    class="star-btn transition-transform hover:scale-110 focus:outline-none"
+                                    onclick="setStars({{ $i }})">
+                                    <svg class="w-9 h-9 star-icon text-gray-300 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                </button>
+                                @endfor
                             </div>
+                            <p id="star-label" class="text-xs text-gray-400 mt-2">Sin valorar</p>
+                            <input type="hidden" name="satisfaccion" id="satisfaccion-input">
                         </div>
 
                         {{-- Firma del Cliente --}}
@@ -263,19 +265,31 @@ function calcularTiempo() {
     document.getElementById('tiempo-total').textContent = (h ? h + 'h ' : '') + (m ? m + 'min' : '');
 }
 
-// ─── Satisfacción ─────────────────────────────────────────────────────────────
-document.querySelectorAll('.satisfaccion-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-        document.querySelectorAll('.satisfaccion-option .option-box').forEach(b => {
-            b.classList.remove('border-[#10B981]','border-[#D97706]','border-[#EF4444]','bg-[#D1FAE5]','bg-[#FEF3C7]','bg-red-50');
-            b.classList.add('border-gray-200');
+// ─── Estrellas ────────────────────────────────────────────────────────────────
+const starLabels = ['', 'Muy insatisfecho', 'Insatisfecho', 'Neutral', 'Satisfecho', 'Muy satisfecho'];
+function setStars(value) {
+    document.getElementById('satisfaccion-input').value = value;
+    document.getElementById('star-label').textContent = starLabels[value];
+    document.querySelectorAll('.star-btn').forEach(btn => {
+        const star = btn.querySelector('.star-icon');
+        star.classList.toggle('text-[#F59E0B]', parseInt(btn.dataset.value) <= value);
+        star.classList.toggle('text-gray-300',  parseInt(btn.dataset.value) >  value);
+    });
+}
+document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+        const hover = parseInt(btn.dataset.value);
+        document.querySelectorAll('.star-btn .star-icon').forEach((s, i) => {
+            s.classList.toggle('text-[#F59E0B]', i < hover);
+            s.classList.toggle('text-gray-300',  i >= hover);
         });
-        const color = opt.dataset.color;
-        const box = opt.querySelector('.option-box');
-        box.classList.remove('border-gray-200');
-        if (color === '#10B981') box.classList.add('border-[#10B981]', 'bg-[#D1FAE5]');
-        if (color === '#D97706') box.classList.add('border-[#D97706]', 'bg-[#FEF3C7]');
-        if (color === '#EF4444') box.classList.add('border-[#EF4444]', 'bg-red-50');
+    });
+    btn.addEventListener('mouseleave', () => {
+        const current = parseInt(document.getElementById('satisfaccion-input').value || 0);
+        document.querySelectorAll('.star-btn .star-icon').forEach((s, i) => {
+            s.classList.toggle('text-[#F59E0B]', i < current);
+            s.classList.toggle('text-gray-300',  i >= current);
+        });
     });
 });
 
