@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Material;
 use App\Models\User;
 use App\Models\OrdenTrabajo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class OrdenTrabajoController extends Controller
 {
@@ -27,7 +29,9 @@ class OrdenTrabajoController extends Controller
             ->whereDate('created_at', today())
             ->count();
 
-        return view('cliente.nueva-solicitud', compact('hoyCount'));
+        $cliente = $user->cliente_id ? Cliente::find($user->cliente_id) : null;
+
+        return view('cliente.nueva-solicitud', compact('hoyCount', 'cliente'));
     }
 
     public function create()
@@ -55,11 +59,12 @@ class OrdenTrabajoController extends Controller
         // Para clientes, asignar automáticamente su cliente_id
         if ($user->role === 'cliente') {
             $validated = $request->validate([
-                'titulo'           => 'required|string|max:255',
-                'descripcion'      => 'nullable|string',
-                'prioridad'        => 'required|in:baja,media,alta',
-                'fecha_preferida'  => 'required|date|after_or_equal:tomorrow',
-                'horario_preferido'=> 'required|in:mañana,mediodia,tarde,sin_preferencia',
+                'titulo'             => 'required|string|max:255',
+                'descripcion'        => 'nullable|string',
+                'prioridad'          => 'required|in:baja,media,alta',
+                'fecha_preferida'    => 'required|date|after_or_equal:tomorrow',
+                'horario_preferido'  => 'required|in:mañana,mediodia,tarde,sin_preferencia',
+                'direccion_servicio' => 'nullable|string|max:500',
             ]);
 
             // Verificar que sea día laborable (lunes-viernes)
@@ -95,6 +100,15 @@ class OrdenTrabajoController extends Controller
             } else {
                 $cliente_id = $user->cliente_id;
             }
+
+            // Actualizar dirección del cliente si fue modificada
+            if (!empty($validated['direccion_servicio'])) {
+                $clienteModel = Cliente::find($cliente_id);
+                if ($clienteModel && $clienteModel->direccion !== $validated['direccion_servicio']) {
+                    $clienteModel->update(['direccion' => $validated['direccion_servicio']]);
+                }
+            }
+
             $usuario_id = null;
         } else {
             // Para admin, puede seleccionar cliente y técnico
@@ -183,20 +197,60 @@ class OrdenTrabajoController extends Controller
         }
 
         $request->validate([
-            'observaciones' => 'required|string',
-            'firma' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // 2MB Max
+            'observaciones'    => 'required|string',
+            'recomendaciones'  => 'nullable|string',
+            'satisfaccion'     => 'nullable|in:satisfecho,neutral,insatisfecho',
+            'hora_inicio'      => 'nullable|date_format:H:i',
+            'hora_fin'         => 'nullable|date_format:H:i',
+            'firma_base64'     => 'nullable|string',
+            'materiales'       => 'nullable|array',
+            'materiales.*.nombre'   => 'required_with:materiales|string|max:255',
+            'materiales.*.cantidad' => 'required_with:materiales|integer|min:1',
         ]);
 
+        // Firma digital desde canvas (base64) o archivo subido
         $pathFirma = null;
-        if ($request->hasFile('firma')) {
-            $pathFirma = $request->file('firma')->store('firmas', 'public');
+        if ($request->filled('firma_base64')) {
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->firma_base64));
+            $filename = 'firmas/' . Str::uuid() . '.png';
+            Storage::disk('public')->put($filename, $imageData);
+            $pathFirma = $filename;
+        }
+
+        // Prefixar las tareas realizadas en las observaciones
+        $observaciones = $request->observaciones;
+        if ($request->filled('tareas_json')) {
+            $tareas = json_decode($request->tareas_json, true) ?? [];
+            $hechas = array_filter($tareas, fn($t) => $t['done']);
+            if (count($hechas)) {
+                $lista = implode(', ', array_column($hechas, 'nombre'));
+                $observaciones = "Tareas: {$lista}.\n\n" . $observaciones;
+            }
         }
 
         $orden->update([
-            'estado' => 'finalizada',
-            'observaciones' => $request->observaciones,
-            'firma_path' => $pathFirma,
+            'estado'          => 'finalizada',
+            'observaciones'   => $observaciones,
+            'recomendaciones' => $request->recomendaciones,
+            'satisfaccion'    => $request->satisfaccion,
+            'hora_inicio'     => $request->hora_inicio ?: null,
+            'hora_fin'        => $request->hora_fin ?: null,
+            'firma_path'      => $pathFirma,
         ]);
+
+        // Guardar materiales
+        if ($request->has('materiales')) {
+            foreach ($request->materiales as $mat) {
+                if (!empty($mat['nombre'])) {
+                    Material::create([
+                        'orden_trabajo_id' => $orden->id,
+                        'nombre'           => $mat['nombre'],
+                        'cantidad'         => (int) $mat['cantidad'],
+                        'precio_unitario'  => 0,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('dashboard')->with('success', 'Orden finalizada correctamente.');
     }

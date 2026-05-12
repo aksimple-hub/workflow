@@ -20,6 +20,60 @@
         <main class="flex-1 overflow-y-auto p-6">
             <div class="max-w-4xl mx-auto space-y-4">
 
+            {{-- Paso 1: Confirmar Dirección --}}
+            @php
+                $direccionActual = ($cliente && $cliente->direccion && $cliente->direccion !== 'N/A')
+                    ? $cliente->direccion
+                    : '';
+            @endphp
+            <div class="bg-white p-6 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 rounded-full bg-[#10B981] flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-sm font-semibold text-[#1E3A5F]">Paso 1: Confirmar Dirección de Domicilio</h2>
+                </div>
+
+                {{-- Vista lectura --}}
+                <div id="address-display" class="bg-[#F5F7FA] rounded-xl px-5 py-4 flex items-center justify-between">
+                    <div>
+                        <p id="address-text" class="text-sm font-medium text-[#1E3A5F]">
+                            {{ $direccionActual ?: 'Sin dirección registrada' }}
+                        </p>
+                        <p class="text-xs text-gray-500 mt-0.5">Dirección de servicio</p>
+                    </div>
+                    <button type="button" onclick="openAddressEdit()"
+                        class="text-sm font-medium text-[#1D4ED8] hover:underline flex-shrink-0 ml-4">
+                        Cambiar dirección
+                    </button>
+                </div>
+
+                {{-- Vista edición --}}
+                <div id="address-edit" class="hidden mt-3 space-y-2">
+                    <input type="text" id="direccion_input"
+                        value="{{ old('direccion_servicio', $direccionActual) }}"
+                        placeholder="Ej: Calle Mayor 45, 3º B, 28013 Madrid, España"
+                        class="w-full bg-[#F5F7FA] border-2 border-[#10B981] rounded-xl px-4 py-3 focus:outline-none text-sm">
+                    <div class="flex gap-2">
+                        <button type="button" onclick="confirmAddressEdit()"
+                            class="text-sm bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-lg transition-colors font-medium">
+                            Confirmar
+                        </button>
+                        <button type="button" onclick="cancelAddressEdit()"
+                            class="text-sm text-gray-500 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Campo oculto que se envía con el formulario --}}
+                <input type="hidden" name="direccion_servicio" id="direccion_servicio"
+                    value="{{ old('direccion_servicio', $direccionActual) }}">
+            </div>
+
             {{-- Aviso de límite diario --}}
             @php $restantes = 3 - $hoyCount; @endphp
 
@@ -144,6 +198,25 @@
                                 error.classList.add('hidden');
                             }
                         });
+
+                        function openAddressEdit() {
+                            document.getElementById('address-display').classList.add('hidden');
+                            document.getElementById('address-edit').classList.remove('hidden');
+                            document.getElementById('direccion_input').focus();
+                        }
+
+                        function confirmAddressEdit() {
+                            const val = document.getElementById('direccion_input').value.trim();
+                            document.getElementById('direccion_servicio').value = val;
+                            document.getElementById('address-text').textContent = val || 'Sin dirección registrada';
+                            document.getElementById('address-edit').classList.add('hidden');
+                            document.getElementById('address-display').classList.remove('hidden');
+                        }
+
+                        function cancelAddressEdit() {
+                            document.getElementById('address-edit').classList.add('hidden');
+                            document.getElementById('address-display').classList.remove('hidden');
+                        }
                     </script>
 
                     <div class="mt-8 flex items-center justify-between">
