@@ -34,4 +34,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Cliente::class);
     }
+
+    public function perfil()
+    {
+        return $this->hasOne(Tecnico::class, 'id', 'id');
+    }
 }

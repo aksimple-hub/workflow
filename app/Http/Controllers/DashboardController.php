@@ -36,11 +36,18 @@ class DashboardController extends Controller
         }
 
         if ($user->role === 'cliente') {
-            $ordenes = OrdenTrabajo::where('cliente_id', $user->cliente_id)
+            $ordenes = OrdenTrabajo::with(['tecnico.perfil'])
+                ->where('cliente_id', $user->cliente_id)
                 ->latest()
                 ->get();
 
-            return view('cliente.solicitudes', compact('ordenes'));
+            $stats = [
+                'total'      => $ordenes->count(),
+                'en_proceso' => $ordenes->whereNotIn('estado', ['finalizada', 'cancelada'])->count(),
+                'finalizadas' => $ordenes->where('estado', 'finalizada')->count(),
+            ];
+
+            return view('cliente.solicitudes', compact('ordenes', 'stats'));
         }
     }
 
