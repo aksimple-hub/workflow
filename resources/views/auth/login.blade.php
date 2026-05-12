@@ -9,7 +9,7 @@
             <div class="text-center max-w-xl">
                 <h1 class="text-5xl font-bold mb-6">Optimiza tu flujo de trabajo</h1>
                 <p class="text-xl text-blue-100 leading-relaxed mb-16 px-10">
-                    Sistema inteligente de gestión de servicios de campo. Coordina equipos, asigna rutas y mejora la satisfacción del cliente. [cite: 33, 37]
+                    Sistema inteligente de gestión de servicios de campo. Coordina equipos, asigna rutas y mejora la satisfacción del cliente.
                 </p>
             </div>
 
@@ -103,7 +103,7 @@
                     ¿Problemas para acceder? <a href="#" class="text-blue-700 font-bold hover:underline">Contacta con soporte</a>
                 </p>
                 <p class="mt-12 text-center text-xs text-gray-400 tracking-wide uppercase">
-                    Workflow v2.0 © 2026 - Sistema de Gestión de Servicios [cite: 322]
+                    Workflow v2.0 © 2026 - Sistema de Gestión de Servicios
                 </p>
             </div>
         </div>

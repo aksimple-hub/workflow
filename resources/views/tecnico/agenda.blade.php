@@ -54,7 +54,10 @@
 
                     <!-- Acciones -->
                     <div class="flex flex-col gap-2 w-48">
-                        @if($orden->estado === 'pendiente')
+                        @if($orden->estado === 'asignada' || $orden->estado === 'pendiente')
+                            <a href="{{ route('ordenes.show', $orden) }}" class="w-full bg-gray-100 hover:bg-gray-200 text-[#1E3A5F] px-6 py-3 rounded-xl transition-all duration-200 ease-in-out text-center font-medium text-sm">
+                                Ver Detalle
+                            </a>
                             <form action="{{ route('ordenes.update-estado', $orden) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
@@ -64,6 +67,9 @@
                                 </button>
                             </form>
                         @elseif($orden->estado === 'en_camino')
+                            <a href="{{ route('ordenes.show', $orden) }}" class="w-full bg-gray-100 hover:bg-gray-200 text-[#1E3A5F] px-6 py-3 rounded-xl transition-all duration-200 ease-in-out text-center font-medium text-sm">
+                                Ver Detalle
+                            </a>
                             <form action="{{ route('ordenes.update-estado', $orden) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
@@ -73,7 +79,7 @@
                                 </button>
                             </form>
                         @elseif($orden->estado === 'en_proceso')
-                            <a href="{{ route('ordenes.show', $orden) }}" class="w-full bg-gray-100 hover:bg-gray-200 text-[#1E3A5F] px-6 py-3 rounded-xl transition-all duration-200 ease-in-out text-center font-medium text-sm mb-2">
+                            <a href="{{ route('ordenes.show', $orden) }}" class="w-full bg-gray-100 hover:bg-gray-200 text-[#1E3A5F] px-6 py-3 rounded-xl transition-all duration-200 ease-in-out text-center font-medium text-sm">
                                 Ver Detalle
                             </a>
                             <a href="{{ route('ordenes.cierre', $orden) }}" class="w-full bg-[#1E3A5F] hover:bg-[#2C5282] text-white px-6 py-3 rounded-xl transition-all duration-200 ease-in-out text-center font-medium text-sm shadow-[0px_2px_8px_rgba(30,58,95,0.25)]">
