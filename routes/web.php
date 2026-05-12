@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/configuracion', [DashboardController::class, 'configuracion'])->name('admin.configuracion');
     
     // Rutas para Técnico (Estados y Cierre)
+    Route::post('/ordenes/bulk-assign', [OrdenTrabajoController::class, 'bulkAssignTecnico'])->name('ordenes.bulk-assign');
     Route::get('/ordenes/{orden}', [OrdenTrabajoController::class, 'show'])->name('ordenes.show');
     Route::patch('/ordenes/{orden}/estado', [OrdenTrabajoController::class, 'updateEstado'])->name('ordenes.update-estado');
     Route::patch('/ordenes/{orden}/tecnico', [OrdenTrabajoController::class, 'assignTecnico'])->name('ordenes.assign-tecnico');

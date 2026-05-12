@@ -318,4 +318,33 @@ class OrdenTrabajoController extends Controller
 
         return back()->with('success', 'Técnico ' . $tecnico->name . ' asignado correctamente a la orden.');
     }
+
+    // Asignar técnico a múltiples órdenes a la vez
+    public function bulkAssignTecnico(Request $request)
+    {
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'No autorizado');
+        }
+
+        $validated = $request->validate([
+            'usuario_id' => 'required|exists:users,id',
+            'orden_ids'  => 'required|array|min:1',
+            'orden_ids.*'=> 'integer|exists:orden_trabajos,id',
+        ]);
+
+        $tecnico = User::findOrFail($validated['usuario_id']);
+        if ($tecnico->role !== 'tecnico') {
+            return back()->withErrors(['usuario_id' => 'El usuario seleccionado no es un técnico.']);
+        }
+
+        $count = OrdenTrabajo::whereIn('id', $validated['orden_ids'])
+            ->whereNotIn('estado', ['finalizada', 'cancelada'])
+            ->update([
+                'usuario_id'       => $tecnico->id,
+                'estado'           => 'asignada',
+                'fecha_asignacion' => now(),
+            ]);
+
+        return back()->with('success', $count . ' orden(es) asignada(s) a ' . $tecnico->name . '.');
+    }
 }
