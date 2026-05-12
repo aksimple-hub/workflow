@@ -14,6 +14,14 @@ class OrdenTrabajo extends Model
         'uuid', 'cliente_id', 'usuario_id', 'titulo', 'descripcion', 'prioridad', 'estado', 'fecha_asignacion', 'fecha_entrega_prevista', 'observaciones', 'firma_path'
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'fecha_asignacion' => 'datetime',
+            'fecha_entrega_prevista' => 'datetime',
+        ];
+    }
+
     public function cliente() {
         return $this->belongsTo(Cliente::class);
     }
