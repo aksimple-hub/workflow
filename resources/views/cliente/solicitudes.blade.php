@@ -2,137 +2,181 @@
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
-    <!-- Sidebar -->
     @include('components.sidebar')
 
-    <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
+
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex justify-between items-center">
             <div>
-                <h1 class="text-4xl font-medium text-[#1E3A5F]">Mis Solicitudes</h1>
-                <p class="text-base text-gray-500 mt-1">Historial y estado de tus requerimientos</p>
+                <h1 class="text-4xl font-medium text-[#1E3A5F]">Mis Servicios</h1>
+                <p class="text-base text-gray-500 mt-1">Portal del Cliente</p>
             </div>
-            
-            <a href="{{ route('solicitud.nueva') }}" class="bg-[#10B981] hover:bg-[#059669] text-white px-6 py-3 rounded-xl shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-all duration-200 ease-in-out font-medium text-sm flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            <a href="{{ route('solicitud.nueva') }}"
+               class="bg-[#10B981] hover:bg-[#059669] text-white px-5 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Nueva Solicitud
             </a>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-6">
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-3 gap-6 mb-6">
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
-                    <p class="text-sm font-medium text-gray-500 mb-1">Total Solicitudes</p>
-                    <p class="text-3xl font-bold text-[#1E3A5F]">{{ $stats['total'] }}</p>
-                </div>
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
-                    <p class="text-sm font-medium text-gray-500 mb-1">En Proceso</p>
-                    <p class="text-3xl font-bold text-[#1D4ED8]">{{ $stats['en_proceso'] }}</p>
-                </div>
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
-                    <p class="text-sm font-medium text-gray-500 mb-1">Finalizadas</p>
-                    <p class="text-3xl font-bold text-[#10B981]">{{ $stats['finalizadas'] }}</p>
-                </div>
-            </div>
+        <main class="flex-1 overflow-y-auto p-6 space-y-8">
 
-            <div class="max-w-7xl mx-auto space-y-4">
-                
-                @forelse($ordenes as $orden)
+            {{-- ── SERVICIO ACTIVO ─────────────────────────────────────────── --}}
+            <section>
+                <h2 class="text-lg font-semibold text-[#1E3A5F] mb-3">Servicio Activo</h2>
+
+                @if($ordenActiva)
                 @php
-                    $badge = match($orden->estado) {
-                        'pendiente'  => ['Pendiente',        'bg-gray-100 text-gray-600 border-gray-200'],
-                        'asignada'   => ['Asignada',         'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]'],
-                        'en_camino'  => ['Técnico en camino','bg-[#DBEAFE] text-[#1D4ED8] border-[#BFDBFE]'],
-                        'en_proceso' => ['En curso',         'bg-blue-500 text-white border-blue-500'],
-                        'finalizada' => ['Finalizada',       'bg-[#D1FAE5] text-[#065F46] border-[#A7F3D0]'],
-                        'cancelada'  => ['Cancelada',        'bg-red-100 text-red-800 border-red-200'],
-                        default      => [ucfirst(str_replace('_', ' ', $orden->estado)), 'bg-gray-100 text-gray-600 border-gray-200'],
+                    $statusMsg = match($ordenActiva->estado) {
+                        'pendiente' => ['El servicio está pendiente de asignación.',        'text-gray-500',    'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'asignada'  => ['El técnico ha sido asignado a su servicio.',       'text-[#1D4ED8]',   'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'],
+                        'en_camino' => ['El técnico está en camino a su domicilio.',        'text-[#10B981]',   'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'],
+                        'en_proceso'=> ['El técnico está trabajando en su servicio.',       'text-[#D97706]',   'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z'],
+                        default     => ['Estado desconocido.', 'text-gray-500', 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                     };
-                    $tecnicoAsignado = $orden->tecnico && !in_array($orden->estado, ['pendiente', 'cancelada', 'finalizada']);
+                    $badge = match($ordenActiva->estado) {
+                        'pendiente'  => ['Pendiente',          'bg-gray-100 text-gray-600'],
+                        'asignada'   => ['Asignada',           'bg-[#FEF3C7] text-[#D97706]'],
+                        'en_camino'  => ['En camino',          'bg-[#D1FAE5] text-[#065F46]'],
+                        'en_proceso' => ['En proceso',         'bg-[#DBEAFE] text-[#1D4ED8]'],
+                        default      => [ucfirst($ordenActiva->estado), 'bg-gray-100 text-gray-600'],
+                    };
                 @endphp
 
-                <!-- Tarjeta de Solicitud -->
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 hover:border-[#10B981] transition-all duration-200 ease-in-out overflow-hidden">
+                <div class="bg-white rounded-2xl border-2 border-[#10B981] shadow-[0px_4px_16px_rgba(16,185,129,0.12)] p-6">
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
 
-                    <!-- Fila principal -->
-                    <div class="p-6 flex items-center justify-between gap-6">
-                        <div class="flex flex-col gap-1 flex-1 min-w-0">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-black text-gray-400 uppercase tracking-wider whitespace-nowrap">ORD-{{ str_pad($orden->id, 4, '0', STR_PAD_LEFT) }}</span>
-                                <h3 class="text-xl font-medium text-[#1E3A5F] truncate">{{ $orden->titulo }}</h3>
-                            </div>
-                            <p class="text-sm text-gray-600 truncate">{{ $orden->descripcion }}</p>
-                        </div>
-
-                        <div class="flex items-center gap-6 flex-shrink-0">
-                            <div class="text-right">
-                                <p class="text-xs text-gray-500">Fecha de Creación</p>
-                                <p class="text-sm font-medium text-[#1E3A5F]">{{ $orden->created_at->format('d/m/Y H:i') }}</p>
-                            </div>
-
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full border {{ $badge[1] }} whitespace-nowrap">
-                                {{ $badge[0] }}
-                            </span>
-
-                            @if(in_array($orden->estado, ['pendiente', 'asignada']))
-                            <form action="{{ route('ordenes.destroy', $orden) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta solicitud?');">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-800 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors text-sm font-medium">
-                                    Cancelar
-                                </button>
-                            </form>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Panel del técnico asignado -->
-                    @if($tecnicoAsignado)
-                    <div class="border-t border-gray-100 bg-[#F5F7FA] px-6 py-4 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-full bg-[#1E3A5F] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                                {{ substr($orden->tecnico->name, 0, 1) }}
+                        {{-- Icono + info --}}
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-[#D1FAE5] flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Técnico asignado</p>
-                                <p class="text-sm font-semibold text-[#1E3A5F]">
-                                    {{ $orden->tecnico->name }}
-                                    @if($orden->tecnico->perfil?->apellidos)
-                                        {{ $orden->tecnico->perfil->apellidos }}
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <h3 class="text-lg font-semibold text-[#1E3A5F]">{{ $ordenActiva->titulo }}</h3>
+                                    <span class="text-xs font-bold text-gray-400">#OT-{{ str_pad($ordenActiva->id, 3, '0', STR_PAD_LEFT) }}</span>
+                                </div>
+                                <div class="flex items-center gap-5 mt-2 flex-wrap text-sm text-gray-500">
+                                    @if($ordenActiva->tecnico)
+                                    <div>
+                                        <span class="text-xs text-gray-400 block">Técnico asignado</span>
+                                        <span class="font-medium text-[#1E3A5F]">{{ $ordenActiva->tecnico->name }}</span>
+                                    </div>
                                     @endif
+                                    <div>
+                                        <span class="text-xs text-gray-400 block">Estado</span>
+                                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full {{ $badge[1] }}">{{ $badge[0] }}</span>
+                                    </div>
+                                    @if($ordenActiva->fecha_entrega_prevista)
+                                    <div>
+                                        <span class="text-xs text-gray-400 block">Fecha prevista</span>
+                                        <span class="font-medium text-[#1E3A5F]">{{ \Carbon\Carbon::parse($ordenActiva->fecha_entrega_prevista)->format('d/m/Y') }}</span>
+                                    </div>
+                                    @endif
+                                </div>
+                                @if($ordenActiva->cliente?->direccion && $ordenActiva->cliente->direccion !== 'N/A')
+                                <p class="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    {{ $ordenActiva->cliente->direccion }}
                                 </p>
-                                @if($orden->tecnico->perfil?->telefono && $orden->tecnico->perfil->telefono !== 'N/A')
-                                <p class="text-xs text-gray-500 mt-0.5">{{ $orden->tecnico->perfil->telefono }}</p>
                                 @endif
                             </div>
                         </div>
 
-                        @if($orden->tecnico->perfil?->telefono && $orden->tecnico->perfil->telefono !== 'N/A')
-                        <a href="tel:{{ $orden->tecnico->perfil->telefono }}"
-                           class="flex items-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-xl font-medium text-sm transition-colors shadow-[0px_2px_8px_rgba(16,185,129,0.25)]">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                            Contactar
-                        </a>
-                        @else
-                        <span class="text-xs text-gray-400 italic">Teléfono no disponible</span>
-                        @endif
+                        {{-- Botones --}}
+                        <div class="flex items-center gap-3 flex-shrink-0">
+                            @if($ordenActiva->cliente?->direccion && $ordenActiva->cliente->direccion !== 'N/A')
+                            <a href="https://maps.google.com/?q={{ urlencode($ordenActiva->cliente->direccion) }}"
+                               target="_blank"
+                               class="px-4 py-2 rounded-xl border border-gray-200 text-sm font-medium text-[#1E3A5F] hover:bg-gray-50 transition-colors">
+                                Ver en Mapa
+                            </a>
+                            @endif
+                            @if($ordenActiva->tecnico?->perfil?->telefono && $ordenActiva->tecnico->perfil->telefono !== 'N/A')
+                            <a href="tel:{{ $ordenActiva->tecnico->perfil->telefono }}"
+                               class="px-5 py-2 rounded-xl bg-[#1E3A5F] hover:bg-[#2C5282] text-white text-sm font-semibold transition-colors">
+                                Contactar Técnico
+                            </a>
+                            @endif
+                        </div>
                     </div>
-                    @endif
 
+                    {{-- Barra de estado --}}
+                    <div class="mt-4 bg-[#F0FDF4] border border-[#BBF7D0] rounded-xl px-4 py-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0 {{ $statusMsg[1] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $statusMsg[2] }}"/></svg>
+                        <p class="text-sm {{ $statusMsg[1] }}">{{ $statusMsg[0] }}</p>
+                    </div>
                 </div>
-                @empty
-                <!-- Empty State -->
-                <div class="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
-                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                    <h3 class="text-xl font-medium text-[#1E3A5F] mb-2">Aún no tienes solicitudes</h3>
-                    <p class="text-gray-500 mb-6">Crea tu primera solicitud de servicio técnico haciendo clic en el botón.</p>
-                    <a href="{{ route('solicitud.nueva') }}" class="inline-flex bg-[#1E3A5F] hover:bg-[#2C5282] text-white px-6 py-3 rounded-lg transition-colors font-medium text-sm items-center gap-2">
-                        Comenzar
-                    </a>
-                </div>
-                @endforelse
 
-            </div>
+                @else
+                <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-8 text-center">
+                    <svg class="w-10 h-10 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p class="text-sm text-gray-400">No tienes ningún servicio activo en este momento.</p>
+                </div>
+                @endif
+            </section>
+
+            {{-- ── HISTORIAL DE SERVICIOS ──────────────────────────────────── --}}
+            <section id="historial">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <h2 class="text-lg font-semibold text-[#1E3A5F]">Historial de Servicios</h2>
+                        <p class="text-xs text-gray-400">Servicios completados anteriormente</p>
+                    </div>
+                </div>
+
+                @if($historial->isEmpty())
+                <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-10 text-center">
+                    <svg class="w-10 h-10 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p class="text-sm text-gray-400">Aún no tienes servicios completados.</p>
+                </div>
+                @else
+                <div class="grid grid-cols-2 gap-4">
+                    @foreach($historial as $orden)
+                    @php $stars = (int)($orden->satisfaccion ?? 0); @endphp
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5 hover:border-[#10B981] transition-colors">
+                        <div class="flex items-start justify-between gap-2 mb-3">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-[#D1FAE5] flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <svg class="w-4 h-4 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-semibold text-[#1E3A5F] leading-tight">{{ $orden->titulo }}</h3>
+                                    <span class="text-xs text-gray-400">#OT-{{ str_pad($orden->id, 3, '0', STR_PAD_LEFT) }}</span>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-[#D1FAE5] text-[#065F46] flex-shrink-0">Finalizado</span>
+                        </div>
+
+                        <div class="space-y-1 text-xs text-gray-500 mb-3">
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                {{ $orden->updated_at->format('d M Y') }}
+                            </div>
+                            @if($orden->tecnico)
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                Técnico: {{ $orden->tecnico->name }}
+                            </div>
+                            @endif
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-0.5">
+                                @for($s = 1; $s <= 5; $s++)
+                                <svg class="w-4 h-4 {{ $s <= $stars ? 'text-[#F59E0B]' : 'text-gray-200' }}" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                @endfor
+                            </div>
+                            <a href="{{ route('cliente.orden.show', $orden) }}"
+                               class="text-xs font-medium text-[#10B981] hover:underline">Ver detalles</a>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            </section>
+
         </main>
     </div>
 </div>
