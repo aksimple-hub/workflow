@@ -40,13 +40,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/configuracion', [DashboardController::class, 'configuracion'])->name('admin.configuracion');
     
     // Rutas para Técnico (Estados y Cierre)
+    Route::get('/ordenes/{orden}', [OrdenTrabajoController::class, 'show'])->name('ordenes.show');
     Route::patch('/ordenes/{orden}/estado', [OrdenTrabajoController::class, 'updateEstado'])->name('ordenes.update-estado');
     Route::patch('/ordenes/{orden}/tecnico', [OrdenTrabajoController::class, 'assignTecnico'])->name('ordenes.assign-tecnico');
     Route::get('/ordenes/{orden}/cierre', [OrdenTrabajoController::class, 'showCierre'])->name('ordenes.cierre');
     Route::post('/ordenes/{orden}/cerrar', [OrdenTrabajoController::class, 'cerrar'])->name('ordenes.cerrar');
 
     // Rutas para Cliente (Nueva Solicitud)
-    Route::view('/solicitud/nueva', 'cliente.nueva-solicitud')->name('solicitud.nueva');
+    Route::get('/solicitud/nueva', [OrdenTrabajoController::class, 'nuevaSolicitud'])->name('solicitud.nueva');
 });
 
 // Rutas de registro de técnicos (públicas)
