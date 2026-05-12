@@ -13,8 +13,21 @@ class OrdenTrabajoController extends Controller
 {
     public function index()
     {
-        // Redirigir al dashboard según el rol, la vista de agenda o rutas manejará el listado
         return redirect()->route('dashboard');
+    }
+
+    public function nuevaSolicitud()
+    {
+        $user = Auth::user();
+        if ($user->role !== 'cliente') {
+            abort(403);
+        }
+
+        $hoyCount = OrdenTrabajo::where('cliente_id', $user->cliente_id)
+            ->whereDate('created_at', today())
+            ->count();
+
+        return view('cliente.nueva-solicitud', compact('hoyCount'));
     }
 
     public function create()
@@ -42,11 +55,32 @@ class OrdenTrabajoController extends Controller
         // Para clientes, asignar automáticamente su cliente_id
         if ($user->role === 'cliente') {
             $validated = $request->validate([
-                'titulo'     => 'required|string|max:255',
-                'descripcion'=> 'nullable|string',
-                'prioridad'  => 'required|in:baja,media,alta',
+                'titulo'           => 'required|string|max:255',
+                'descripcion'      => 'nullable|string',
+                'prioridad'        => 'required|in:baja,media,alta',
+                'fecha_preferida'  => 'required|date|after_or_equal:tomorrow',
+                'horario_preferido'=> 'required|in:mañana,mediodia,tarde,sin_preferencia',
             ]);
-            
+
+            // Verificar que sea día laborable (lunes-viernes)
+            $fecha = \Carbon\Carbon::parse($validated['fecha_preferida']);
+            if ($fecha->isWeekend()) {
+                return back()->withErrors([
+                    'fecha_preferida' => 'La fecha debe ser un día laborable (lunes a viernes).',
+                ])->withInput();
+            }
+
+            // Límite de 3 solicitudes por día
+            $hoyCount = OrdenTrabajo::where('cliente_id', $user->cliente_id)
+                ->whereDate('created_at', today())
+                ->count();
+
+            if ($hoyCount >= 3) {
+                return back()->withErrors([
+                    'limite' => 'Has alcanzado el límite de 3 solicitudes por día. Podrás crear nuevas solicitudes mañana.',
+                ]);
+            }
+
             // Si el cliente no tiene un cliente_id asociado, crear uno automáticamente
             if (!$user->cliente_id) {
                 $cliente = Cliente::create([
@@ -75,16 +109,25 @@ class OrdenTrabajoController extends Controller
             $usuario_id = $validated['usuario_id'];
         }
 
+        $horarioLabel = match($validated['horario_preferido'] ?? null) {
+            'mañana'          => 'Mañana (8:00 – 13:00)',
+            'mediodia'        => 'Mediodía (13:00 – 16:00)',
+            'tarde'           => 'Tarde (16:00 – 21:00)',
+            'sin_preferencia' => 'Sin preferencia',
+            default           => null,
+        };
+
         OrdenTrabajo::create([
-            'uuid'         => (string) Str::uuid(),
-            'cliente_id'   => $cliente_id,
-            'usuario_id'   => $usuario_id,
-            'titulo'       => $validated['titulo'],
-            'descripcion'  => $validated['descripcion'],
-            'prioridad'    => $validated['prioridad'],
-            // Lógica de estados inicial
-            'estado'       => $usuario_id ? 'asignada' : 'pendiente',
-            'fecha_asignacion' => $usuario_id ? now() : null,
+            'uuid'                   => (string) Str::uuid(),
+            'cliente_id'             => $cliente_id,
+            'usuario_id'             => $usuario_id,
+            'titulo'                 => $validated['titulo'],
+            'descripcion'            => $validated['descripcion'],
+            'prioridad'              => $validated['prioridad'],
+            'estado'                 => $usuario_id ? 'asignada' : 'pendiente',
+            'fecha_asignacion'       => $usuario_id ? now() : null,
+            'fecha_entrega_prevista' => $validated['fecha_preferida'] ?? null,
+            'observaciones'          => $horarioLabel ? 'Horario preferido: ' . $horarioLabel : null,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Orden de trabajo creada correctamente.');

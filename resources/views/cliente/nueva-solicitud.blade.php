@@ -18,11 +18,47 @@
         </header>
 
         <main class="flex-1 overflow-y-auto p-6">
-            <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
-                <form action="{{ route('ordenes.store') }}" method="POST">
+            <div class="max-w-4xl mx-auto space-y-4">
+
+            {{-- Aviso de límite diario --}}
+            @php $restantes = 3 - $hoyCount; @endphp
+
+            @if($hoyCount >= 3)
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+                <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                <div>
+                    <p class="text-sm font-semibold text-red-800">Límite diario alcanzado</p>
+                    <p class="text-sm text-red-700 mt-0.5">Has enviado las 3 solicitudes permitidas hoy. Podrás crear nuevas solicitudes mañana.</p>
+                </div>
+            </div>
+            @elseif($hoyCount === 2)
+            <div class="bg-[#FEF3C7] border border-[#FDE68A] rounded-xl p-4 flex items-start gap-3">
+                <svg class="w-5 h-5 text-[#D97706] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                <div>
+                    <p class="text-sm font-semibold text-[#92400E]">Solo te queda 1 solicitud para hoy</p>
+                    <p class="text-sm text-[#92400E] mt-0.5">Has usado {{ $hoyCount }} de 3 solicitudes permitidas hoy.</p>
+                </div>
+            </div>
+            @elseif($hoyCount === 1)
+            <div class="bg-[#DBEAFE] border border-[#BFDBFE] rounded-xl p-4 flex items-start gap-3">
+                <svg class="w-5 h-5 text-[#1D4ED8] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div>
+                    <p class="text-sm font-semibold text-[#1E3A5F]">Te quedan {{ $restantes }} solicitudes para hoy</p>
+                    <p class="text-sm text-[#1D4ED8] mt-0.5">Has usado {{ $hoyCount }} de 3 solicitudes permitidas hoy.</p>
+                </div>
+            </div>
+            @endif
+
+            @error('limite')
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+                <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                <p class="text-sm font-medium text-red-800">{{ $message }}</p>
+            </div>
+            @enderror
+
+            <div class="bg-white p-8 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
+                <form action="{{ route('ordenes.store') }}" method="POST" {{ $hoyCount >= 3 ? 'onsubmit=return false' : '' }}>
                     @csrf
-                    <!-- El cliente_id se asigna automáticamente desde la sesión del usuario -->
-                    
                     <div class="grid grid-cols-2 gap-6">
                         <!-- Título (Ocupa 2 columnas) -->
                         <div class="col-span-2">
@@ -62,15 +98,66 @@
                                 class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl p-4 resize-none focus:outline-none transition-colors text-base"
                                 placeholder="Por favor, describe con detalle el problema o la necesidad..."></textarea>
                         </div>
+
+                        <!-- Separador cita -->
+                        <div class="col-span-2 border-t border-gray-100 pt-4">
+                            <p class="text-sm font-semibold text-[#1E3A5F] mb-1">Cita con el técnico</p>
+                            <p class="text-xs text-gray-500">Disponibilidad: lunes a viernes · 8:00 – 21:00</p>
+                        </div>
+
+                        <!-- Fecha -->
+                        <div>
+                            <label for="fecha_preferida" class="block text-sm font-medium text-[#1E3A5F] mb-2">Fecha *</label>
+                            <input type="date" id="fecha_preferida" name="fecha_preferida" required
+                                min="{{ now()->addDay()->toDateString() }}"
+                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-3 focus:outline-none transition-colors text-base"
+                                value="{{ old('fecha_preferida') }}">
+                            <p id="fecha-error" class="text-xs text-red-500 mt-1 hidden">Solo se permiten días de lunes a viernes.</p>
+                            @error('fecha_preferida')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Horario de preferencia -->
+                        <div>
+                            <label for="horario_preferido" class="block text-sm font-medium text-[#1E3A5F] mb-2">Horario de preferencia *</label>
+                            <select id="horario_preferido" name="horario_preferido" required
+                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
+                                <option value="" disabled selected>Selecciona un horario...</option>
+                                <option value="mañana" {{ old('horario_preferido') === 'mañana' ? 'selected' : '' }}>Mañana (8:00 – 13:00)</option>
+                                <option value="mediodia" {{ old('horario_preferido') === 'mediodia' ? 'selected' : '' }}>Mediodía (13:00 – 16:00)</option>
+                                <option value="tarde" {{ old('horario_preferido') === 'tarde' ? 'selected' : '' }}>Tarde (16:00 – 21:00)</option>
+                                <option value="sin_preferencia" {{ old('horario_preferido') === 'sin_preferencia' ? 'selected' : '' }}>Sin preferencia</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="mt-8 flex justify-end">
-                        <button type="submit" 
-                            class="bg-[#10B981] hover:bg-[#059669] text-white px-8 py-4 rounded-xl shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-all font-medium text-base">
+                    <script>
+                        document.getElementById('fecha_preferida').addEventListener('change', function () {
+                            const date = new Date(this.value + 'T00:00:00');
+                            const day = date.getDay(); // 0=dom, 6=sab
+                            const error = document.getElementById('fecha-error');
+                            if (day === 0 || day === 6) {
+                                error.classList.remove('hidden');
+                                this.value = '';
+                            } else {
+                                error.classList.add('hidden');
+                            }
+                        });
+                    </script>
+
+                    <div class="mt-8 flex items-center justify-between">
+                        <p class="text-xs text-gray-400">
+                            Solicitudes usadas hoy: <span class="font-semibold {{ $hoyCount >= 3 ? 'text-red-500' : 'text-[#1E3A5F]' }}">{{ $hoyCount }} / 3</span>
+                        </p>
+                        <button type="submit" {{ $hoyCount >= 3 ? 'disabled' : '' }}
+                            class="{{ $hoyCount >= 3 ? 'bg-gray-300 cursor-not-allowed text-gray-500' : 'bg-[#10B981] hover:bg-[#059669] text-white shadow-[0px_2px_8px_rgba(16,185,129,0.25)]' }} px-8 py-4 rounded-xl transition-all font-medium text-base">
                             Enviar Solicitud
                         </button>
                     </div>
                 </form>
+            </div>
+
             </div>
         </main>
     </div>
