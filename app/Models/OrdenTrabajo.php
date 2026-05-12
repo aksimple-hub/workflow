@@ -11,7 +11,9 @@ class OrdenTrabajo extends Model
     use HasFactory;
 
     protected $fillable = [
-        'uuid', 'cliente_id', 'usuario_id', 'titulo', 'descripcion', 'prioridad', 'estado', 'fecha_asignacion', 'fecha_entrega_prevista', 'observaciones', 'firma_path'
+        'uuid', 'cliente_id', 'usuario_id', 'titulo', 'descripcion', 'prioridad', 'estado',
+        'fecha_asignacion', 'fecha_entrega_prevista', 'observaciones', 'recomendaciones',
+        'satisfaccion', 'hora_inicio', 'hora_fin', 'firma_path',
     ];
 
     protected function casts(): array
