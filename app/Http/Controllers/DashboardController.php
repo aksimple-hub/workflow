@@ -51,6 +51,28 @@ class DashboardController extends Controller
         }
     }
 
+    public function historialTecnico()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if ($user->role !== 'tecnico') {
+            abort(403);
+        }
+
+        $ordenes = OrdenTrabajo::with('cliente')
+            ->where('usuario_id', $user->id)
+            ->whereIn('estado', ['finalizada', 'cancelada'])
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $stats = [
+            'finalizadas' => $ordenes->where('estado', 'finalizada')->count(),
+            'canceladas'  => $ordenes->where('estado', 'cancelada')->count(),
+            'total'       => $ordenes->count(),
+        ];
+
+        return view('tecnico.historial', compact('ordenes', 'stats'));
+    }
+
     public function tecnicos()
     {
         $tecnicos = \App\Models\User::where('role', 'tecnico')->get();

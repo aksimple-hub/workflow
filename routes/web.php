@@ -48,6 +48,9 @@ Route::middleware('auth')->group(function () {
 
     // Rutas para Cliente (Nueva Solicitud)
     Route::get('/solicitud/nueva', [OrdenTrabajoController::class, 'nuevaSolicitud'])->name('solicitud.nueva');
+
+    // Rutas para Técnico
+    Route::get('/mi-historial', [DashboardController::class, 'historialTecnico'])->name('tecnico.historial');
 });
 
 // Rutas de registro de técnicos (públicas)
