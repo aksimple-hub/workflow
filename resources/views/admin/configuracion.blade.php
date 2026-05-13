@@ -5,12 +5,17 @@
     @include('components.sidebar')
 
     <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-200 py-4 px-6 flex justify-between items-center">
-            <div>
-                <h1 class="text-4xl font-medium text-[#1E3A5F]">Configuración del Sistema</h1>
-                <p class="text-base text-gray-500 mt-1">Ajustes generales y preferencias</p>
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-3 min-w-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div>
+                    <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Configuración del Sistema</h1>
+                    <p class="text-sm md:text-base text-gray-500 mt-0.5">Ajustes generales y preferencias</p>
+                </div>
             </div>
-            <button class="bg-[#10B981] hover:bg-[#059669] text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+            <button class="flex-shrink-0 bg-[#10B981] hover:bg-[#059669] text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
                 Guardar Cambios
             </button>
         </header>
@@ -24,7 +29,7 @@
                         Datos de la Empresa
                     </h2>
                     
-                    <div class="grid grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Empresa</label>
                             <input type="text" value="WorkFlow S.L." class="w-full bg-[#F5F7FA] border border-transparent focus:border-[#10B981] rounded-lg px-4 py-2 focus:outline-none transition-colors text-sm">

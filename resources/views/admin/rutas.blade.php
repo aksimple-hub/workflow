@@ -7,9 +7,14 @@
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-200 py-4 px-6">
-            <h1 class="text-4xl font-medium text-[#1E3A5F]">Asignación de Rutas</h1>
-            <p class="text-base text-gray-500 mt-1">Crear y asignar órdenes de trabajo a los técnicos</p>
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div>
+                <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Asignación de Rutas</h1>
+                <p class="text-sm md:text-base text-gray-500 mt-0.5">Crear y asignar órdenes de trabajo a los técnicos</p>
+            </div>
         </header>
 
         <main class="flex-1 overflow-hidden p-6">

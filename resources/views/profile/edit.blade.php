@@ -10,19 +10,19 @@
 <body class="bg-[#F5F7FA] font-sans antialiased text-gray-900">
 
     <!-- Top Navigation -->
-    <nav class="bg-white border-b border-gray-200 py-4 px-8 flex justify-between items-center">
-        <div class="flex items-center gap-6">
-            <a href="{{ route('dashboard') }}" class="bg-[#214371] px-5 py-2 rounded-xl hover:bg-[#1E3A5F] transition-colors">
-                <span class="text-white text-xl font-bold tracking-tight">Workflow</span>
+    <nav class="bg-white border-b border-gray-200 py-3 px-4 sm:px-8 flex justify-between items-center gap-3 flex-wrap">
+        <div class="flex items-center gap-3 sm:gap-6 min-w-0">
+            <a href="{{ route('dashboard') }}" class="bg-[#214371] px-3 sm:px-5 py-2 rounded-xl hover:bg-[#1E3A5F] transition-colors flex-shrink-0">
+                <span class="text-white text-base sm:text-xl font-bold tracking-tight">Workflow</span>
             </a>
             <div>
-                <h1 class="text-xl font-bold text-[#1E3A5F]">Mi Perfil</h1>
-                <p class="text-xs text-gray-500">Configuración de cuenta</p>
+                <h1 class="text-base sm:text-xl font-bold text-[#1E3A5F]">Mi Perfil</h1>
+                <p class="text-xs text-gray-500 hidden sm:block">Configuración de cuenta</p>
             </div>
         </div>
         <div>
-            <a href="{{ route('dashboard') }}" class="text-sm font-medium text-gray-600 bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                Volver al Dashboard
+            <a href="{{ route('dashboard') }}" class="text-sm font-medium text-gray-600 bg-white border border-gray-300 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap">
+                Volver
             </a>
         </div>
     </nav>

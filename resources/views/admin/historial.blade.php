@@ -5,16 +5,20 @@
     @include('components.sidebar')
 
     <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-200 py-4 px-6 flex justify-between items-center">
-            <div>
-                <h1 class="text-4xl font-medium text-[#1E3A5F]">Historial de Órdenes</h1>
-                <p class="text-base text-gray-500 mt-1">Registro completo de todos los trabajos realizados</p>
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-3 min-w-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div>
+                    <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Historial de Órdenes</h1>
+                    <p class="text-sm md:text-base text-gray-500 mt-0.5 hidden sm:block">Registro completo de todos los trabajos realizados</p>
+                </div>
             </div>
-
-            <div class="flex gap-3">
-                <div class="relative">
+            <div class="flex gap-3 w-full sm:w-auto">
+                <div class="relative flex-1 sm:flex-none">
                     <input type="text" id="searchInput" placeholder="Buscar orden..."
-                        class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#10B981] w-64">
+                        class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#10B981] w-full sm:w-64">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>

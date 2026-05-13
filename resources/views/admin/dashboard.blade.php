@@ -7,12 +7,17 @@
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-200 py-4 px-6 flex justify-between items-center">
-            <div>
-                <h1 class="text-4xl font-medium text-[#1E3A5F]">Panel de Control</h1>
-                <p class="text-base text-gray-500 mt-1">Gestión de Órdenes de Trabajo</p>
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-3 min-w-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div>
+                    <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Panel de Control</h1>
+                    <p class="text-sm md:text-base text-gray-500 mt-0.5">Gestión de Órdenes de Trabajo</p>
+                </div>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 flex-shrink-0">
                 <button type="button" onclick="toggleFiltros()"
                     class="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-white rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ ($estado || $prioridad) ? 'border-[#10B981] text-[#10B981]' : '' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
@@ -91,7 +96,7 @@
             </form>
 
             <!-- Stats Grid -->
-            <div class="grid grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
                 <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
                     <p class="text-sm font-medium text-gray-500 mb-1">Total Órdenes</p>
                     <p class="text-3xl font-bold text-[#1E3A5F]">{{ $stats['total'] ?? 0 }}</p>

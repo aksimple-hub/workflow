@@ -6,13 +6,18 @@
 
     <div class="flex-1 flex flex-col overflow-hidden">
 
-        <header class="bg-white border-b border-gray-200 py-4 px-6 flex justify-between items-center">
-            <div>
-                <h1 class="text-4xl font-medium text-[#1E3A5F]">Mis Servicios</h1>
-                <p class="text-base text-gray-500 mt-1">Portal del Cliente</p>
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-3 min-w-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div>
+                    <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Mis Servicios</h1>
+                    <p class="text-sm md:text-base text-gray-500 mt-0.5">Portal del Cliente</p>
+                </div>
             </div>
             <a href="{{ route('solicitud.nueva') }}"
-               class="bg-[#10B981] hover:bg-[#059669] text-white px-5 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-all">
+               class="flex-shrink-0 bg-[#10B981] hover:bg-[#059669] text-white px-5 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Nueva Solicitud
             </a>
@@ -130,7 +135,7 @@
                     <p class="text-sm text-gray-400">Aún no tienes servicios completados.</p>
                 </div>
                 @else
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach($historial as $orden)
                     @php $stars = (int)($orden->satisfaccion ?? 0); @endphp
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5 hover:border-[#10B981] transition-colors">
