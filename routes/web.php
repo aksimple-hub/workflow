@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/tecnicos/create', [DashboardController::class, 'createTecnico'])->name('admin.tecnicos.create');
     Route::post('/tecnicos', [DashboardController::class, 'storeTecnico'])->name('admin.tecnicos.store');
     Route::get('/tecnicos/{id}', [DashboardController::class, 'tecnicoShow'])->name('admin.tecnico.show');
+    Route::patch('/tecnicos/{id}', [DashboardController::class, 'updateTecnico'])->name('admin.tecnico.update');
+    Route::delete('/tecnicos/{id}', [DashboardController::class, 'destroyTecnico'])->name('admin.tecnico.destroy');
     Route::get('/clientes-lista', [DashboardController::class, 'clientes'])->name('admin.clientes');
     Route::get('/clientes-lista/create', [DashboardController::class, 'createCliente'])->name('admin.clientes.create');
     Route::post('/clientes-lista', [DashboardController::class, 'storeCliente'])->name('admin.clientes.store');

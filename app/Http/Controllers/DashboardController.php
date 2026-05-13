@@ -118,8 +118,44 @@ class DashboardController extends Controller
     public function tecnicoShow($id)
     {
         $tecnico = \App\Models\User::where('role', 'tecnico')->findOrFail($id);
-        $ordenes = OrdenTrabajo::where('usuario_id', $tecnico->id)->latest()->take(5)->get();
-        return view('admin.tecnico-show', compact('tecnico', 'ordenes'));
+        $perfil  = \App\Models\Tecnico::find($id);
+        $ordenes = OrdenTrabajo::where('usuario_id', $tecnico->id)->latest()->get();
+        return view('admin.tecnico-show', compact('tecnico', 'perfil', 'ordenes'));
+    }
+
+    public function updateTecnico(\Illuminate\Http\Request $request, $id)
+    {
+        $tecnico = \App\Models\User::where('role', 'tecnico')->findOrFail($id);
+        $perfil  = \App\Models\Tecnico::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'apellidos'   => 'required|string|max:255',
+            'email'       => 'required|email|max:255|unique:users,email,' . $tecnico->id,
+            'telefono'    => 'required|string|max:20',
+            'direccion'   => 'required|string|max:255',
+            'dni_nie'     => 'required|string|max:20|unique:tecnicos,dni_nie,' . $id,
+            'experiencia' => 'nullable|string',
+        ]);
+
+        $tecnico->update(['name' => $validated['name'], 'email' => $validated['email']]);
+        $perfil->update([
+            'nombre'      => $validated['name'],
+            'apellidos'   => $validated['apellidos'],
+            'dni_nie'     => $validated['dni_nie'],
+            'telefono'    => $validated['telefono'],
+            'direccion'   => $validated['direccion'],
+            'experiencia' => $validated['experiencia'],
+        ]);
+
+        return redirect()->route('admin.tecnico.show', $id)->with('success', 'Datos del técnico actualizados correctamente.');
+    }
+
+    public function destroyTecnico($id)
+    {
+        $tecnico = \App\Models\User::where('role', 'tecnico')->findOrFail($id);
+        $tecnico->update(['is_approved' => false]);
+        return redirect()->route('admin.tecnicos')->with('success', 'Técnico "' . $tecnico->name . '" dado de baja correctamente.');
     }
 
     public function clienteShow($id)
