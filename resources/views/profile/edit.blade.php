@@ -323,6 +323,35 @@
             switchTab('tab-info');
             toggleSection('edit-profile');
         @endif
+
+        // Toast de notificación
+        function showToast(message, type) {
+            const colors = type === 'success'
+                ? 'bg-[#10B981] text-white'
+                : 'bg-red-500 text-white';
+            const icon = type === 'success'
+                ? '<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
+                : '<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+
+            const toast = document.createElement('div');
+            toast.className = `fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-lg ${colors} transition-all duration-300 translate-y-0 opacity-100`;
+            toast.innerHTML = `${icon}<span class="text-sm font-medium">${message}</span>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-1rem)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        @if(session('status') === 'password-updated')
+            showToast('Contraseña actualizada correctamente.', 'success');
+        @elseif(session('status') === 'profile-updated')
+            showToast('Perfil actualizado correctamente.', 'success');
+        @elseif(session('status') === 'photo-updated')
+            showToast('Foto de perfil actualizada.', 'success');
+        @endif
     </script>
 </body>
 </html>

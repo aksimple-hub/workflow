@@ -28,16 +28,6 @@
 
         <div class="flex items-center gap-4">
             <x-primary-button>Guardar</x-primary-button>
-
-            @if (session('status') === 'password-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >Contraseña actualizada correctamente.</p>
-            @endif
         </div>
     </form>
 </section>
