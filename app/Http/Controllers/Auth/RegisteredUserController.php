@@ -56,6 +56,8 @@ class RegisteredUserController extends Controller
             'direccion' => $request->direccion,
         ]);
 
+        $user->update(['cliente_id' => $user->id]);
+
         event(new Registered($user));
 
         // Auth::login($user); // No auto-login until approved

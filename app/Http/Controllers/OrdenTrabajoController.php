@@ -29,7 +29,7 @@ class OrdenTrabajoController extends Controller
             ->whereDate('created_at', today())
             ->count();
 
-        $cliente = $user->cliente_id ? Cliente::find($user->cliente_id) : null;
+        $cliente = Cliente::find($user->cliente_id ?? $user->id);
 
         return view('cliente.nueva-solicitud', compact('hoyCount', 'cliente'));
     }
@@ -62,18 +62,9 @@ class OrdenTrabajoController extends Controller
                 'titulo'             => 'required|string|max:255',
                 'descripcion'        => 'nullable|string',
                 'prioridad'          => 'required|in:baja,media,alta',
-                'fecha_preferida'    => 'required|date|after_or_equal:tomorrow',
                 'horario_preferido'  => 'required|in:mañana,mediodia,tarde,sin_preferencia',
                 'direccion_servicio' => 'nullable|string|max:500',
             ]);
-
-            // Verificar que sea día laborable (lunes-viernes)
-            $fecha = \Carbon\Carbon::parse($validated['fecha_preferida']);
-            if ($fecha->isWeekend()) {
-                return back()->withErrors([
-                    'fecha_preferida' => 'La fecha debe ser un día laborable (lunes a viernes).',
-                ])->withInput();
-            }
 
             // Límite de 3 solicitudes por día
             $hoyCount = OrdenTrabajo::where('cliente_id', $user->cliente_id)
@@ -140,7 +131,6 @@ class OrdenTrabajoController extends Controller
             'prioridad'              => $validated['prioridad'],
             'estado'                 => $usuario_id ? 'asignada' : 'pendiente',
             'fecha_asignacion'       => $usuario_id ? now() : null,
-            'fecha_entrega_prevista' => $validated['fecha_preferida'] ?? null,
             'observaciones'          => $horarioLabel ? 'Horario preferido: ' . $horarioLabel : null,
         ]);
 
