@@ -40,10 +40,10 @@
                 <input type="hidden" name="firma_base64" id="firma_base64">
                 <input type="hidden" name="tareas_json" id="tareas_json">
 
-                <div class="grid grid-cols-5 gap-5 max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-5 max-w-7xl mx-auto">
 
                     {{-- ====== COLUMNA IZQUIERDA (3/5) ====== --}}
-                    <div class="col-span-3 space-y-5">
+                    <div class="lg:col-span-3 space-y-5">
 
                         {{-- Tareas Realizadas --}}
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
@@ -110,7 +110,7 @@
                     </div>
 
                     {{-- ====== COLUMNA DERECHA (2/5) ====== --}}
-                    <div class="col-span-2 space-y-5">
+                    <div class="lg:col-span-2 space-y-5">
 
                         {{-- Comentarios del Técnico --}}
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">

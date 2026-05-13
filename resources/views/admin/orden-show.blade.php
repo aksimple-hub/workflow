@@ -33,10 +33,10 @@
         </header>
 
         <main class="flex-1 overflow-y-auto p-6">
-            <div class="max-w-5xl mx-auto grid grid-cols-3 gap-5">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-5">
 
                 {{-- ── COLUMNA IZQUIERDA (2/3) ── --}}
-                <div class="col-span-2 space-y-5">
+                <div class="lg:col-span-2 space-y-5">
 
                     {{-- Descripción --}}
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6">
@@ -87,7 +87,7 @@
                 </div>
 
                 {{-- ── COLUMNA DERECHA (1/3) ── --}}
-                <div class="col-span-1 space-y-5">
+                <div class="lg:col-span-1 space-y-5">
 
                     {{-- Info del cliente --}}
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">

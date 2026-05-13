@@ -40,6 +40,13 @@
         <div class="w-full lg:w-5/12 flex flex-col justify-center items-center px-10 py-6 bg-gray-50 overflow-y-auto">
 
             <div class="w-full max-w-md">
+                <!-- Logo (solo móvil) -->
+                <div class="lg:hidden flex justify-center mb-6">
+                    <div class="bg-[#214371] px-6 py-3 rounded-xl shadow-lg">
+                        <span class="text-white text-2xl font-bold tracking-tight">Workflow</span>
+                    </div>
+                </div>
+
                 <h2 class="text-3xl font-bold text-gray-900 mb-1">Bienvenido de nuevo</h2>
                 <p class="text-gray-500 mb-4">Ingresa tus credenciales para continuar</p>
 
