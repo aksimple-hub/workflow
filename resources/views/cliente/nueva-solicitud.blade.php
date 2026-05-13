@@ -155,25 +155,12 @@
 
                         <!-- Separador cita -->
                         <div class="col-span-2 border-t border-gray-100 pt-4">
-                            <p class="text-sm font-semibold text-[#1E3A5F] mb-1">Cita con el técnico</p>
-                            <p class="text-xs text-gray-500">Disponibilidad: lunes a viernes · 8:00 – 21:00</p>
-                        </div>
-
-                        <!-- Fecha -->
-                        <div>
-                            <label for="fecha_preferida" class="block text-sm font-medium text-[#1E3A5F] mb-2">Fecha *</label>
-                            <input type="date" id="fecha_preferida" name="fecha_preferida" required
-                                min="{{ now()->addDay()->toDateString() }}"
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-3 focus:outline-none transition-colors text-base"
-                                value="{{ old('fecha_preferida') }}">
-                            <p id="fecha-error" class="text-xs text-red-500 mt-1 hidden">Solo se permiten días de lunes a viernes.</p>
-                            @error('fecha_preferida')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
+                            <p class="text-sm font-semibold text-[#1E3A5F] mb-1">Preferencia de horario</p>
+                            <p class="text-xs text-gray-500">El administrador asignará la fecha definitiva de la visita</p>
                         </div>
 
                         <!-- Horario de preferencia -->
-                        <div>
+                        <div class="col-span-2">
                             <label for="horario_preferido" class="block text-sm font-medium text-[#1E3A5F] mb-2">Horario de preferencia *</label>
                             <select id="horario_preferido" name="horario_preferido" required
                                 class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
@@ -187,18 +174,6 @@
                     </div>
 
                     <script>
-                        document.getElementById('fecha_preferida').addEventListener('change', function () {
-                            const date = new Date(this.value + 'T00:00:00');
-                            const day = date.getDay(); // 0=dom, 6=sab
-                            const error = document.getElementById('fecha-error');
-                            if (day === 0 || day === 6) {
-                                error.classList.remove('hidden');
-                                this.value = '';
-                            } else {
-                                error.classList.add('hidden');
-                            }
-                        });
-
                         function openAddressEdit() {
                             document.getElementById('address-display').classList.add('hidden');
                             document.getElementById('address-edit').classList.remove('hidden');
