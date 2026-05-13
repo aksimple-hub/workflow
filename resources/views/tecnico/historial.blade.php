@@ -5,15 +5,20 @@
     @include('components.sidebar')
 
     <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-200 py-4 px-6">
-            <h1 class="text-4xl font-medium text-[#1E3A5F]">Mi Historial</h1>
-            <p class="text-base text-gray-500 mt-1">Órdenes finalizadas y canceladas</p>
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div>
+                <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Mi Historial</h1>
+                <p class="text-sm md:text-base text-gray-500 mt-0.5">Órdenes finalizadas y canceladas</p>
+            </div>
         </header>
 
         <main class="flex-1 overflow-y-auto p-6">
 
             {{-- Stats --}}
-            <div class="grid grid-cols-3 gap-5 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-6">
                 <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
                     <p class="text-sm text-gray-500 mb-1">Total trabajos</p>
                     <p class="text-3xl font-bold text-[#1E3A5F]">{{ $stats['total'] }}</p>
@@ -34,7 +39,7 @@
                 @php
                     $finalizada = $orden->estado === 'finalizada';
                 @endphp
-                <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5 flex items-center justify-between gap-6">
+                <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5 flex items-start sm:items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
                     <div class="flex items-center gap-4 min-w-0">
                         <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 {{ $finalizada ? 'bg-[#D1FAE5]' : 'bg-red-100' }}">
                             @if($finalizada)

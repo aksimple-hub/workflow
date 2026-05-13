@@ -6,8 +6,12 @@
 
     <div class="flex-1 flex flex-col overflow-hidden">
         <!-- Header -->
-        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between flex-shrink-0">
-            <div>
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3 justify-between flex-shrink-0 flex-wrap">
+            <div class="flex items-center gap-3 min-w-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div>
                 <div class="flex items-center gap-3 mb-1">
                     <h1 class="text-2xl font-semibold text-[#1E3A5F]">
                         Detalle de Avería #OT-{{ str_pad($orden->id, 3, '0', STR_PAD_LEFT) }}
@@ -25,6 +29,7 @@
                         · Inicio programado: {{ \Carbon\Carbon::parse($orden->fecha_asignacion)->format('H:i') }}
                     @endif
                 </p>
+                </div>
             </div>
             <a href="{{ route('dashboard') }}" class="flex items-center gap-2 text-sm font-medium text-[#1E3A5F] hover:text-[#10B981] transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
@@ -34,10 +39,10 @@
 
         <!-- Main Content -->
         <main class="flex-1 overflow-y-auto p-6">
-            <div class="grid grid-cols-5 gap-6 h-full">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
                 <!-- Columna Izquierda (2/5) -->
-                <div class="col-span-2 space-y-4">
+                <div class="lg:col-span-2 space-y-4">
 
                     <!-- Datos del Cliente -->
                     <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
@@ -112,7 +117,7 @@
                 </div>
 
                 <!-- Columna Derecha (3/5) -->
-                <div class="col-span-3 space-y-4 flex flex-col">
+                <div class="lg:col-span-3 space-y-4 flex flex-col">
 
                     <!-- Descripción del Problema -->
                     <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">

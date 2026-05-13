@@ -1,4 +1,9 @@
-<aside class="w-64 bg-[#1E3A5F] h-full flex flex-col text-white flex-shrink-0">
+<!-- Backdrop (mobile) -->
+<div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 md:hidden hidden" onclick="closeSidebar()"></div>
+
+<aside id="app-sidebar"
+    class="fixed inset-y-0 left-0 z-40 w-64 bg-[#1E3A5F] h-full flex flex-col text-white flex-shrink-0
+           -translate-x-full md:translate-x-0 md:relative md:inset-auto transition-transform duration-300 ease-in-out">
     <!-- Logo Area -->
     <div class="h-20 flex items-center justify-center border-b border-[#2C5282]">
         <h2 class="text-2xl font-bold text-white tracking-wide">WorkFlow</h2>
@@ -6,7 +11,7 @@
 
     <!-- Navigation -->
     <nav class="flex-1 py-6 px-4 space-y-2">
-        
+
         <!-- Link Dashboard / Agenda / Mis Servicios -->
         <a href="{{ route('dashboard') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('dashboard') ? 'bg-[#10B981] text-white' : 'text-gray-300 hover:bg-[#2C5282] hover:text-white' }}">
@@ -24,7 +29,7 @@
 
         @if(auth()->user()->role === 'admin')
         <!-- Link Asignar Rutas (Admin) -->
-        <a href="{{ route('ordenes.create') }}" 
+        <a href="{{ route('ordenes.create') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('ordenes.create') ? 'bg-[#10B981] text-white' : 'text-gray-300 hover:bg-[#2C5282] hover:text-white' }}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
             <span class="font-medium text-sm">Asignar Rutas</span>
@@ -105,3 +110,17 @@
         </form>
     </div>
 </aside>
+
+<script>
+function toggleSidebar() {
+    const s = document.getElementById('app-sidebar');
+    const b = document.getElementById('sidebar-backdrop');
+    const isHidden = s.classList.contains('-translate-x-full');
+    s.classList.toggle('-translate-x-full', !isHidden);
+    b.classList.toggle('hidden', !isHidden);
+}
+function closeSidebar() {
+    document.getElementById('app-sidebar').classList.add('-translate-x-full');
+    document.getElementById('sidebar-backdrop').classList.add('hidden');
+}
+</script>

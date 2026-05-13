@@ -5,16 +5,17 @@
     @include('components.sidebar')
 
     <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <a href="{{ route('admin.clientes') }}" class="text-gray-400 hover:text-[#10B981] transition-colors">
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="{{ route('admin.clientes') }}" class="text-gray-400 hover:text-[#10B981] transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 </a>
-                <div>
-                    <h1 class="text-2xl font-medium text-[#1E3A5F]">Perfil del Cliente</h1>
-                </div>
+                <h1 class="text-xl md:text-2xl font-medium text-[#1E3A5F]">Perfil del Cliente</h1>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 flex-wrap flex-shrink-0">
                 <button onclick="toggleEdit()"
                     class="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -59,7 +60,7 @@
                                 @endif
                             @endif
                         </div>
-                        <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">DNI / CIF</p>
                                 <p class="text-sm font-medium text-gray-700">{{ $cliente->dni_cif }}</p>
@@ -86,7 +87,7 @@
                     <form method="POST" action="{{ route('admin.cliente.update', $cliente->id) }}">
                         @csrf
                         @method('PATCH')
-                        <div class="grid grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Nombre / Razón social</label>
                                 <input type="text" name="nombre" value="{{ old('nombre', $cliente->nombre) }}" required

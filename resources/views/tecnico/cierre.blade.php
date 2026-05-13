@@ -7,8 +7,11 @@
     <div class="flex-1 flex flex-col overflow-hidden">
 
         {{-- Header --}}
-        <header class="bg-white border-b border-gray-200 py-4 px-6 flex justify-between items-center flex-shrink-0">
-            <div>
+        <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3 flex-shrink-0 flex-wrap">
+            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="flex-1 min-w-0">
                 <h1 class="text-3xl font-medium text-[#1E3A5F]">
                     Finalizar Servicio #OT-{{ str_pad($orden->id, 3, '0', STR_PAD_LEFT) }}
                 </h1>
