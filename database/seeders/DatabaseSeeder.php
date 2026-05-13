@@ -140,6 +140,8 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
+
+            $user->update(['cliente_id' => $user->id]);
         }
     }
 }
