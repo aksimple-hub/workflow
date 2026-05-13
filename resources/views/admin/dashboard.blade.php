@@ -9,11 +9,23 @@
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex justify-between items-center">
             <div>
-                <h1 class="text-4xl font-medium text-[#1E3A5F]">Dashboard Admin</h1>
-                <p class="text-base text-gray-500 mt-1">Resumen general de órdenes de trabajo</p>
+                <h1 class="text-4xl font-medium text-[#1E3A5F]">Panel de Control</h1>
+                <p class="text-base text-gray-500 mt-1">Gestión de Órdenes de Trabajo</p>
             </div>
-            <div class="flex items-center gap-4">
-                <span class="text-sm font-medium text-gray-700">{{ Auth::user()->name }}</span>
+            <div class="flex items-center gap-3">
+                <button onclick="toggleFiltros()"
+                    class="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ ($estado || $prioridad) ? 'border-[#10B981] text-[#10B981]' : '' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+                    Filtrar
+                    @if($estado || $prioridad)
+                        <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+                    @endif
+                </button>
+                <a href="{{ route('ordenes.create') }}"
+                    class="flex items-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Nueva Orden
+                </a>
             </div>
         </header>
 
@@ -23,6 +35,60 @@
                 {{ session('success') }}
             </div>
             @endif
+
+            <!-- Barra de búsqueda -->
+            <form method="GET" action="{{ route('dashboard') }}" id="searchForm">
+                <div class="mb-4 flex gap-3">
+                    <div class="relative flex-1">
+                        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg>
+                        <input type="text" name="search" value="{{ $search }}"
+                            placeholder="Buscar por cliente, ID de orden o técnico..."
+                            class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-colors"
+                            oninput="debounceSearch(this)">
+                        @if($search)
+                        <a href="{{ route('dashboard', array_filter(['estado' => $estado, 'prioridad' => $prioridad])) }}"
+                            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </a>
+                        @endif
+                    </div>
+                    @if($search || $estado || $prioridad)
+                    <a href="{{ route('dashboard') }}" class="px-4 py-3 text-sm text-gray-500 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors whitespace-nowrap">
+                        Limpiar filtros
+                    </a>
+                    @endif
+                </div>
+
+                <!-- Panel de filtros -->
+                <div id="filtrosPanel" class="{{ ($estado || $prioridad) ? '' : 'hidden' }} mb-4 bg-white border border-gray-200 rounded-xl p-4 flex flex-wrap gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">Estado</label>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach(['pendiente' => 'Pendiente', 'asignada' => 'Asignada', 'en_camino' => 'En camino', 'en_proceso' => 'En proceso', 'finalizada' => 'Finalizada', 'cancelada' => 'Cancelada'] as $val => $label)
+                            <button type="button" onclick="setFiltro('estado', '{{ $val }}')"
+                                class="px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors
+                                {{ $estado === $val ? 'bg-[#214371] text-white border-[#214371]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#214371]' }}">
+                                {{ $label }}
+                            </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">Prioridad</label>
+                        <div class="flex gap-2">
+                            @foreach(['baja' => 'Baja', 'media' => 'Media', 'alta' => 'Alta'] as $val => $label)
+                            <button type="button" onclick="setFiltro('prioridad', '{{ $val }}')"
+                                class="px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors
+                                {{ $prioridad === $val ? 'bg-[#214371] text-white border-[#214371]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#214371]' }}">
+                                {{ $label }}
+                            </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    <input type="hidden" name="estado" id="inputEstado" value="{{ $estado }}">
+                    <input type="hidden" name="prioridad" id="inputPrioridad" value="{{ $prioridad }}">
+                </div>
+            </form>
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-4 gap-6 mb-8">
@@ -47,8 +113,12 @@
             <!-- Tabla -->
             <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                    <h2 class="text-xl font-medium text-[#1E3A5F]">Órdenes de Trabajo Activas</h2>
-                    <a href="{{ route('ordenes.create') }}" class="bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Nueva Orden</a>
+                    <h2 class="text-xl font-medium text-[#1E3A5F]">
+                        Órdenes de Trabajo
+                        @if($search || $estado || $prioridad)
+                            <span class="ml-2 text-sm font-normal text-gray-400">— {{ $ordenes->total() }} resultado(s)</span>
+                        @endif
+                    </h2>
                 </div>
 
                 <form id="bulkForm" action="{{ route('ordenes.bulk-assign') }}" method="POST">
@@ -113,6 +183,35 @@
                         </table>
                     </div>
                 </form>
+
+                @if($ordenes->hasPages())
+                <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                    <p class="text-sm text-gray-500">
+                        Mostrando {{ $ordenes->firstItem() }}–{{ $ordenes->lastItem() }} de {{ $ordenes->total() }} órdenes
+                    </p>
+                    <div class="flex items-center gap-1">
+                        @if($ordenes->onFirstPage())
+                            <span class="px-3 py-1.5 text-sm text-gray-300 border border-gray-100 rounded-lg">Anterior</span>
+                        @else
+                            <a href="{{ $ordenes->previousPageUrl() }}" class="px-3 py-1.5 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">Anterior</a>
+                        @endif
+
+                        @foreach($ordenes->getUrlRange(1, $ordenes->lastPage()) as $page => $url)
+                            @if($page == $ordenes->currentPage())
+                                <span class="px-3 py-1.5 text-sm font-medium text-white bg-[#214371] border border-[#214371] rounded-lg">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}" class="px-3 py-1.5 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        @if($ordenes->hasMorePages())
+                            <a href="{{ $ordenes->nextPageUrl() }}" class="px-3 py-1.5 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">Siguiente</a>
+                        @else
+                            <span class="px-3 py-1.5 text-sm text-gray-300 border border-gray-100 rounded-lg">Siguiente</span>
+                        @endif
+                    </div>
+                </div>
+                @endif
             </div>
         </main>
     </div>
@@ -154,6 +253,28 @@
 </div>
 
 <script>
+// Búsqueda con debounce
+let searchTimer;
+function debounceSearch(input) {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+        document.getElementById('searchForm').submit();
+    }, 400);
+}
+
+// Toggle panel de filtros
+function toggleFiltros() {
+    const panel = document.getElementById('filtrosPanel');
+    panel.classList.toggle('hidden');
+}
+
+// Aplicar filtro y enviar formulario
+function setFiltro(campo, valor) {
+    const input = document.getElementById('input' + campo.charAt(0).toUpperCase() + campo.slice(1));
+    input.value = input.value === valor ? '' : valor;
+    document.getElementById('searchForm').submit();
+}
+
 const checkboxes  = () => document.querySelectorAll('.orden-checkbox');
 const bulkBar     = document.getElementById('bulkBar');
 const countBadge  = document.getElementById('selectedCount');

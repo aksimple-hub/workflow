@@ -14,15 +14,31 @@ class DashboardController extends Controller
 
         if ($user->role === 'admin') {
             $stats = [
-                'total' => OrdenTrabajo::count(),
+                'total'      => OrdenTrabajo::count(),
                 'pendientes' => OrdenTrabajo::where('estado', 'pendiente')->count(),
-                'en_curso' => OrdenTrabajo::where('estado', 'en_proceso')->count(),
+                'en_curso'   => OrdenTrabajo::whereIn('estado', ['en_camino', 'en_proceso', 'asignada'])->count(),
                 'finalizadas' => OrdenTrabajo::where('estado', 'finalizada')->count(),
             ];
-            
-            $ordenes = OrdenTrabajo::with(['cliente', 'tecnico'])->latest()->take(10)->get();
 
-            return view('admin.dashboard', compact('stats', 'ordenes'));
+            $search   = request('search', '');
+            $estado   = request('estado', '');
+            $prioridad = request('prioridad', '');
+
+            $ordenes = OrdenTrabajo::with(['cliente', 'tecnico'])
+                ->when($search, function ($q) use ($search) {
+                    $q->where(function ($q2) use ($search) {
+                        $q2->whereHas('cliente', fn($c) => $c->where('nombre', 'like', "%{$search}%"))
+                           ->orWhereHas('tecnico', fn($t) => $t->where('name', 'like', "%{$search}%"))
+                           ->orWhere('id', is_numeric($search) ? (int)$search : 0);
+                    });
+                })
+                ->when($estado, fn($q) => $q->where('estado', $estado))
+                ->when($prioridad, fn($q) => $q->where('prioridad', $prioridad))
+                ->latest()
+                ->paginate(15)
+                ->withQueryString();
+
+            return view('admin.dashboard', compact('stats', 'ordenes', 'search', 'estado', 'prioridad'));
         }
 
         if ($user->role === 'tecnico') {
