@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -32,10 +33,34 @@
         <!-- Left Sidebar (Profile Menu) -->
         <div class="w-full md:w-1/4">
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col items-center">
-                <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 mb-4">
-                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+
+                <form method="POST" action="{{ route('profile.photo') }}" enctype="multipart/form-data" id="form-foto">
+                    @csrf
+                    <input type="file" id="input-foto" name="foto_perfil" accept="image/*" class="hidden"
+                           onchange="document.getElementById('form-foto').submit()">
+                </form>
+
+                <div class="w-24 h-24 rounded-full overflow-hidden mb-4 bg-gray-200 flex items-center justify-center text-gray-400 cursor-pointer"
+                     onclick="document.getElementById('input-foto').click()">
+                    @if(auth()->user()->foto_perfil)
+                        <img src="{{ Storage::url(auth()->user()->foto_perfil) }}" alt="Foto de perfil" class="w-full h-full object-cover">
+                    @else
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    @endif
                 </div>
-                <button class="text-sm font-medium text-[#10B981] hover:text-[#059669] mb-6 transition-colors">Cambiar foto</button>
+
+                @error('foto_perfil')
+                    <p class="text-xs text-red-500 mb-2">{{ $message }}</p>
+                @enderror
+
+                @if(session('status') === 'photo-updated')
+                    <p class="text-xs text-[#10B981] mb-2">Foto actualizada.</p>
+                @endif
+
+                <button type="button" onclick="document.getElementById('input-foto').click()"
+                        class="text-sm font-medium text-[#10B981] hover:text-[#059669] mb-6 transition-colors">
+                    Cambiar foto
+                </button>
 
                 <div class="w-full space-y-2">
                     <button id="btn-tab-info" onclick="switchTab('tab-info')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-[#10B981] text-white font-medium text-sm transition-colors border border-transparent">
