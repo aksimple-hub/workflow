@@ -125,8 +125,43 @@ class DashboardController extends Controller
     public function clienteShow($id)
     {
         $cliente = \App\Models\Cliente::findOrFail($id);
-        $ordenes = OrdenTrabajo::where('cliente_id', $cliente->id)->latest()->take(5)->get();
-        return view('admin.cliente-show', compact('cliente', 'ordenes'));
+        $user    = \App\Models\User::where('cliente_id', $cliente->id)->orWhere('id', $cliente->id)->first();
+        $ordenes = OrdenTrabajo::where('cliente_id', $cliente->id)->latest()->get();
+        return view('admin.cliente-show', compact('cliente', 'user', 'ordenes'));
+    }
+
+    public function updateCliente(\Illuminate\Http\Request $request, $id)
+    {
+        $cliente = \App\Models\Cliente::findOrFail($id);
+        $user    = \App\Models\User::where('cliente_id', $cliente->id)->orWhere('id', $cliente->id)->first();
+
+        $validated = $request->validate([
+            'nombre'    => 'required|string|max:255',
+            'email'     => 'required|email|max:255|unique:clientes,email,' . $cliente->id,
+            'telefono'  => 'required|string|max:20',
+            'direccion' => 'nullable|string|max:255',
+            'dni_cif'   => 'required|string|max:20|unique:clientes,dni_cif,' . $cliente->id,
+        ]);
+
+        $cliente->update($validated);
+
+        if ($user) {
+            $user->update(['name' => $validated['nombre'], 'email' => $validated['email']]);
+        }
+
+        return redirect()->route('admin.cliente.show', $id)->with('success', 'Datos del cliente actualizados correctamente.');
+    }
+
+    public function destroyCliente($id)
+    {
+        $cliente = \App\Models\Cliente::findOrFail($id);
+        $user    = \App\Models\User::where('cliente_id', $cliente->id)->orWhere('id', $cliente->id)->first();
+
+        if ($user) {
+            $user->update(['is_approved' => false]);
+        }
+
+        return redirect()->route('admin.clientes')->with('success', 'Cliente "' . $cliente->nombre . '" dado de baja correctamente.');
     }
 
     public function ordenShow($id)
