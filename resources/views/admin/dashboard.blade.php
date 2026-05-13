@@ -12,21 +12,6 @@
                 <h1 class="text-4xl font-medium text-[#1E3A5F]">Panel de Control</h1>
                 <p class="text-base text-gray-500 mt-1">Gestión de Órdenes de Trabajo</p>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="toggleFiltros()"
-                    class="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ ($estado || $prioridad) ? 'border-[#10B981] text-[#10B981]' : '' }}">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
-                    Filtrar
-                    @if($estado || $prioridad)
-                        <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
-                    @endif
-                </button>
-                <a href="{{ route('ordenes.create') }}"
-                    class="flex items-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    Nueva Orden
-                </a>
-            </div>
         </header>
 
         <main class="flex-1 overflow-y-auto p-6 pb-32">
@@ -38,6 +23,23 @@
 
             <!-- Barra de búsqueda -->
             <form method="GET" action="{{ route('dashboard') }}" id="searchForm">
+                <!-- Botones encima del buscador -->
+                <div class="mb-3 flex justify-end gap-3">
+                    <button type="button" onclick="toggleFiltros()"
+                        class="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-white rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ ($estado || $prioridad) ? 'border-[#10B981] text-[#10B981]' : '' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+                        Filtrar
+                        @if($estado || $prioridad)
+                            <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+                        @endif
+                    </button>
+                    <a href="{{ route('ordenes.create') }}"
+                        class="flex items-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Nueva Orden
+                    </a>
+                </div>
+
                 <div class="mb-4 flex gap-3">
                     <div class="relative flex-1">
                         <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg>
