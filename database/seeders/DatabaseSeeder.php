@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory()->create([
             'name' => 'Admin Workflow',
             'email' => 'admin@test.com',
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'role' => 'admin',
             'is_approved' => true,
         ]);
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory()->create([
             'name' => 'Juan Técnico',
             'email' => 'tecnico@test.com',
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'role' => 'tecnico',
             'is_approved' => true,
         ]);
@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         $userCliente = \App\Models\User::factory()->create([
             'name' => 'Empresa Cliente',
             'email' => 'cliente@test.com',
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'role' => 'cliente',
             'is_approved' => true,
         ]);
