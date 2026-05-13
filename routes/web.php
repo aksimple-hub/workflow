@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/clientes-lista', [DashboardController::class, 'storeCliente'])->name('admin.clientes.store');
     Route::post('/usuarios/{id}/validate', [DashboardController::class, 'validateUser'])->name('admin.users.validate');
     Route::get('/clientes-lista/{id}', [DashboardController::class, 'clienteShow'])->name('admin.cliente.show');
+    Route::patch('/clientes-lista/{id}', [DashboardController::class, 'updateCliente'])->name('admin.cliente.update');
+    Route::delete('/clientes-lista/{id}', [DashboardController::class, 'destroyCliente'])->name('admin.cliente.destroy');
     Route::get('/historial', [DashboardController::class, 'historial'])->name('admin.historial');
     Route::get('/ordenes-detalle/{id}', [DashboardController::class, 'ordenShow'])->name('admin.orden.show');
     Route::get('/configuracion', [DashboardController::class, 'configuracion'])->name('admin.configuracion');
