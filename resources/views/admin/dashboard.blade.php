@@ -116,7 +116,7 @@
             </div>
 
             <!-- Tabla -->
-            <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
+            <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
                 <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-xl font-medium text-[#1E3A5F]">
                         Órdenes de Trabajo
@@ -131,7 +131,7 @@
                     <input type="hidden" name="usuario_id" id="bulkTecnicoId">
 
                     <div class="overflow-x-auto w-full">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
                             <thead>
                                 <tr class="bg-[#F5F7FA] text-gray-500 text-sm border-b border-gray-200">
                                     <th class="px-4 py-3 w-10">

@@ -21,8 +21,7 @@
         </header>
 
         <main class="flex-1 overflow-y-auto p-6">
-            <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
-                <div class="overflow-x-auto">
+            <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 overflow-x-auto">
                 <table class="w-full text-left border-collapse min-w-[700px]">
                     <thead>
                         <tr class="bg-[#F5F7FA] text-gray-500 text-sm border-b border-gray-200">
@@ -71,7 +70,6 @@
                         @endforelse
                     </tbody>
                 </table>
-                </div>
             </div>
         </main>
     </div>
