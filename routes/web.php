@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\OrdenTrabajoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\SocialAuthController;
 
 Route::get('/', function () {
     return auth()->check() ? redirect('/dashboard') : redirect('/login');
@@ -59,6 +60,10 @@ Route::middleware('auth')->group(function () {
     // Rutas para Técnico
     Route::get('/mi-historial', [DashboardController::class, 'historialTecnico'])->name('tecnico.historial');
 });
+
+// Google OAuth
+Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 // Rutas de registro de técnicos (públicas)
 Route::middleware('guest')->group(function () {
