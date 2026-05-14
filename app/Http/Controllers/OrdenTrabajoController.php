@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\AsignacionOrdenTecnico;
 
 class OrdenTrabajoController extends Controller
 {
@@ -306,6 +307,9 @@ class OrdenTrabajoController extends Controller
             'fecha_asignacion' => now(),
         ]);
 
+        $orden->load('cliente');
+        $tecnico->notify(new AsignacionOrdenTecnico($orden));
+
         return back()->with('success', 'Técnico ' . $tecnico->name . ' asignado correctamente a la orden.');
     }
 
@@ -327,13 +331,23 @@ class OrdenTrabajoController extends Controller
             return back()->withErrors(['usuario_id' => 'El usuario seleccionado no es un técnico.']);
         }
 
-        $count = OrdenTrabajo::whereIn('id', $validated['orden_ids'])
+        $ordenes = OrdenTrabajo::with('cliente')
+            ->whereIn('id', $validated['orden_ids'])
             ->whereNotIn('estado', ['finalizada', 'cancelada'])
+            ->get();
+
+        $count = $ordenes->count();
+
+        OrdenTrabajo::whereIn('id', $ordenes->pluck('id'))
             ->update([
                 'usuario_id'       => $tecnico->id,
                 'estado'           => 'asignada',
                 'fecha_asignacion' => now(),
             ]);
+
+        foreach ($ordenes as $orden) {
+            $tecnico->notify(new AsignacionOrdenTecnico($orden));
+        }
 
         return back()->with('success', $count . ' orden(es) asignada(s) a ' . $tecnico->name . '.');
     }
