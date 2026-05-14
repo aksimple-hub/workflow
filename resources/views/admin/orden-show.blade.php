@@ -128,28 +128,78 @@
                             <p class="text-sm text-gray-400">Sin técnico asignado</p>
                         @endif
 
-                        {{-- Formulario solo si NO está finalizada --}}
-                        @if($orden->estado !== 'finalizada')
                         @php $tecnicos = \App\Models\User::where('role', 'tecnico')->get(); @endphp
-                        @if($tecnicos->count())
+
+                        {{-- PENDIENTE: asignación directa --}}
+                        @if($orden->estado === 'pendiente' && $tecnicos->count())
                         <form action="{{ route('ordenes.assign-tecnico', $orden) }}" method="POST" class="mt-4 space-y-3">
                             @csrf
                             @method('PATCH')
                             <div>
-                                <label for="usuario_id" class="block text-sm font-medium text-brand-dark mb-2">Seleccionar Técnico</label>
-                                <select id="usuario_id" name="usuario_id" required
+                                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Seleccionar Técnico</label>
+                                <select name="usuario_id" required
                                     class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-2 focus:outline-none transition-colors text-sm appearance-none">
-                                    <option value="" disabled {{ !$orden->tecnico ? 'selected' : '' }}>Elige un técnico...</option>
+                                    <option value="" disabled selected>Elige un técnico...</option>
                                     @foreach($tecnicos as $tec)
-                                        <option value="{{ $tec->id }}" {{ $orden->usuario_id === $tec->id ? 'selected' : '' }}>{{ $tec->name }}</option>
+                                        <option value="{{ $tec->id }}">{{ $tec->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <button type="submit" class="w-full bg-brand-green hover:bg-brand-green-dark text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                {{ $orden->tecnico ? 'Cambiar Técnico' : 'Asignar Técnico' }}
+                            <button type="submit" class="w-full bg-brand-green hover:bg-brand-green-dark text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
+                                Asignar Técnico
                             </button>
                         </form>
                         @endif
+
+                        {{-- ASIGNADA: reasignación con motivo --}}
+                        @if($orden->estado === 'asignada' && $tecnicos->count())
+                        <div class="mt-4">
+                            <button type="button" id="btn-reasignar"
+                                onclick="document.getElementById('panel-reasignar').classList.toggle('hidden'); this.classList.toggle('hidden')"
+                                class="w-full flex items-center justify-center gap-2 border-2 border-orange-300 text-orange-600 hover:bg-orange-50 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                Reasignar Técnico
+                            </button>
+
+                            <div id="panel-reasignar" class="hidden mt-3 bg-orange-50 border border-orange-200 rounded-xl p-4 space-y-3">
+                                <div class="flex items-start gap-2 mb-1">
+                                    <svg class="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <p class="text-xs text-orange-700 font-medium">Se notificará al nuevo técnico por correo.</p>
+                                </div>
+
+                                <form action="{{ route('ordenes.assign-tecnico', $orden) }}" method="POST" class="space-y-3">
+                                    @csrf
+                                    @method('PATCH')
+                                    <div>
+                                        <label class="block text-xs font-semibold text-orange-700 uppercase tracking-wide mb-1.5">Motivo de reasignación <span class="text-red-500">*</span></label>
+                                        <textarea name="motivo" required rows="2" placeholder="Ej: El técnico ha sufrido un accidente..."
+                                            class="w-full bg-white border-2 border-orange-200 focus:border-orange-400 rounded-xl px-3 py-2 text-sm focus:outline-none transition-colors resize-none"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-orange-700 uppercase tracking-wide mb-1.5">Nuevo Técnico</label>
+                                        <select name="usuario_id" required
+                                            class="w-full bg-white border-2 border-orange-200 focus:border-orange-400 rounded-xl px-4 py-2 focus:outline-none transition-colors text-sm appearance-none">
+                                            <option value="" disabled selected>Selecciona el sustituto...</option>
+                                            @foreach($tecnicos as $tec)
+                                                @if($tec->id !== $orden->usuario_id)
+                                                <option value="{{ $tec->id }}">{{ $tec->name }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button type="submit" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
+                                            Confirmar reasignación
+                                        </button>
+                                        <button type="button"
+                                            onclick="document.getElementById('panel-reasignar').classList.add('hidden'); document.getElementById('btn-reasignar').classList.remove('hidden')"
+                                            class="px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-500 hover:bg-gray-50 transition-colors">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         @endif
                     </div>
 

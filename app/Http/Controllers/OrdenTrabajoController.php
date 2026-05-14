@@ -282,35 +282,46 @@ class OrdenTrabajoController extends Controller
         return redirect()->route('dashboard')->with('success', 'Solicitud cancelada correctamente.');
     }
 
-    // Asignar o cambiar técnico a una orden existente
+    // Asignar o reasignar técnico a una orden existente
     public function assignTecnico(Request $request, OrdenTrabajo $orden)
     {
-        // Solo admin puede asignar técnicos
         if (Auth::user()->role !== 'admin') {
             abort(403, 'No autorizado');
         }
 
+        $esReasignacion = $orden->usuario_id !== null;
+
         $validated = $request->validate([
             'usuario_id' => 'required|exists:users,id',
+            'motivo'     => $esReasignacion ? 'required|string|max:500' : 'nullable|string|max:500',
         ]);
 
-        // Verificar que el usuario seleccionado sea técnico
         $tecnico = User::findOrFail($validated['usuario_id']);
         if ($tecnico->role !== 'tecnico') {
             return back()->withErrors(['usuario_id' => 'El usuario seleccionado no es un técnico.']);
         }
 
-        // Actualizar la orden
-        $orden->update([
-            'usuario_id' => $validated['usuario_id'],
-            'estado' => 'asignada',
-            'fecha_asignacion' => now(),
-        ]);
+        // Si es reasignación, registrar el motivo en observaciones
+        if ($esReasignacion && !empty($validated['motivo'])) {
+            $tecnicoAnterior = $orden->tecnico?->name ?? 'anterior';
+            $nota = "\n[Reasignación " . now()->format('d/m/Y H:i') . "] "
+                  . "Técnico anterior: {$tecnicoAnterior}. Motivo: " . $validated['motivo'];
+            $orden->observaciones = ($orden->observaciones ?? '') . $nota;
+        }
+
+        $orden->usuario_id      = $tecnico->id;
+        $orden->estado          = 'asignada';
+        $orden->fecha_asignacion = now();
+        $orden->save();
 
         $orden->load('cliente');
         $tecnico->notify(new AsignacionOrdenTecnico($orden));
 
-        return back()->with('success', 'Técnico ' . $tecnico->name . ' asignado correctamente a la orden.');
+        $msg = $esReasignacion
+            ? 'Orden reasignada a ' . $tecnico->name . ' correctamente.'
+            : 'Técnico ' . $tecnico->name . ' asignado correctamente.';
+
+        return back()->with('success', $msg);
     }
 
     // Asignar técnico a múltiples órdenes a la vez
