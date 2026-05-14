@@ -256,6 +256,32 @@
                     </div>
                     @endif
 
+                    {{-- Valoración del técnico sobre el cliente --}}
+                    @if($orden->satisfaccion_tecnico)
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
+                        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Trato del cliente <span class="normal-case text-gray-300">(según técnico)</span></h2>
+                        @php $starsTec = (int)$orden->satisfaccion_tecnico; @endphp
+                        <div class="flex items-center gap-1 mb-1">
+                            @for($s = 1; $s <= 5; $s++)
+                            <svg class="w-5 h-5 {{ $s <= $starsTec ? 'text-[#F59E0B]' : 'text-gray-200' }}" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            @endfor
+                        </div>
+                        <p class="text-xs text-gray-400">
+                            @php echo ['','Muy mal trato','Mal trato','Normal','Buen trato','Excelente trato'][$starsTec]; @endphp
+                        </p>
+                    </div>
+                    @endif
+
+                    {{-- Comentario del cliente --}}
+                    @if($orden->comentario_cliente)
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
+                        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Comentario del cliente</h2>
+                        <p class="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{{ $orden->comentario_cliente }}</p>
+                    </div>
+                    @endif
+
                     {{-- Firma del cliente --}}
                     @if($orden->firma_path)
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
