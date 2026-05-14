@@ -40,14 +40,20 @@
                            onchange="document.getElementById('form-foto').submit()">
                 </form>
 
-                <div class="w-24 h-24 rounded-full overflow-hidden mb-4 bg-gray-200 flex items-center justify-center text-gray-400 cursor-pointer"
-                     onclick="document.getElementById('input-foto').click()">
-                    @if(auth()->user()->foto_perfil)
-                        <img src="{{ Storage::url(auth()->user()->foto_perfil) }}" alt="Foto de perfil" class="w-full h-full object-cover">
-                    @else
-                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                    @endif
+                @if(auth()->user()->foto_perfil)
+                <div class="w-24 h-24 rounded-full overflow-hidden mb-4 ring-2 ring-brand-green ring-offset-2 cursor-pointer group relative"
+                     onclick="document.getElementById('modal-foto').classList.remove('hidden')">
+                    <img src="{{ Storage::url(auth()->user()->foto_perfil) }}" alt="Foto de perfil" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-full">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
+                    </div>
                 </div>
+                @else
+                <div class="w-24 h-24 rounded-full overflow-hidden mb-4 bg-gray-200 flex items-center justify-center text-gray-400 cursor-pointer hover:bg-gray-300 transition-colors"
+                     onclick="document.getElementById('input-foto').click()">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                </div>
+                @endif
 
                 @error('foto_perfil')
                     <p class="text-xs text-red-500 mb-2">{{ $message }}</p>
@@ -353,5 +359,30 @@
             showToast('Foto de perfil actualizada.', 'success');
         @endif
     </script>
+
+    {{-- Modal foto de perfil --}}
+    @if(auth()->user()->foto_perfil)
+    <div id="modal-foto" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+         onclick="if(event.target===this) this.classList.add('hidden')">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+        <div class="relative z-10 flex flex-col items-center gap-4">
+            <img src="{{ Storage::url(auth()->user()->foto_perfil) }}"
+                 alt="Foto de perfil"
+                 class="max-h-[70vh] max-w-[80vw] rounded-2xl shadow-2xl object-contain">
+            <div class="flex items-center gap-3">
+                <button type="button"
+                        onclick="document.getElementById('modal-foto').classList.add('hidden'); document.getElementById('input-foto').click()"
+                        class="bg-brand-green hover:bg-brand-green-dark text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+                    Cambiar foto
+                </button>
+                <button type="button"
+                        onclick="document.getElementById('modal-foto').classList.add('hidden')"
+                        class="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-white/20">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
 </body>
 </html>
