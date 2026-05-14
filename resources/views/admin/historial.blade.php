@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -7,18 +7,18 @@
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
             <div class="flex items-center gap-3 min-w-0">
-                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
                 <div>
-                    <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Historial de Órdenes</h1>
+                    <h1 class="text-2xl md:text-4xl font-medium text-brand-dark">Historial de Órdenes</h1>
                     <p class="text-sm md:text-base text-gray-500 mt-0.5 hidden sm:block">Registro completo de todos los trabajos realizados</p>
                 </div>
             </div>
             <div class="flex gap-3 w-full sm:w-auto">
                 <div class="relative flex-1 sm:flex-none">
                     <input type="text" id="searchInput" placeholder="Buscar orden..."
-                        class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#10B981] w-full sm:w-64">
+                        class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-green w-full sm:w-64">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
@@ -43,7 +43,7 @@
                             <tr class="bg-[#F5F7FA] text-gray-500 text-sm border-b border-gray-200">
                                 <th class="px-4 py-4 w-10">
                                     <input type="checkbox" id="selectAll"
-                                        class="w-4 h-4 rounded border-gray-300 text-[#10B981] focus:ring-[#10B981] cursor-pointer">
+                                        class="w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer">
                                 </th>
                                 <th class="px-6 py-4 font-medium">ID Orden</th>
                                 <th class="px-6 py-4 font-medium">Fecha</th>
@@ -63,14 +63,14 @@
                                 <td class="px-4 py-4">
                                     @if($asignable)
                                     <input type="checkbox" name="orden_ids[]" value="{{ $orden->id }}"
-                                        class="orden-checkbox w-4 h-4 rounded border-gray-300 text-[#10B981] focus:ring-[#10B981] cursor-pointer">
+                                        class="orden-checkbox w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer">
                                     @else
                                     <span class="w-4 h-4 block"></span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 font-bold text-gray-500">ORD-{{ str_pad($orden->id, 4, '0', STR_PAD_LEFT) }}</td>
                                 <td class="px-6 py-4 text-gray-600">{{ $orden->created_at->format('d/m/Y') }}</td>
-                                <td class="px-6 py-4 text-[#1E3A5F] font-medium">{{ $orden->cliente->nombre ?? 'N/A' }}</td>
+                                <td class="px-6 py-4 text-brand-dark font-medium">{{ $orden->cliente->nombre ?? 'N/A' }}</td>
                                 <td class="px-6 py-4 text-gray-600">{{ $orden->tecnico->name ?? 'No asignado' }}</td>
                                 <td class="px-6 py-4">
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full
@@ -113,15 +113,15 @@
 <div id="bulkBar"
     class="fixed bottom-0 left-0 right-0 z-50 hidden transition-all duration-300">
     <div class="mx-auto max-w-5xl mb-6 px-6">
-        <div class="bg-[#1E3A5F] rounded-2xl shadow-2xl px-6 py-4 flex items-center gap-4 flex-wrap">
+        <div class="bg-brand-dark rounded-2xl shadow-2xl px-6 py-4 flex items-center gap-4 flex-wrap">
             <div class="flex items-center gap-2 text-white flex-shrink-0">
-                <div class="w-7 h-7 bg-[#10B981] rounded-full flex items-center justify-center font-bold text-sm" id="selectedCount">0</div>
+                <div class="w-7 h-7 bg-brand-green rounded-full flex items-center justify-center font-bold text-sm" id="selectedCount">0</div>
                 <span class="font-medium text-sm">orden(es) seleccionada(s)</span>
             </div>
 
             <div class="flex-1 min-w-48">
                 <select id="bulkTecnicoSelect"
-                    class="w-full bg-white/10 border border-white/20 text-white rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#10B981] appearance-none">
+                    class="w-full bg-white/10 border border-white/20 text-white rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-brand-green appearance-none">
                     <option value="" class="text-gray-900">Seleccionar técnico...</option>
                     @foreach(\App\Models\User::where('role','tecnico')->get() as $tec)
                     <option value="{{ $tec->id }}" class="text-gray-900">{{ $tec->name }}</option>
@@ -130,7 +130,7 @@
             </div>
 
             <button type="button" id="bulkAssignBtn"
-                class="bg-[#10B981] hover:bg-[#059669] text-white px-5 py-2 rounded-xl text-sm font-semibold transition-colors flex-shrink-0">
+                class="bg-brand-green hover:bg-brand-green-dark text-white px-5 py-2 rounded-xl text-sm font-semibold transition-colors flex-shrink-0">
                 Asignar técnico
             </button>
 

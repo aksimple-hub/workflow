@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -8,16 +8,16 @@
 
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
             <div class="flex items-center gap-3 min-w-0">
-                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
                 <div>
-                    <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Mis Servicios</h1>
+                    <h1 class="text-2xl md:text-4xl font-medium text-brand-dark">Mis Servicios</h1>
                     <p class="text-sm md:text-base text-gray-500 mt-0.5">Portal del Cliente</p>
                 </div>
             </div>
             <a href="{{ route('solicitud.nueva') }}"
-               class="flex-shrink-0 bg-[#10B981] hover:bg-[#059669] text-white px-5 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-all">
+               class="flex-shrink-0 bg-brand-green hover:bg-brand-green-dark text-white px-5 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Nueva Solicitud
             </a>
@@ -27,14 +27,14 @@
 
             {{-- ── SERVICIO ACTIVO ─────────────────────────────────────────── --}}
             <section>
-                <h2 class="text-lg font-semibold text-[#1E3A5F] mb-3">Servicio Activo</h2>
+                <h2 class="text-lg font-semibold text-brand-dark mb-3">Servicio Activo</h2>
 
                 @if($ordenActiva)
                 @php
                     $statusMsg = match($ordenActiva->estado) {
                         'pendiente' => ['El servicio está pendiente de asignación.',        'text-gray-500',    'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
                         'asignada'  => ['El técnico ha sido asignado a su servicio.',       'text-[#1D4ED8]',   'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'],
-                        'en_camino' => ['El técnico está en camino a su domicilio.',        'text-[#10B981]',   'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'],
+                        'en_camino' => ['El técnico está en camino a su domicilio.',        'text-brand-green',   'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'],
                         'en_proceso'=> ['El técnico está trabajando en su servicio.',       'text-[#D97706]',   'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z'],
                         default     => ['Estado desconocido.', 'text-gray-500', 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                     };
@@ -47,24 +47,24 @@
                     };
                 @endphp
 
-                <div class="bg-white rounded-2xl border-2 border-[#10B981] shadow-[0px_4px_16px_rgba(16,185,129,0.12)] p-6">
+                <div class="bg-white rounded-2xl border-2 border-brand-green shadow-[0px_4px_16px_rgba(16,185,129,0.12)] p-6">
                     <div class="flex items-start justify-between gap-4 flex-wrap">
 
                         {{-- Icono + info --}}
                         <div class="flex items-start gap-4">
                             <div class="w-12 h-12 rounded-full bg-[#D1FAE5] flex items-center justify-center flex-shrink-0">
-                                <svg class="w-6 h-6 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                                <svg class="w-6 h-6 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
                             </div>
                             <div>
                                 <div class="flex items-center gap-2 flex-wrap">
-                                    <h3 class="text-lg font-semibold text-[#1E3A5F]">{{ $ordenActiva->titulo }}</h3>
+                                    <h3 class="text-lg font-semibold text-brand-dark">{{ $ordenActiva->titulo }}</h3>
                                     <span class="text-xs font-bold text-gray-400">#OT-{{ str_pad($ordenActiva->id, 3, '0', STR_PAD_LEFT) }}</span>
                                 </div>
                                 <div class="flex items-center gap-5 mt-2 flex-wrap text-sm text-gray-500">
                                     @if($ordenActiva->tecnico)
                                     <div>
                                         <span class="text-xs text-gray-400 block">Técnico asignado</span>
-                                        <span class="font-medium text-[#1E3A5F]">{{ $ordenActiva->tecnico->name }}</span>
+                                        <span class="font-medium text-brand-dark">{{ $ordenActiva->tecnico->name }}</span>
                                     </div>
                                     @endif
                                     <div>
@@ -74,7 +74,7 @@
                                     @if($ordenActiva->fecha_entrega_prevista)
                                     <div>
                                         <span class="text-xs text-gray-400 block">Fecha prevista</span>
-                                        <span class="font-medium text-[#1E3A5F]">{{ \Carbon\Carbon::parse($ordenActiva->fecha_entrega_prevista)->format('d/m/Y') }}</span>
+                                        <span class="font-medium text-brand-dark">{{ \Carbon\Carbon::parse($ordenActiva->fecha_entrega_prevista)->format('d/m/Y') }}</span>
                                     </div>
                                     @endif
                                 </div>
@@ -92,13 +92,13 @@
                             @if($ordenActiva->cliente?->direccion && $ordenActiva->cliente->direccion !== 'N/A')
                             <a href="https://maps.google.com/?q={{ urlencode($ordenActiva->cliente->direccion) }}"
                                target="_blank"
-                               class="px-4 py-2 rounded-xl border border-gray-200 text-sm font-medium text-[#1E3A5F] hover:bg-gray-50 transition-colors">
+                               class="px-4 py-2 rounded-xl border border-gray-200 text-sm font-medium text-brand-dark hover:bg-gray-50 transition-colors">
                                 Ver en Mapa
                             </a>
                             @endif
                             @if($ordenActiva->tecnico?->perfil?->telefono && $ordenActiva->tecnico->perfil->telefono !== 'N/A')
                             <a href="tel:{{ $ordenActiva->tecnico->perfil->telefono }}"
-                               class="px-5 py-2 rounded-xl bg-[#1E3A5F] hover:bg-[#2C5282] text-white text-sm font-semibold transition-colors">
+                               class="px-5 py-2 rounded-xl bg-brand-dark hover:bg-brand-dark-mid text-white text-sm font-semibold transition-colors">
                                 Contactar Técnico
                             </a>
                             @endif
@@ -124,7 +124,7 @@
             <section id="historial">
                 <div class="flex items-center justify-between mb-3">
                     <div>
-                        <h2 class="text-lg font-semibold text-[#1E3A5F]">Historial de Servicios</h2>
+                        <h2 class="text-lg font-semibold text-brand-dark">Historial de Servicios</h2>
                         <p class="text-xs text-gray-400">Servicios completados anteriormente</p>
                     </div>
                 </div>
@@ -138,14 +138,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach($historial as $orden)
                     @php $stars = (int)($orden->satisfaccion ?? 0); @endphp
-                    <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5 hover:border-[#10B981] transition-colors">
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5 hover:border-brand-green transition-colors">
                         <div class="flex items-start justify-between gap-2 mb-3">
                             <div class="flex items-start gap-3">
                                 <div class="w-8 h-8 rounded-full bg-[#D1FAE5] flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <svg class="w-4 h-4 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-sm font-semibold text-[#1E3A5F] leading-tight">{{ $orden->titulo }}</h3>
+                                    <h3 class="text-sm font-semibold text-brand-dark leading-tight">{{ $orden->titulo }}</h3>
                                     <span class="text-xs text-gray-400">#OT-{{ str_pad($orden->id, 3, '0', STR_PAD_LEFT) }}</span>
                                 </div>
                             </div>
@@ -174,7 +174,7 @@
                                 @endfor
                             </div>
                             <a href="{{ route('cliente.orden.show', $orden) }}"
-                               class="text-xs font-medium text-[#10B981] hover:underline">Ver detalles</a>
+                               class="text-xs font-medium text-brand-green hover:underline">Ver detalles</a>
                         </div>
                     </div>
                     @endforeach

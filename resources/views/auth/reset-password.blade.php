@@ -1,4 +1,4 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <div class="flex h-screen overflow-hidden bg-white">
 
         {{-- Panel izquierdo --}}
@@ -68,7 +68,7 @@
                                     </svg>
                                 </span>
                                 <input type="email" name="email" value="{{ old('email', $request->email) }}"
-                                       class="w-full h-12 pl-12 bg-gray-50 border @error('email') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-[#10b981] focus:outline-none"
+                                       class="w-full h-12 pl-12 bg-gray-50 border @error('email') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-brand-green focus:outline-none"
                                        placeholder="usuario@empresa.com" required autofocus autocomplete="username" />
                             </div>
                         </div>
@@ -83,7 +83,7 @@
                                     </svg>
                                 </span>
                                 <input type="password" id="password" name="password"
-                                       class="w-full h-12 pl-12 pr-12 bg-gray-50 border @error('password') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-[#10b981] focus:outline-none"
+                                       class="w-full h-12 pl-12 pr-12 bg-gray-50 border @error('password') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-brand-green focus:outline-none"
                                        placeholder="••••••••" required autocomplete="new-password" />
                                 <button type="button" onclick="togglePassword('password', 'eye-password')"
                                     class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
@@ -105,7 +105,7 @@
                                     </svg>
                                 </span>
                                 <input type="password" id="password_confirmation" name="password_confirmation"
-                                       class="w-full h-12 pl-12 pr-12 bg-gray-50 border @error('password_confirmation') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-[#10b981] focus:outline-none"
+                                       class="w-full h-12 pl-12 pr-12 bg-gray-50 border @error('password_confirmation') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-brand-green focus:outline-none"
                                        placeholder="••••••••" required autocomplete="new-password" />
                                 <button type="button" onclick="togglePassword('password_confirmation', 'eye-confirm')"
                                     class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
@@ -118,14 +118,14 @@
                         </div>
 
                         <button type="submit"
-                            class="w-full py-3 bg-[#10b981] hover:bg-[#059669] text-white text-lg font-bold rounded-2xl shadow-lg transition-all">
+                            class="w-full py-3 bg-brand-green hover:bg-brand-green-dark text-white text-lg font-bold rounded-2xl shadow-lg transition-all">
                             Restablecer contraseña
                         </button>
                     </form>
                 </div>
 
                 <p class="mt-4 text-center text-gray-600 text-sm">
-                    <a href="{{ route('login') }}" class="text-[#10b981] font-bold hover:underline">Volver al inicio de sesión</a>
+                    <a href="{{ route('login') }}" class="text-brand-green font-bold hover:underline">Volver al inicio de sesión</a>
                 </p>
 
                 <p class="mt-4 text-center text-xs text-gray-400 tracking-wide uppercase">

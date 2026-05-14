@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -6,15 +6,15 @@
 
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3 md:gap-4 flex-shrink-0 flex-wrap">
-            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
-            <a href="javascript:history.back()" class="text-gray-400 hover:text-[#10B981] transition-colors flex-shrink-0">
+            <a href="javascript:history.back()" class="text-gray-400 hover:text-brand-green transition-colors flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
             </a>
             <div>
                 <span class="text-xs font-black text-gray-400 uppercase tracking-wider">ORD-{{ str_pad($orden->id, 4, '0', STR_PAD_LEFT) }}</span>
-                <h1 class="text-2xl font-medium text-[#1E3A5F]">{{ $orden->titulo }}</h1>
+                <h1 class="text-2xl font-medium text-brand-dark">{{ $orden->titulo }}</h1>
             </div>
             <div class="ml-auto">
                 @php
@@ -40,15 +40,15 @@
 
                     {{-- Descripción --}}
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6">
-                        <h2 class="text-sm font-semibold text-[#1E3A5F] mb-3">Descripción del problema</h2>
+                        <h2 class="text-sm font-semibold text-brand-dark mb-3">Descripción del problema</h2>
                         <p class="text-sm text-gray-600 leading-relaxed">{{ $orden->descripcion ?: 'Sin descripción.' }}</p>
                     </div>
 
                     {{-- Informe del técnico --}}
                     @if($orden->observaciones)
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6">
-                        <h2 class="text-sm font-semibold text-[#1E3A5F] mb-3 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <h2 class="text-sm font-semibold text-brand-dark mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             Informe del técnico
                         </h2>
                         <p class="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{{ $orden->observaciones }}</p>
@@ -69,14 +69,14 @@
                     {{-- Materiales utilizados --}}
                     @if($orden->Material->count())
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6">
-                        <h2 class="text-sm font-semibold text-[#1E3A5F] mb-4 flex items-center gap-2">
+                        <h2 class="text-sm font-semibold text-brand-dark mb-4 flex items-center gap-2">
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                             Materiales utilizados
                         </h2>
                         <div class="space-y-2">
                             @foreach($orden->Material as $mat)
                             <div class="flex items-center justify-between bg-[#F5F7FA] rounded-xl px-4 py-2.5">
-                                <span class="text-sm text-[#1E3A5F]">{{ $mat->nombre }}</span>
+                                <span class="text-sm text-brand-dark">{{ $mat->nombre }}</span>
                                 <span class="text-xs font-semibold text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200">x{{ $mat->cantidad }}</span>
                             </div>
                             @endforeach
@@ -93,7 +93,7 @@
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
                         <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Cliente</h2>
                         @if($orden->cliente)
-                            <p class="font-semibold text-[#1E3A5F] text-sm">{{ $orden->cliente->nombre }}</p>
+                            <p class="font-semibold text-brand-dark text-sm">{{ $orden->cliente->nombre }}</p>
                             @if($orden->cliente->telefono && $orden->cliente->telefono !== 'N/A')
                             <p class="text-xs text-gray-400 mt-1">{{ $orden->cliente->telefono }}</p>
                             @endif
@@ -113,11 +113,11 @@
                         <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Técnico</h2>
                         @if($orden->tecnico)
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="w-10 h-10 rounded-full bg-[#1E3A5F] text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-brand-dark text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
                                     {{ substr($orden->tecnico->name, 0, 1) }}
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-[#1E3A5F] text-sm">{{ $orden->tecnico->name }}</p>
+                                    <p class="font-semibold text-brand-dark text-sm">{{ $orden->tecnico->name }}</p>
                                     <p class="text-xs text-gray-400">Técnico de Campo</p>
                                 </div>
                             </div>
@@ -136,16 +136,16 @@
                             @csrf
                             @method('PATCH')
                             <div>
-                                <label for="usuario_id" class="block text-sm font-medium text-[#1E3A5F] mb-2">Seleccionar Técnico</label>
+                                <label for="usuario_id" class="block text-sm font-medium text-brand-dark mb-2">Seleccionar Técnico</label>
                                 <select id="usuario_id" name="usuario_id" required
-                                    class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-2 focus:outline-none transition-colors text-sm appearance-none">
+                                    class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-2 focus:outline-none transition-colors text-sm appearance-none">
                                     <option value="" disabled {{ !$orden->tecnico ? 'selected' : '' }}>Elige un técnico...</option>
                                     @foreach($tecnicos as $tec)
                                         <option value="{{ $tec->id }}" {{ $orden->usuario_id === $tec->id ? 'selected' : '' }}>{{ $tec->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <button type="submit" class="w-full bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            <button type="submit" class="w-full bg-brand-green hover:bg-brand-green-dark text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                                 {{ $orden->tecnico ? 'Cambiar Técnico' : 'Asignar Técnico' }}
                             </button>
                         </form>
@@ -159,16 +159,16 @@
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-gray-500">Fecha</span>
-                                <span class="font-medium text-[#1E3A5F]">{{ $orden->updated_at->format('d/m/Y') }}</span>
+                                <span class="font-medium text-brand-dark">{{ $orden->updated_at->format('d/m/Y') }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-500">Prioridad</span>
-                                <span class="font-medium text-[#1E3A5F] capitalize">{{ $orden->prioridad }}</span>
+                                <span class="font-medium text-brand-dark capitalize">{{ $orden->prioridad }}</span>
                             </div>
                             @if($orden->hora_inicio && $orden->hora_fin)
                             <div class="flex justify-between">
                                 <span class="text-gray-500">Horario</span>
-                                <span class="font-medium text-[#1E3A5F]">{{ $orden->hora_inicio }} – {{ $orden->hora_fin }}</span>
+                                <span class="font-medium text-brand-dark">{{ $orden->hora_inicio }} – {{ $orden->hora_fin }}</span>
                             </div>
                             @php
                                 [$hi,$mi] = explode(':', $orden->hora_inicio);
@@ -178,7 +178,7 @@
                             @endphp
                             <div class="flex justify-between bg-[#D1FAE5] rounded-lg px-3 py-2">
                                 <span class="text-[#065F46] font-medium">Duración</span>
-                                <span class="font-bold text-[#10B981]">{{ ($h ? $h.'h ' : '') . ($m ? $m.'min' : '') }}</span>
+                                <span class="font-bold text-brand-green">{{ ($h ? $h.'h ' : '') . ($m ? $m.'min' : '') }}</span>
                             </div>
                             @endif
                         </div>

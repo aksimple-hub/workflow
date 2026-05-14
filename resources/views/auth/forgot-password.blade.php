@@ -1,4 +1,4 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <div class="flex h-screen overflow-hidden bg-white">
 
         {{-- Panel izquierdo --}}
@@ -68,13 +68,13 @@
                                     </svg>
                                 </span>
                                 <input type="email" name="email" value="{{ old('email') }}"
-                                       class="w-full h-12 pl-12 bg-gray-50 border @error('email') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-[#10b981] focus:outline-none"
+                                       class="w-full h-12 pl-12 bg-gray-50 border @error('email') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-brand-green focus:outline-none"
                                        placeholder="usuario@empresa.com" required autofocus />
                             </div>
                         </div>
 
                         <button type="submit"
-                            class="w-full h-13 py-3 bg-[#10b981] hover:bg-[#059669] text-white text-lg font-bold rounded-2xl shadow-lg transition-all">
+                            class="w-full h-13 py-3 bg-brand-green hover:bg-brand-green-dark text-white text-lg font-bold rounded-2xl shadow-lg transition-all">
                             Enviar enlace de recuperación
                         </button>
                     </form>
@@ -82,7 +82,7 @@
 
                 <p class="mt-4 text-center text-gray-600 text-sm">
                     ¿Recuerdas tu contraseña?
-                    <a href="{{ route('login') }}" class="text-[#10b981] font-bold hover:underline">Volver al inicio de sesión</a>
+                    <a href="{{ route('login') }}" class="text-brand-green font-bold hover:underline">Volver al inicio de sesión</a>
                 </p>
 
                 <p class="mt-4 text-center text-xs text-gray-400 tracking-wide uppercase">

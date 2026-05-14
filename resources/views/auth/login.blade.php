@@ -1,4 +1,4 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <div class="flex h-screen overflow-hidden bg-white">
 
         <div class="hidden lg:flex lg:w-7/12 bg-[#214371] p-10 flex-col justify-center items-center text-white">
@@ -14,22 +14,22 @@
             </div>
 
             <div class="grid grid-cols-2 gap-4 w-full max-w-2xl">
-                <div class="bg-[#2c5282]/50 p-5 rounded-2xl border border-blue-400/30 text-center">
+                <div class="bg-brand-dark-mid/50 p-5 rounded-2xl border border-blue-400/30 text-center">
                     <span class="text-2xl mb-2 block">📍</span>
                     <h4 class="text-base font-bold">Gestión de Rutas</h4>
                     <p class="text-xs text-blue-200">Optimización automática</p>
                 </div>
-                <div class="bg-[#2c5282]/50 p-5 rounded-2xl border border-blue-400/30 text-center">
+                <div class="bg-brand-dark-mid/50 p-5 rounded-2xl border border-blue-400/30 text-center">
                     <span class="text-2xl mb-2 block">⚡</span>
                     <h4 class="text-base font-bold">Tiempo Real</h4>
                     <p class="text-xs text-blue-200">Seguimiento en vivo</p>
                 </div>
-                <div class="bg-[#2c5282]/50 p-5 rounded-2xl border border-blue-400/30 text-center">
+                <div class="bg-brand-dark-mid/50 p-5 rounded-2xl border border-blue-400/30 text-center">
                     <span class="text-2xl mb-2 block">📊</span>
                     <h4 class="text-base font-bold">Reportes</h4>
                     <p class="text-xs text-blue-200">Análisis detallados</p>
                 </div>
-                <div class="bg-[#2c5282]/50 p-5 rounded-2xl border border-blue-400/30 text-center">
+                <div class="bg-brand-dark-mid/50 p-5 rounded-2xl border border-blue-400/30 text-center">
                     <span class="text-2xl mb-2 block">👥</span>
                     <h4 class="text-base font-bold">Colaboración</h4>
                     <p class="text-xs text-blue-200">Equipo conectado</p>
@@ -72,7 +72,7 @@
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                 </span>
                                 <input type="email" name="email" value="{{ old('email') }}"
-                                       class="w-full h-12 pl-12 bg-gray-50 border @error('email') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-[#10b981]"
+                                       class="w-full h-12 pl-12 bg-gray-50 border @error('email') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-brand-green"
                                        placeholder="usuario@empresa.com" required />
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                 </span>
                                 <input type="password" id="login-password" name="password"
-                                       class="w-full h-12 pl-12 pr-12 bg-gray-50 border @error('password') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-[#10b981] focus:outline-none"
+                                       class="w-full h-12 pl-12 pr-12 bg-gray-50 border @error('password') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-brand-green focus:outline-none"
                                        placeholder="••••••••" required />
                                 <button type="button" onclick="toggleLoginPassword()"
                                     class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
@@ -98,20 +98,20 @@
 
                         <div class="flex items-center justify-between mb-6">
                             <label class="flex items-center">
-                                <input type="checkbox" name="remember" class="w-4 h-4 rounded border-gray-300 text-[#10b981] focus:ring-[#10b981]">
+                                <input type="checkbox" name="remember" class="w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green">
                                 <span class="ml-2 text-sm text-gray-600 font-medium">Recordarme</span>
                             </label>
                             <a href="{{ route('password.request') }}" class="text-sm font-bold text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
                         </div>
 
-                        <button type="submit" class="w-full h-13 py-3 bg-[#10b981] hover:bg-[#059669] text-white text-lg font-bold rounded-2xl shadow-lg transition-all">
+                        <button type="submit" class="w-full h-13 py-3 bg-brand-green hover:bg-brand-green-dark text-white text-lg font-bold rounded-2xl shadow-lg transition-all">
                             Iniciar Sesión
                         </button>
                     </form>
                 </div>
 
                 <p class="mt-4 text-center text-gray-600 text-sm">
-                    ¿No tienes una cuenta? <a href="{{ route('register') }}" class="text-[#10b981] font-bold hover:underline">Regístrate como cliente</a> o <a href="{{ route('register.tecnico') }}" class="text-[#214371] font-bold hover:underline">como técnico</a>
+                    ¿No tienes una cuenta? <a href="{{ route('register') }}" class="text-brand-green font-bold hover:underline">Regístrate como cliente</a> o <a href="{{ route('register.tecnico') }}" class="text-[#214371] font-bold hover:underline">como técnico</a>
                 </p>
                 <p class="mt-2 text-center text-gray-600 text-sm">
                     ¿Problemas para acceder? <a href="#" class="text-blue-700 font-bold hover:underline">Contacta con soporte</a>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -8,11 +8,11 @@
 
         {{-- Header --}}
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3 flex-shrink-0 flex-wrap">
-            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
             <div class="flex-1 min-w-0">
-                <h1 class="text-3xl font-medium text-[#1E3A5F]">
+                <h1 class="text-3xl font-medium text-brand-dark">
                     Finalizar Servicio #OT-{{ str_pad($orden->id, 3, '0', STR_PAD_LEFT) }}
                 </h1>
                 <p class="text-sm text-gray-500 mt-0.5">
@@ -23,7 +23,7 @@
                 </p>
             </div>
             <a href="{{ route('ordenes.show', $orden) }}"
-               class="flex items-center gap-2 text-sm font-medium text-[#1E3A5F] border border-gray-200 hover:border-[#1E3A5F] px-4 py-2 rounded-xl transition-colors">
+               class="flex items-center gap-2 text-sm font-medium text-brand-dark border border-gray-200 hover:border-brand-dark px-4 py-2 rounded-xl transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
@@ -47,20 +47,20 @@
 
                         {{-- Tareas Realizadas --}}
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
-                            <h2 class="text-base font-semibold text-[#1E3A5F] mb-1">Tareas Realizadas</h2>
+                            <h2 class="text-base font-semibold text-brand-dark mb-1">Tareas Realizadas</h2>
                             <p class="text-xs text-gray-400 mb-4">Marca las tareas completadas durante el servicio</p>
 
                             <div id="tareas-list" class="space-y-2">
                                 @foreach(['Revisión visual del sistema completo','Prueba de funcionamiento','Verificación de presión'] as $tarea)
                                 <label class="flex items-center gap-3 bg-[#F5F7FA] rounded-xl px-4 py-3 cursor-pointer group">
-                                    <input type="checkbox" class="tarea-check w-4 h-4 accent-[#10B981]" data-nombre="{{ $tarea }}" checked>
-                                    <span class="text-sm text-gray-700 group-hover:text-[#1E3A5F] transition-colors">{{ $tarea }}</span>
+                                    <input type="checkbox" class="tarea-check w-4 h-4 accent-brand-green" data-nombre="{{ $tarea }}" checked>
+                                    <span class="text-sm text-gray-700 group-hover:text-brand-dark transition-colors">{{ $tarea }}</span>
                                 </label>
                                 @endforeach
                             </div>
 
                             <button type="button" onclick="addTarea()"
-                                class="mt-3 w-full border-2 border-dashed border-gray-200 hover:border-[#10B981] text-gray-400 hover:text-[#10B981] rounded-xl py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                                class="mt-3 w-full border-2 border-dashed border-gray-200 hover:border-brand-green text-gray-400 hover:text-brand-green rounded-xl py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                 Añadir tarea adicional
                             </button>
@@ -68,13 +68,13 @@
 
                         {{-- Material Utilizado --}}
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
-                            <h2 class="text-base font-semibold text-[#1E3A5F] mb-1">Material Utilizado</h2>
+                            <h2 class="text-base font-semibold text-brand-dark mb-1">Material Utilizado</h2>
                             <p class="text-xs text-gray-400 mb-4">Registra los materiales empleados</p>
 
                             <div id="materiales-list" class="space-y-2"></div>
 
                             <button type="button" onclick="addMaterial()"
-                                class="mt-3 w-full border-2 border-dashed border-gray-200 hover:border-[#10B981] text-gray-400 hover:text-[#10B981] rounded-xl py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                                class="mt-3 w-full border-2 border-dashed border-gray-200 hover:border-brand-green text-gray-400 hover:text-brand-green rounded-xl py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                 Añadir material
                             </button>
@@ -82,27 +82,27 @@
 
                         {{-- Resumen --}}
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
-                            <h2 class="text-base font-semibold text-[#1E3A5F] mb-4">Resumen</h2>
+                            <h2 class="text-base font-semibold text-brand-dark mb-4">Resumen</h2>
                             <div class="space-y-2">
                                 <div class="flex items-center justify-between py-2 border-b border-gray-100">
                                     <span class="text-sm text-gray-500">Hora de inicio:</span>
                                     <input type="time" name="hora_inicio" id="hora_inicio"
-                                        class="text-sm font-medium text-[#1E3A5F] bg-transparent border-none outline-none text-right"
+                                        class="text-sm font-medium text-brand-dark bg-transparent border-none outline-none text-right"
                                         onchange="calcularTiempo()">
                                 </div>
                                 <div class="flex items-center justify-between py-2 border-b border-gray-100">
                                     <span class="text-sm text-gray-500">Hora de finalización:</span>
                                     <input type="time" name="hora_fin" id="hora_fin"
-                                        class="text-sm font-medium text-[#1E3A5F] bg-transparent border-none outline-none text-right"
+                                        class="text-sm font-medium text-brand-dark bg-transparent border-none outline-none text-right"
                                         onchange="calcularTiempo()">
                                 </div>
                                 <div class="flex items-center justify-between py-2 bg-[#D1FAE5] rounded-xl px-3">
                                     <span class="text-sm font-medium text-[#065F46]">Tiempo total:</span>
-                                    <span id="tiempo-total" class="text-sm font-bold text-[#10B981]">—</span>
+                                    <span id="tiempo-total" class="text-sm font-bold text-brand-green">—</span>
                                 </div>
                                 <div class="flex items-center justify-between py-2 border-t border-gray-100 mt-1">
                                     <span class="text-sm text-gray-500">Materiales usados:</span>
-                                    <span id="resumen-materiales" class="text-sm font-medium text-[#1E3A5F]">0 unidades</span>
+                                    <span id="resumen-materiales" class="text-sm font-medium text-brand-dark">0 unidades</span>
                                 </div>
                             </div>
                         </div>
@@ -114,13 +114,13 @@
 
                         {{-- Comentarios del Técnico --}}
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
-                            <h2 class="text-base font-semibold text-[#1E3A5F] mb-1">Comentarios del Técnico</h2>
+                            <h2 class="text-base font-semibold text-brand-dark mb-1">Comentarios del Técnico</h2>
                             <p class="text-xs text-gray-400 mb-3">Describe el trabajo realizado y cualquier observación relevante</p>
                             <textarea name="observaciones" required rows="5"
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl p-3 resize-none outline-none transition-colors text-sm text-gray-700"
+                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl p-3 resize-none outline-none transition-colors text-sm text-gray-700"
                                 placeholder="Escribe aquí los detalles del servicio, observaciones, recomendaciones para el cliente..."></textarea>
                             <p class="text-xs text-gray-400 mt-2">
-                                Estos comentarios serán visibles para el <span class="text-[#10B981] font-medium">cliente</span> y el <span class="text-[#1D4ED8] font-medium">administrador</span>
+                                Estos comentarios serán visibles para el <span class="text-brand-green font-medium">cliente</span> y el <span class="text-[#1D4ED8] font-medium">administrador</span>
                             </p>
                             @error('observaciones')
                                 <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -129,16 +129,16 @@
 
                         {{-- Recomendaciones para el Cliente --}}
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
-                            <h2 class="text-base font-semibold text-[#1E3A5F] mb-1">Recomendaciones para el Cliente</h2>
+                            <h2 class="text-base font-semibold text-brand-dark mb-1">Recomendaciones para el Cliente</h2>
                             <p class="text-xs text-gray-400 mb-3">Sugerencias de mantenimiento o acciones preventivas</p>
                             <textarea name="recomendaciones" rows="3"
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl p-3 resize-none outline-none transition-colors text-sm text-gray-700"
+                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl p-3 resize-none outline-none transition-colors text-sm text-gray-700"
                                 placeholder="Ej: Recomiendo realizar una revisión anual de la caldera..."></textarea>
                         </div>
 
                         {{-- Satisfacción del Cliente --}}
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
-                            <h2 class="text-base font-semibold text-[#1E3A5F] mb-1">Satisfacción del Cliente</h2>
+                            <h2 class="text-base font-semibold text-brand-dark mb-1">Satisfacción del Cliente</h2>
                             <p class="text-xs text-gray-400 mb-4">¿El cliente está satisfecho con el servicio?</p>
                             <div class="flex items-center gap-2" id="star-rating">
                                 @for($i = 1; $i <= 5; $i++)
@@ -157,7 +157,7 @@
 
                         {{-- Firma del Cliente --}}
                         <div class="bg-[#EFF6FF] rounded-xl border border-[#BFDBFE] p-5">
-                            <h2 class="text-base font-semibold text-[#1E3A5F] mb-1">Firma del Cliente</h2>
+                            <h2 class="text-base font-semibold text-brand-dark mb-1">Firma del Cliente</h2>
                             <p class="text-xs text-[#1D4ED8] mb-3">Solicita la firma digital del cliente para confirmar la finalización</p>
                             <div class="bg-white rounded-xl border-2 border-dashed border-[#BFDBFE] relative overflow-hidden" style="height:120px">
                                 <canvas id="firma-canvas" class="w-full h-full cursor-crosshair touch-none"></canvas>
@@ -179,7 +179,7 @@
 
                         {{-- Botón final --}}
                         <button type="submit"
-                            class="w-full bg-[#10B981] hover:bg-[#059669] text-white py-4 rounded-xl font-semibold text-base shadow-[0px_4px_12px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center gap-2">
+                            class="w-full bg-brand-green hover:bg-brand-green-dark text-white py-4 rounded-xl font-semibold text-base shadow-[0px_4px_12px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
@@ -202,7 +202,7 @@ function addTarea() {
     const label = document.createElement('label');
     label.className = 'flex items-center gap-3 bg-[#F5F7FA] rounded-xl px-4 py-3 cursor-pointer group';
     label.innerHTML = `
-        <input type="checkbox" class="tarea-check w-4 h-4 accent-[#10B981]" data-nombre="${nombre.trim()}" checked>
+        <input type="checkbox" class="tarea-check w-4 h-4 accent-brand-green" data-nombre="${nombre.trim()}" checked>
         <span class="text-sm text-gray-700 flex-1">${nombre.trim()}</span>
         <button type="button" onclick="this.closest('label').remove()" class="text-gray-300 hover:text-red-400 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -220,12 +220,12 @@ function addMaterial(nombre = '') {
     div.innerHTML = `
         <input type="text" name="materiales[${idx}][nombre]" placeholder="Nombre del material"
             value="${nombre}"
-            class="flex-1 bg-transparent text-sm text-[#1E3A5F] outline-none placeholder-gray-400">
+            class="flex-1 bg-transparent text-sm text-brand-dark outline-none placeholder-gray-400">
         <div class="flex items-center gap-2 flex-shrink-0">
             <button type="button" onclick="changeQty(this,-1)" class="w-6 h-6 rounded-full border border-gray-300 hover:border-red-400 hover:text-red-400 flex items-center justify-center text-gray-500 transition-colors text-sm font-bold">−</button>
             <input type="number" name="materiales[${idx}][cantidad]" value="1" min="1"
-                class="w-8 text-center text-sm font-medium text-[#1E3A5F] bg-transparent outline-none qty-input">
-            <button type="button" onclick="changeQty(this,1)" class="w-6 h-6 rounded-full border border-gray-300 hover:border-[#10B981] hover:text-[#10B981] flex items-center justify-center text-gray-500 transition-colors text-sm font-bold">+</button>
+                class="w-8 text-center text-sm font-medium text-brand-dark bg-transparent outline-none qty-input">
+            <button type="button" onclick="changeQty(this,1)" class="w-6 h-6 rounded-full border border-gray-300 hover:border-brand-green hover:text-brand-green flex items-center justify-center text-gray-500 transition-colors text-sm font-bold">+</button>
         </div>
         <button type="button" onclick="removeMaterial(this)" class="text-gray-300 hover:text-red-400 transition-colors ml-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>

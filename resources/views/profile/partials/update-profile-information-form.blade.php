@@ -1,6 +1,6 @@
-<section>
+﻿<section>
     <header>
-        <h2 class="text-lg font-medium text-[#1E3A5F]">Información del Perfil</h2>
+        <h2 class="text-lg font-medium text-brand-dark">Información del Perfil</h2>
         <p class="mt-1 text-sm text-gray-600">Actualiza el nombre y el correo electrónico de tu cuenta.</p>
     </header>
 
@@ -27,7 +27,7 @@
                 <div>
                     <p class="text-sm mt-2 text-gray-800">
                         Tu dirección de correo no está verificada.
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#10b981]">
+                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green">
                             Haz clic aquí para reenviar el correo de verificación.
                         </button>
                     </p>

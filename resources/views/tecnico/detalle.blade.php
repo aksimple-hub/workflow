@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -8,12 +8,12 @@
         <!-- Header -->
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3 justify-between flex-shrink-0 flex-wrap">
             <div class="flex items-center gap-3 min-w-0">
-                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
                 <div>
                 <div class="flex items-center gap-3 mb-1">
-                    <h1 class="text-2xl font-semibold text-[#1E3A5F]">
+                    <h1 class="text-2xl font-semibold text-brand-dark">
                         Detalle de Avería #OT-{{ str_pad($orden->id, 3, '0', STR_PAD_LEFT) }}
                     </h1>
                     @php
@@ -31,7 +31,7 @@
                 </p>
                 </div>
             </div>
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-2 text-sm font-medium text-[#1E3A5F] hover:text-[#10B981] transition-colors">
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-2 text-sm font-medium text-brand-dark hover:text-brand-green transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 Volver a Agenda
             </a>
@@ -46,14 +46,14 @@
 
                     <!-- Datos del Cliente -->
                     <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
-                        <h2 class="text-base font-semibold text-[#1E3A5F] mb-4">Datos del Cliente</h2>
+                        <h2 class="text-base font-semibold text-brand-dark mb-4">Datos del Cliente</h2>
                         <div class="flex items-center gap-4 mb-4">
                             <div class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
                                 <svg class="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                             </div>
                             <div>
-                                <p class="font-semibold text-[#1E3A5F] text-base">{{ $orden->cliente->nombre ?? 'Cliente no asignado' }}</p>
-                                <p class="text-sm text-[#10B981] font-medium">Cliente activo</p>
+                                <p class="font-semibold text-brand-dark text-base">{{ $orden->cliente->nombre ?? 'Cliente no asignado' }}</p>
+                                <p class="text-sm text-brand-green font-medium">Cliente activo</p>
                                 @if($orden->cliente && $orden->cliente->created_at)
                                     <p class="text-xs text-gray-400">Miembro desde {{ $orden->cliente->created_at->format('Y') }}</p>
                                 @endif
@@ -62,7 +62,7 @@
                         <div class="space-y-2">
                             @if($orden->cliente && $orden->cliente->telefono && $orden->cliente->telefono !== 'N/A')
                             <a href="tel:{{ $orden->cliente->telefono }}"
-                               class="flex items-center justify-center gap-2 w-full bg-[#10B981] hover:bg-[#059669] text-white py-2.5 rounded-xl font-medium text-sm transition-colors shadow-[0px_2px_8px_rgba(16,185,129,0.25)]">
+                               class="flex items-center justify-center gap-2 w-full bg-brand-green hover:bg-brand-green-dark text-white py-2.5 rounded-xl font-medium text-sm transition-colors shadow-[0px_2px_8px_rgba(16,185,129,0.25)]">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                                 Llamar al Cliente
                             </a>
@@ -72,7 +72,7 @@
                                 Sin teléfono
                             </button>
                             @endif
-                            <button class="flex items-center justify-center gap-2 w-full bg-[#1E3A5F] hover:bg-[#2C5282] text-white py-2.5 rounded-xl font-medium text-sm transition-colors">
+                            <button class="flex items-center justify-center gap-2 w-full bg-brand-dark hover:bg-brand-dark-mid text-white py-2.5 rounded-xl font-medium text-sm transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 Ver en Mapa
                             </button>
@@ -81,9 +81,9 @@
 
                     <!-- Dirección del Servicio -->
                     <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
-                        <h2 class="text-base font-semibold text-[#1E3A5F] mb-3">Dirección del Servicio</h2>
+                        <h2 class="text-base font-semibold text-brand-dark mb-3">Dirección del Servicio</h2>
                         <div class="flex items-start gap-2 mb-4">
-                            <svg class="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <svg class="w-5 h-5 text-brand-green flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             <div>
                                 <p class="text-sm font-semibold text-[#1D4ED8]">{{ $orden->cliente->direccion ?? 'Dirección no especificada' }}</p>
                                 <p class="text-xs text-gray-500 mt-0.5">España</p>
@@ -98,7 +98,7 @@
 
                     <!-- Detalles del Servicio -->
                     <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
-                        <h2 class="text-base font-semibold text-[#1E3A5F] mb-4">Detalles del Servicio</h2>
+                        <h2 class="text-base font-semibold text-brand-dark mb-4">Detalles del Servicio</h2>
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Asunto:</span>
@@ -125,7 +125,7 @@
                             <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
                                 <svg class="w-4 h-4 text-[#D97706]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                             </div>
-                            <h2 class="text-base font-semibold text-[#1E3A5F]">Descripción del Problema</h2>
+                            <h2 class="text-base font-semibold text-brand-dark">Descripción del Problema</h2>
                         </div>
                         <p class="text-sm text-gray-700 leading-relaxed">{{ $orden->descripcion ?? 'Sin descripción proporcionada.' }}</p>
 
@@ -139,7 +139,7 @@
 
                     <!-- Fotos Adjuntas -->
                     <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
-                        <h2 class="text-base font-semibold text-[#1E3A5F] mb-4">Fotos Adjuntas por el Cliente</h2>
+                        <h2 class="text-base font-semibold text-brand-dark mb-4">Fotos Adjuntas por el Cliente</h2>
                         <div class="grid grid-cols-3 gap-3">
                             @for($i = 0; $i < 3; $i++)
                             <div class="bg-gray-100 rounded-xl aspect-square flex items-center justify-center">
@@ -151,23 +151,23 @@
 
                     <!-- Historial de la Orden -->
                     <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
-                        <h2 class="text-base font-semibold text-[#1E3A5F] mb-4">Historial de la Orden</h2>
+                        <h2 class="text-base font-semibold text-brand-dark mb-4">Historial de la Orden</h2>
                         <div class="space-y-4">
                             @if($orden->fecha_asignacion)
                             <div class="flex items-start gap-3">
-                                <div class="w-3 h-3 rounded-full bg-[#10B981] flex-shrink-0 mt-1"></div>
+                                <div class="w-3 h-3 rounded-full bg-brand-green flex-shrink-0 mt-1"></div>
                                 <div>
                                     <p class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($orden->fecha_asignacion)->format('d M Y - H:i') }}</p>
-                                    <p class="text-sm font-medium text-[#1E3A5F]">Orden asignada al técnico</p>
+                                    <p class="text-sm font-medium text-brand-dark">Orden asignada al técnico</p>
                                     <p class="text-xs text-gray-500">Por: Sistema</p>
                                 </div>
                             </div>
                             @endif
                             <div class="flex items-start gap-3">
-                                <div class="w-3 h-3 rounded-full bg-[#10B981] flex-shrink-0 mt-1"></div>
+                                <div class="w-3 h-3 rounded-full bg-brand-green flex-shrink-0 mt-1"></div>
                                 <div>
                                     <p class="text-xs text-gray-400">{{ $orden->created_at->translatedFormat('d M Y - H:i') }}</p>
-                                    <p class="text-sm font-medium text-[#1E3A5F]">Orden creada por el cliente</p>
+                                    <p class="text-sm font-medium text-brand-dark">Orden creada por el cliente</p>
                                     <p class="text-xs text-gray-500">Por: {{ $orden->cliente->nombre ?? 'Cliente' }}</p>
                                 </div>
                             </div>
@@ -180,7 +180,7 @@
                             <form action="{{ route('ordenes.update-estado', $orden) }}" method="POST" class="flex-1">
                                 @csrf @method('PATCH')
                                 <input type="hidden" name="estado" value="en_camino">
-                                <button type="submit" class="w-full bg-[#10B981] hover:bg-[#059669] text-white py-3.5 rounded-xl font-semibold text-sm shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-colors">
+                                <button type="submit" class="w-full bg-brand-green hover:bg-brand-green-dark text-white py-3.5 rounded-xl font-semibold text-sm shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-colors">
                                     Iniciar Desplazamiento
                                 </button>
                             </form>
@@ -188,17 +188,17 @@
                             <form action="{{ route('ordenes.update-estado', $orden) }}" method="POST" class="flex-1">
                                 @csrf @method('PATCH')
                                 <input type="hidden" name="estado" value="en_proceso">
-                                <button type="submit" class="w-full bg-[#10B981] hover:bg-[#059669] text-white py-3.5 rounded-xl font-semibold text-sm shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-colors">
+                                <button type="submit" class="w-full bg-brand-green hover:bg-brand-green-dark text-white py-3.5 rounded-xl font-semibold text-sm shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-colors">
                                     Iniciar Trabajo
                                 </button>
                             </form>
                         @elseif($orden->estado === 'en_proceso')
-                            <a href="{{ route('ordenes.cierre', $orden) }}" class="flex-1 flex items-center justify-center bg-[#10B981] hover:bg-[#059669] text-white py-3.5 rounded-xl font-semibold text-sm shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-colors">
+                            <a href="{{ route('ordenes.cierre', $orden) }}" class="flex-1 flex items-center justify-center bg-brand-green hover:bg-brand-green-dark text-white py-3.5 rounded-xl font-semibold text-sm shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-colors">
                                 Finalizar Orden
                             </a>
                         @endif
 
-                        <a href="{{ route('dashboard') }}" class="px-6 flex items-center justify-center bg-white border border-gray-200 hover:border-gray-300 text-[#1E3A5F] py-3.5 rounded-xl font-semibold text-sm transition-colors">
+                        <a href="{{ route('dashboard') }}" class="px-6 flex items-center justify-center bg-white border border-gray-200 hover:border-gray-300 text-brand-dark py-3.5 rounded-xl font-semibold text-sm transition-colors">
                             Cancelar Servicio
                         </a>
                     </div>

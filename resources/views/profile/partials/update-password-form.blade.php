@@ -1,6 +1,6 @@
-<section>
+﻿<section>
     <header>
-        <h2 class="text-lg font-medium text-[#1E3A5F]">Actualizar Contraseña</h2>
+        <h2 class="text-lg font-medium text-brand-dark">Actualizar Contraseña</h2>
         <p class="mt-1 text-sm text-gray-600">Usa una contraseña larga y aleatoria para mantener tu cuenta segura.</p>
     </header>
 

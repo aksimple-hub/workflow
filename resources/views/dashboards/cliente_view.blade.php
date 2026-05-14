@@ -1,10 +1,10 @@
-<div class="space-y-6">
+﻿<div class="space-y-6">
     <div class="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
         <div>
             <h3 class="text-2xl font-bold text-gray-900">¡Hola, {{ auth()->user()->name }}!</h3>
             <p class="text-gray-500">Consulta el estado de tus averías en tiempo real.</p>
         </div>
-        <a href="{{ route('ordenes.create') }}" class="bg-[#10b981] hover:bg-[#059669] text-white font-bold py-3 px-6 rounded-xl shadow-lg transition">
+        <a href="{{ route('ordenes.create') }}" class="bg-brand-green hover:bg-brand-green-dark text-white font-bold py-3 px-6 rounded-xl shadow-lg transition">
             + Nueva Solicitud
         </a>
     </div>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -9,15 +9,15 @@
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
             <div class="flex items-center gap-3 min-w-0">
-                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
                 <div>
-                    <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Nueva Solicitud</h1>
+                    <h1 class="text-2xl md:text-4xl font-medium text-brand-dark">Nueva Solicitud</h1>
                     <p class="text-sm md:text-base text-gray-500 mt-0.5 hidden sm:block">Registra una nueva petición de servicio</p>
                 </div>
             </div>
-            <a href="{{ route('dashboard') }}" class="flex-shrink-0 text-[#1E3A5F] hover:underline font-medium text-sm">
+            <a href="{{ route('dashboard') }}" class="flex-shrink-0 text-brand-dark hover:underline font-medium text-sm">
                 Volver
             </a>
         </header>
@@ -33,19 +33,19 @@
             @endphp
             <div class="bg-white p-6 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-8 h-8 rounded-full bg-[#10B981] flex items-center justify-center flex-shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-brand-green flex items-center justify-center flex-shrink-0">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
                     </div>
-                    <h2 class="text-sm font-semibold text-[#1E3A5F]">Paso 1: Confirmar Dirección de Domicilio</h2>
+                    <h2 class="text-sm font-semibold text-brand-dark">Paso 1: Confirmar Dirección de Domicilio</h2>
                 </div>
 
                 {{-- Vista lectura --}}
                 <div id="address-display" class="bg-[#F5F7FA] rounded-xl px-5 py-4 flex items-center justify-between">
                     <div>
-                        <p id="address-text" class="text-sm font-medium text-[#1E3A5F]">
+                        <p id="address-text" class="text-sm font-medium text-brand-dark">
                             {{ $direccionActual ?: 'Sin dirección registrada' }}
                         </p>
                         <p class="text-xs text-gray-500 mt-0.5">Dirección de servicio</p>
@@ -61,10 +61,10 @@
                     <input type="text" id="direccion_input"
                         value="{{ old('direccion_servicio', $direccionActual) }}"
                         placeholder="Ej: Calle Mayor 45, 3º B, 28013 Madrid, España"
-                        class="w-full bg-[#F5F7FA] border-2 border-[#10B981] rounded-xl px-4 py-3 focus:outline-none text-sm">
+                        class="w-full bg-[#F5F7FA] border-2 border-brand-green rounded-xl px-4 py-3 focus:outline-none text-sm">
                     <div class="flex gap-2">
                         <button type="button" onclick="confirmAddressEdit()"
-                            class="text-sm bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-lg transition-colors font-medium">
+                            class="text-sm bg-brand-green hover:bg-brand-green-dark text-white px-4 py-2 rounded-lg transition-colors font-medium">
                             Confirmar
                         </button>
                         <button type="button" onclick="cancelAddressEdit()"
@@ -102,7 +102,7 @@
             <div class="bg-[#DBEAFE] border border-[#BFDBFE] rounded-xl p-4 flex items-start gap-3">
                 <svg class="w-5 h-5 text-[#1D4ED8] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <div>
-                    <p class="text-sm font-semibold text-[#1E3A5F]">Te quedan {{ $restantes }} solicitudes para hoy</p>
+                    <p class="text-sm font-semibold text-brand-dark">Te quedan {{ $restantes }} solicitudes para hoy</p>
                     <p class="text-sm text-[#1D4ED8] mt-0.5">Has usado {{ $hoyCount }} de 3 solicitudes permitidas hoy.</p>
                 </div>
             </div>
@@ -121,17 +121,17 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Título (Ocupa 2 columnas) -->
                         <div class="col-span-2">
-                            <label for="titulo" class="block text-sm font-medium text-[#1E3A5F] mb-2">Asunto de la solicitud *</label>
+                            <label for="titulo" class="block text-sm font-medium text-brand-dark mb-2">Asunto de la solicitud *</label>
                             <input type="text" id="titulo" name="titulo" required
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-3 focus:outline-none transition-colors text-base"
+                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 focus:outline-none transition-colors text-base"
                                 placeholder="Ej: Falla en el sistema de refrigeración">
                         </div>
 
                         <!-- Prioridad -->
                         <div>
-                            <label for="prioridad" class="block text-sm font-medium text-[#1E3A5F] mb-2">Prioridad Estimada *</label>
+                            <label for="prioridad" class="block text-sm font-medium text-brand-dark mb-2">Prioridad Estimada *</label>
                             <select id="prioridad" name="prioridad" required
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
+                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
                                 <option value="" disabled selected>Selecciona una opción...</option>
                                 <option value="baja">Baja - Puede esperar</option>
                                 <option value="media">Media - Necesita atención pronta</option>
@@ -141,9 +141,9 @@
 
                         <!-- Tipo de Servicio (Simulado, no está en la BD actual pero es común) -->
                         <div>
-                            <label for="tipo_servicio" class="block text-sm font-medium text-[#1E3A5F] mb-2">Tipo de Servicio</label>
+                            <label for="tipo_servicio" class="block text-sm font-medium text-brand-dark mb-2">Tipo de Servicio</label>
                             <select id="tipo_servicio" name="tipo_servicio"
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
+                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
                                 <option value="mantenimiento">Mantenimiento Preventivo</option>
                                 <option value="reparacion">Reparación de Avería</option>
                                 <option value="instalacion">Nueva Instalación</option>
@@ -152,23 +152,23 @@
 
                         <!-- Descripción (Ocupa 2 columnas) -->
                         <div class="col-span-2">
-                            <label for="descripcion" class="block text-sm font-medium text-[#1E3A5F] mb-2">Descripción detallada *</label>
+                            <label for="descripcion" class="block text-sm font-medium text-brand-dark mb-2">Descripción detallada *</label>
                             <textarea id="descripcion" name="descripcion" required rows="6"
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl p-4 resize-none focus:outline-none transition-colors text-base"
+                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl p-4 resize-none focus:outline-none transition-colors text-base"
                                 placeholder="Por favor, describe con detalle el problema o la necesidad..."></textarea>
                         </div>
 
                         <!-- Separador cita -->
                         <div class="col-span-2 border-t border-gray-100 pt-4">
-                            <p class="text-sm font-semibold text-[#1E3A5F] mb-1">Preferencia de horario</p>
+                            <p class="text-sm font-semibold text-brand-dark mb-1">Preferencia de horario</p>
                             <p class="text-xs text-gray-500">El administrador asignará la fecha definitiva de la visita</p>
                         </div>
 
                         <!-- Horario de preferencia -->
                         <div class="col-span-2">
-                            <label for="horario_preferido" class="block text-sm font-medium text-[#1E3A5F] mb-2">Horario de preferencia *</label>
+                            <label for="horario_preferido" class="block text-sm font-medium text-brand-dark mb-2">Horario de preferencia *</label>
                             <select id="horario_preferido" name="horario_preferido" required
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-[#10B981] rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
+                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
                                 <option value="" disabled selected>Selecciona un horario...</option>
                                 <option value="mañana" {{ old('horario_preferido') === 'mañana' ? 'selected' : '' }}>Mañana (8:00 – 13:00)</option>
                                 <option value="mediodia" {{ old('horario_preferido') === 'mediodia' ? 'selected' : '' }}>Mediodía (13:00 – 16:00)</option>
@@ -201,10 +201,10 @@
 
                     <div class="mt-8 flex items-center justify-between">
                         <p class="text-xs text-gray-400">
-                            Solicitudes usadas hoy: <span class="font-semibold {{ $hoyCount >= 3 ? 'text-red-500' : 'text-[#1E3A5F]' }}">{{ $hoyCount }} / 3</span>
+                            Solicitudes usadas hoy: <span class="font-semibold {{ $hoyCount >= 3 ? 'text-red-500' : 'text-brand-dark' }}">{{ $hoyCount }} / 3</span>
                         </p>
                         <button type="submit" {{ $hoyCount >= 3 ? 'disabled' : '' }}
-                            class="{{ $hoyCount >= 3 ? 'bg-gray-300 cursor-not-allowed text-gray-500' : 'bg-[#10B981] hover:bg-[#059669] text-white shadow-[0px_2px_8px_rgba(16,185,129,0.25)]' }} px-8 py-4 rounded-xl transition-all font-medium text-base">
+                            class="{{ $hoyCount >= 3 ? 'bg-gray-300 cursor-not-allowed text-gray-500' : 'bg-brand-green hover:bg-brand-green-dark text-white shadow-[0px_2px_8px_rgba(16,185,129,0.25)]' }} px-8 py-4 rounded-xl transition-all font-medium text-base">
                             Enviar Solicitud
                         </button>
                     </div>

@@ -1,4 +1,4 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
+﻿@php use Illuminate\Support\Facades\Storage; @endphp
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,11 +12,11 @@
     <!-- Top Navigation -->
     <nav class="bg-white border-b border-gray-200 py-3 px-4 sm:px-8 flex justify-between items-center gap-3 flex-wrap">
         <div class="flex items-center gap-3 sm:gap-6 min-w-0">
-            <a href="{{ route('dashboard') }}" class="bg-[#214371] px-3 sm:px-5 py-2 rounded-xl hover:bg-[#1E3A5F] transition-colors flex-shrink-0">
+            <a href="{{ route('dashboard') }}" class="bg-[#214371] px-3 sm:px-5 py-2 rounded-xl hover:bg-brand-dark transition-colors flex-shrink-0">
                 <span class="text-white text-base sm:text-xl font-bold tracking-tight">Workflow</span>
             </a>
             <div>
-                <h1 class="text-base sm:text-xl font-bold text-[#1E3A5F]">Mi Perfil</h1>
+                <h1 class="text-base sm:text-xl font-bold text-brand-dark">Mi Perfil</h1>
                 <p class="text-xs text-gray-500 hidden sm:block">Configuración de cuenta</p>
             </div>
         </div>
@@ -54,16 +54,16 @@
                 @enderror
 
                 @if(session('status') === 'photo-updated')
-                    <p class="text-xs text-[#10B981] mb-2">Foto actualizada.</p>
+                    <p class="text-xs text-brand-green mb-2">Foto actualizada.</p>
                 @endif
 
                 <button type="button" onclick="document.getElementById('input-foto').click()"
-                        class="text-sm font-medium text-[#10B981] hover:text-[#059669] mb-6 transition-colors">
+                        class="text-sm font-medium text-brand-green hover:text-brand-green-dark mb-6 transition-colors">
                     Cambiar foto
                 </button>
 
                 <div class="w-full space-y-2">
-                    <button id="btn-tab-info" onclick="switchTab('tab-info')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-[#10B981] text-white font-medium text-sm transition-colors border border-transparent">
+                    <button id="btn-tab-info" onclick="switchTab('tab-info')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-green text-white font-medium text-sm transition-colors border border-transparent">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                         Información Personal
                     </button>
@@ -97,7 +97,7 @@
                 <!-- Información Personal -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-bold text-[#1E3A5F]">Información Personal</h3>
+                        <h3 class="text-xl font-bold text-brand-dark">Información Personal</h3>
                         <button onclick="toggleSection('edit-profile')" class="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">Editar</button>
                     </div>
 
@@ -152,11 +152,11 @@
 
                 <!-- Información de la Cuenta -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                    <h3 class="text-xl font-bold text-[#1E3A5F] mb-6">Información de la Cuenta</h3>
+                    <h3 class="text-xl font-bold text-brand-dark mb-6">Información de la Cuenta</h3>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="bg-gray-50 rounded-xl p-6 text-center border border-gray-100">
-                            <div class="text-3xl font-bold text-[#1E3A5F] mb-1">
+                            <div class="text-3xl font-bold text-brand-dark mb-1">
                                 @php
                                     $count = 0;
                                     if(auth()->user()->role === 'tecnico') {
@@ -173,7 +173,7 @@
                         </div>
                         
                         <div class="bg-gray-50 rounded-xl p-6 text-center border border-gray-100">
-                            <div class="text-3xl font-bold text-[#1E3A5F] mb-1">
+                            <div class="text-3xl font-bold text-brand-dark mb-1">
                                 @php
                                     $iv = auth()->user()->created_at->toDateTime()->diff(new \DateTime());
                                     $td = (int) $iv->days;
@@ -188,7 +188,7 @@
                         </div>
 
                         <div class="bg-gray-50 rounded-xl p-6 text-center border border-gray-100">
-                            <div class="text-3xl font-bold text-[#10B981] mb-1 flex items-center justify-center gap-1">
+                            <div class="text-3xl font-bold text-brand-green mb-1 flex items-center justify-center gap-1">
                                 @php
                                     $u = auth()->user();
                                     $avgRaw = match($u->role) {
@@ -215,7 +215,7 @@
             <div id="tab-security" class="tab-content hidden space-y-6">
                 <!-- Seguridad y Contraseña -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                    <h3 class="text-xl font-bold text-[#1E3A5F] mb-6">Seguridad y Contraseña</h3>
+                    <h3 class="text-xl font-bold text-brand-dark mb-6">Seguridad y Contraseña</h3>
                     
                     <div class="space-y-4">
                         <!-- Password Option -->
@@ -225,7 +225,7 @@
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-[#1E3A5F]">Contraseña</p>
+                                    <p class="text-sm font-bold text-brand-dark">Contraseña</p>
                                     <p class="text-xs text-gray-500">Actualiza la contraseña de tu cuenta</p>
                                 </div>
                             </div>
@@ -248,7 +248,7 @@
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-[#1E3A5F]">Autenticación de dos factores</p>
+                                    <p class="text-sm font-bold text-brand-dark">Autenticación de dos factores</p>
                                     <p class="text-xs text-gray-500">Añade una capa extra de seguridad (Próximamente)</p>
                                 </div>
                             </div>
@@ -272,7 +272,7 @@
             <div id="tab-notifications" class="tab-content hidden space-y-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
                     <svg class="w-20 h-20 text-gray-200 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-                    <h3 class="text-2xl font-bold text-[#1E3A5F] mb-3">Notificaciones</h3>
+                    <h3 class="text-2xl font-bold text-brand-dark mb-3">Notificaciones</h3>
                     <p class="text-gray-500 max-w-md mx-auto">No tienes notificaciones pendientes en este momento. Cuando haya actualizaciones sobre tus servicios aparecerán aquí.</p>
                 </div>
             </div>
@@ -294,14 +294,14 @@
 
             // Resetear estilos de todos los botones
             document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('bg-[#10B981]', 'text-white');
+                el.classList.remove('bg-brand-green', 'text-white');
                 el.classList.add('text-gray-600', 'hover:bg-gray-50', 'hover:border-gray-100');
             });
 
             // Activar estilo del botón seleccionado
             const activeBtn = document.getElementById('btn-' + tabId);
             activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-50', 'hover:border-gray-100');
-            activeBtn.classList.add('bg-[#10B981]', 'text-white');
+            activeBtn.classList.add('bg-brand-green', 'text-white');
         }
 
         function toggleSection(sectionId) {
@@ -327,7 +327,7 @@
         // Toast de notificación
         function showToast(message, type) {
             const colors = type === 'success'
-                ? 'bg-[#10B981] text-white'
+                ? 'bg-brand-green text-white'
                 : 'bg-red-500 text-white';
             const icon = type === 'success'
                 ? '<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'

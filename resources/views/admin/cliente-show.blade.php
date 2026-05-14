@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -7,13 +7,13 @@
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
             <div class="flex items-center gap-3">
-                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
-                <a href="{{ route('admin.clientes') }}" class="text-gray-400 hover:text-[#10B981] transition-colors flex-shrink-0">
+                <a href="{{ route('admin.clientes') }}" class="text-gray-400 hover:text-brand-green transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 </a>
-                <h1 class="text-xl md:text-2xl font-medium text-[#1E3A5F]">Perfil del Cliente</h1>
+                <h1 class="text-xl md:text-2xl font-medium text-brand-dark">Perfil del Cliente</h1>
             </div>
             <div class="flex items-center gap-3 flex-wrap flex-shrink-0">
                 <button onclick="toggleEdit()"
@@ -46,12 +46,12 @@
 
                 <!-- Info Cliente (vista) -->
                 <div id="view-mode" class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-8 flex items-start gap-6">
-                    <div class="w-20 h-20 rounded-xl bg-[#F5F7FA] border-2 border-gray-200 text-[#1E3A5F] flex items-center justify-center font-bold text-3xl flex-shrink-0">
+                    <div class="w-20 h-20 rounded-xl bg-[#F5F7FA] border-2 border-gray-200 text-brand-dark flex items-center justify-center font-bold text-3xl flex-shrink-0">
                         {{ substr($cliente->nombre, 0, 1) }}
                     </div>
                     <div class="flex-1">
                         <div class="flex items-center gap-3 mb-1">
-                            <h2 class="text-3xl font-medium text-[#1E3A5F]">{{ $cliente->nombre }}</h2>
+                            <h2 class="text-3xl font-medium text-brand-dark">{{ $cliente->nombre }}</h2>
                             @if($user)
                                 @if($user->is_approved)
                                     <span class="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Activo</span>
@@ -82,8 +82,8 @@
                 </div>
 
                 <!-- Formulario de edición (oculto por defecto) -->
-                <div id="edit-mode" class="hidden bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-[#10B981] p-8">
-                    <h3 class="text-lg font-semibold text-[#1E3A5F] mb-6">Editar datos del cliente</h3>
+                <div id="edit-mode" class="hidden bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-brand-green p-8">
+                    <h3 class="text-lg font-semibold text-brand-dark mb-6">Editar datos del cliente</h3>
                     <form method="POST" action="{{ route('admin.cliente.update', $cliente->id) }}">
                         @csrf
                         @method('PATCH')
@@ -91,35 +91,35 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Nombre / Razón social</label>
                                 <input type="text" name="nombre" value="{{ old('nombre', $cliente->nombre) }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('nombre')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">DNI / CIF</label>
                                 <input type="text" name="dni_cif" value="{{ old('dni_cif', $cliente->dni_cif) }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('dni_cif')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
                                 <input type="email" name="email" value="{{ old('email', $cliente->email) }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('email')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Teléfono</label>
                                 <input type="text" name="telefono" value="{{ old('telefono', $cliente->telefono) }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('telefono')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Dirección</label>
                                 <input type="text" name="direccion" value="{{ old('direccion', $cliente->direccion) }}"
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                             </div>
                         </div>
                         <div class="flex gap-3 mt-6">
-                            <button type="submit" class="px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] text-white text-sm font-medium rounded-xl transition-colors">
+                            <button type="submit" class="px-6 py-2.5 bg-brand-green hover:bg-brand-green-dark text-white text-sm font-medium rounded-xl transition-colors">
                                 Guardar cambios
                             </button>
                             <button type="button" onclick="toggleEdit()" class="px-6 py-2.5 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors">
@@ -131,7 +131,7 @@
 
                 <!-- Historial de órdenes -->
                 <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
-                    <h3 class="text-xl font-medium text-[#1E3A5F] mb-4">
+                    <h3 class="text-xl font-medium text-brand-dark mb-4">
                         Órdenes del cliente
                         <span class="text-sm font-normal text-gray-400 ml-2">{{ $ordenes->count() }} en total</span>
                     </h3>
@@ -145,10 +145,10 @@
                                 default                  => 'bg-gray-100 text-gray-600',
                             };
                         @endphp
-                        <div class="border border-gray-100 rounded-xl p-4 flex justify-between items-center hover:border-[#10B981] transition-colors">
+                        <div class="border border-gray-100 rounded-xl p-4 flex justify-between items-center hover:border-brand-green transition-colors">
                             <div>
                                 <span class="text-xs font-bold text-gray-400 uppercase">#OT-{{ $orden->id }}</span>
-                                <h4 class="text-base font-medium text-[#1E3A5F]">{{ $orden->titulo }}</h4>
+                                <h4 class="text-base font-medium text-brand-dark">{{ $orden->titulo }}</h4>
                                 <p class="text-xs text-gray-500 mt-0.5">{{ $orden->created_at->format('d/m/Y H:i') }}</p>
                             </div>
                             <div class="flex items-center gap-4">
