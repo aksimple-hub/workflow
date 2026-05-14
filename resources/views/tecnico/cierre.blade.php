@@ -36,8 +36,6 @@
             <form action="{{ route('ordenes.cerrar', $orden) }}" method="POST" id="form-cierre">
                 @csrf
 
-                {{-- Inputs ocultos para firma y tareas --}}
-                <input type="hidden" name="firma_base64" id="firma_base64">
                 <input type="hidden" name="tareas_json" id="tareas_json">
 
                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-5 max-w-7xl mx-auto">
@@ -136,54 +134,42 @@
                                 placeholder="Ej: Recomiendo realizar una revisión anual de la caldera..."></textarea>
                         </div>
 
-                        {{-- Satisfacción del Cliente --}}
+                        {{-- Valoración del trato del cliente --}}
                         <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
-                            <h2 class="text-base font-semibold text-brand-dark mb-1">Satisfacción del Cliente</h2>
-                            <p class="text-xs text-gray-400 mb-4">¿El cliente está satisfecho con el servicio?</p>
-                            <div class="flex items-center gap-2" id="star-rating">
+                            <h2 class="text-base font-semibold text-brand-dark mb-1">Trato del Cliente</h2>
+                            <p class="text-xs text-gray-400 mb-4">¿Cómo fue el trato recibido por parte del cliente?</p>
+                            <div class="flex items-center gap-2" id="star-rating-tec">
                                 @for($i = 1; $i <= 5; $i++)
                                 <button type="button" data-value="{{ $i }}"
-                                    class="star-btn transition-transform hover:scale-110 focus:outline-none"
-                                    onclick="setStars({{ $i }})">
-                                    <svg class="w-9 h-9 star-icon text-gray-300 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                                    class="star-tec-btn transition-transform hover:scale-110 focus:outline-none"
+                                    onclick="setStarsTec({{ $i }})">
+                                    <svg class="w-9 h-9 star-tec-icon text-gray-300 transition-colors" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                     </svg>
                                 </button>
                                 @endfor
                             </div>
-                            <p id="star-label" class="text-xs text-gray-400 mt-2">Sin valorar</p>
-                            <input type="hidden" name="satisfaccion" id="satisfaccion-input">
+                            <p id="star-tec-label" class="text-xs text-gray-400 mt-2">Sin valorar</p>
+                            <input type="hidden" name="satisfaccion_tecnico" id="satisfaccion-tecnico-input">
                         </div>
 
-                        {{-- Firma del Cliente --}}
-                        <div class="bg-[#EFF6FF] rounded-xl border border-[#BFDBFE] p-5">
-                            <h2 class="text-base font-semibold text-brand-dark mb-1">Firma del Cliente</h2>
-                            <p class="text-xs text-[#1D4ED8] mb-3">Solicita la firma digital del cliente para confirmar la finalización</p>
-                            <div class="bg-white rounded-xl border-2 border-dashed border-[#BFDBFE] relative overflow-hidden" style="height:120px">
-                                <canvas id="firma-canvas" class="w-full h-full cursor-crosshair touch-none"></canvas>
-                                <span id="firma-placeholder" class="absolute inset-0 flex items-center justify-center text-xs text-gray-400 pointer-events-none">
-                                    Área de firma digital
-                                </span>
-                            </div>
-                            <div class="flex gap-2 mt-2">
-                                <button type="button" onclick="limpiarFirma()"
-                                    class="flex-1 text-xs text-gray-500 border border-gray-200 hover:bg-gray-50 rounded-lg py-2 transition-colors">
-                                    Limpiar
-                                </button>
-                                <button type="button" onclick="solicitarFirma()"
-                                    class="flex-1 text-xs font-medium text-[#1D4ED8] border border-[#BFDBFE] hover:bg-[#DBEAFE] rounded-lg py-2 transition-colors">
-                                    Solicitar Firma
-                                </button>
-                            </div>
+                        {{-- Info: el cliente valorará por su cuenta --}}
+                        <div class="bg-[#EFF6FF] rounded-xl border border-[#BFDBFE] p-4 flex items-start gap-3">
+                            <svg class="w-5 h-5 text-[#1D4ED8] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <p class="text-xs text-[#1D4ED8]">
+                                Al enviar el informe, el cliente recibirá una solicitud para <strong>valorar el servicio y firmar</strong> la conformidad desde su portal.
+                            </p>
                         </div>
 
                         {{-- Botón final --}}
                         <button type="submit"
                             class="w-full bg-brand-green hover:bg-brand-green-dark text-white py-4 rounded-xl font-semibold text-base shadow-[0px_4px_12px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            Firmar y Cerrar Orden
+                            Enviar Informe
                         </button>
 
                     </div>
@@ -268,85 +254,41 @@ function calcularTiempo() {
     document.getElementById('tiempo-total').textContent = (h ? h + 'h ' : '') + (m ? m + 'min' : '');
 }
 
-// ─── Estrellas ────────────────────────────────────────────────────────────────
-const starLabels = ['', 'Muy insatisfecho', 'Insatisfecho', 'Neutral', 'Satisfecho', 'Muy satisfecho'];
-function setStars(value) {
-    document.getElementById('satisfaccion-input').value = value;
-    document.getElementById('star-label').textContent = starLabels[value];
-    document.querySelectorAll('.star-btn').forEach(btn => {
-        const star = btn.querySelector('.star-icon');
+// ─── Estrellas trato del cliente ─────────────────────────────────────────────
+const starLabelsTec = ['', 'Muy mal trato', 'Mal trato', 'Normal', 'Buen trato', 'Excelente trato'];
+function setStarsTec(value) {
+    document.getElementById('satisfaccion-tecnico-input').value = value;
+    document.getElementById('star-tec-label').textContent = starLabelsTec[value];
+    document.querySelectorAll('.star-tec-btn').forEach(btn => {
+        const star = btn.querySelector('.star-tec-icon');
         star.classList.toggle('text-[#F59E0B]', parseInt(btn.dataset.value) <= value);
         star.classList.toggle('text-gray-300',  parseInt(btn.dataset.value) >  value);
     });
 }
-document.querySelectorAll('.star-btn').forEach(btn => {
+document.querySelectorAll('.star-tec-btn').forEach(btn => {
     btn.addEventListener('mouseenter', () => {
         const hover = parseInt(btn.dataset.value);
-        document.querySelectorAll('.star-btn .star-icon').forEach((s, i) => {
+        document.querySelectorAll('.star-tec-btn .star-tec-icon').forEach((s, i) => {
             s.classList.toggle('text-[#F59E0B]', i < hover);
             s.classList.toggle('text-gray-300',  i >= hover);
         });
     });
     btn.addEventListener('mouseleave', () => {
-        const current = parseInt(document.getElementById('satisfaccion-input').value || 0);
-        document.querySelectorAll('.star-btn .star-icon').forEach((s, i) => {
+        const current = parseInt(document.getElementById('satisfaccion-tecnico-input').value || 0);
+        document.querySelectorAll('.star-tec-btn .star-tec-icon').forEach((s, i) => {
             s.classList.toggle('text-[#F59E0B]', i < current);
             s.classList.toggle('text-gray-300',  i >= current);
         });
     });
 });
 
-// ─── Firma Canvas ─────────────────────────────────────────────────────────────
-const canvas = document.getElementById('firma-canvas');
-const ctx = canvas.getContext('2d');
-let drawing = false, hasFirma = false;
-
-function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-function getPos(e) {
-    const r = canvas.getBoundingClientRect();
-    const src = e.touches ? e.touches[0] : e;
-    return { x: src.clientX - r.left, y: src.clientY - r.top };
-}
-
-canvas.addEventListener('mousedown',  e => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
-canvas.addEventListener('mousemove',  e => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.strokeStyle = '#1E3A5F'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke(); hasFirma = true; document.getElementById('firma-placeholder').style.display = 'none'; });
-canvas.addEventListener('mouseup',    () => drawing = false);
-canvas.addEventListener('mouseleave', () => drawing = false);
-canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); }, { passive: false });
-canvas.addEventListener('touchmove',  e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.strokeStyle = '#1E3A5F'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke(); hasFirma = true; document.getElementById('firma-placeholder').style.display = 'none'; }, { passive: false });
-canvas.addEventListener('touchend',   () => drawing = false);
-
-function limpiarFirma() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    hasFirma = false;
-    document.getElementById('firma-placeholder').style.display = 'flex';
-    document.getElementById('firma_base64').value = '';
-}
-
-function solicitarFirma() {
-    alert('Entrega el dispositivo al cliente para que firme en el área de arriba.');
-}
-
-// ─── Submit: serializar tareas y firma ────────────────────────────────────────
+// ─── Submit: serializar tareas ───────────────────────────────────────────────
 document.getElementById('form-cierre').addEventListener('submit', function() {
-    // Tareas
     const tareas = [];
     document.querySelectorAll('.tarea-check').forEach(ch => {
         tareas.push({ nombre: ch.dataset.nombre, done: ch.checked });
     });
     document.getElementById('tareas_json').value = JSON.stringify(tareas);
-
-    // Firma
-    if (hasFirma) {
-        document.getElementById('firma_base64').value = canvas.toDataURL('image/png');
-    }
 });
 </script>
 @endsection
