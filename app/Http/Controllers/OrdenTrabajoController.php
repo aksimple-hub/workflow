@@ -199,26 +199,20 @@ class OrdenTrabajoController extends Controller
             abort(403, 'No autorizado');
         }
 
+        if (in_array($orden->estado, ['pendiente_valoracion', 'finalizada', 'cancelada'])) {
+            return redirect()->route('dashboard')->with('info', 'Esta orden ya fue procesada.');
+        }
+
         $request->validate([
-            'observaciones'    => 'required|string',
-            'recomendaciones'  => 'nullable|string',
-            'satisfaccion'     => 'nullable|integer|min:1|max:5',
-            'hora_inicio'      => 'nullable|date_format:H:i',
-            'hora_fin'         => 'nullable|date_format:H:i',
-            'firma_base64'     => 'nullable|string',
-            'materiales'       => 'nullable|array',
+            'observaciones'       => 'required|string',
+            'recomendaciones'     => 'nullable|string',
+            'satisfaccion_tecnico'=> 'nullable|integer|min:1|max:5',
+            'hora_inicio'         => 'nullable|date_format:H:i',
+            'hora_fin'            => 'nullable|date_format:H:i',
+            'materiales'          => 'nullable|array',
             'materiales.*.nombre'   => 'required_with:materiales|string|max:255',
             'materiales.*.cantidad' => 'required_with:materiales|integer|min:1',
         ]);
-
-        // Firma digital desde canvas (base64) o archivo subido
-        $pathFirma = null;
-        if ($request->filled('firma_base64')) {
-            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->firma_base64));
-            $filename = 'firmas/' . Str::uuid() . '.png';
-            Storage::disk('public')->put($filename, $imageData);
-            $pathFirma = $filename;
-        }
 
         // Prefixar las tareas realizadas en las observaciones
         $observaciones = $request->observaciones;
@@ -232,13 +226,12 @@ class OrdenTrabajoController extends Controller
         }
 
         $orden->update([
-            'estado'          => 'finalizada',
-            'observaciones'   => $observaciones,
-            'recomendaciones' => $request->recomendaciones,
-            'satisfaccion'    => $request->satisfaccion,
-            'hora_inicio'     => $request->hora_inicio ?: null,
-            'hora_fin'        => $request->hora_fin ?: null,
-            'firma_path'      => $pathFirma,
+            'estado'               => 'pendiente_valoracion',
+            'observaciones'        => $observaciones,
+            'recomendaciones'      => $request->recomendaciones,
+            'satisfaccion_tecnico' => $request->satisfaccion_tecnico ?: null,
+            'hora_inicio'          => $request->hora_inicio ?: null,
+            'hora_fin'             => $request->hora_fin ?: null,
         ]);
 
         // Guardar materiales
@@ -255,7 +248,56 @@ class OrdenTrabajoController extends Controller
             }
         }
 
-        return redirect()->route('dashboard')->with('success', 'Orden finalizada correctamente.');
+        return redirect()->route('dashboard')->with('success', 'Informe enviado. El cliente recibirá la solicitud de valoración.');
+    }
+
+    // Muestra el formulario de valoración del cliente
+    public function showValoracion(OrdenTrabajo $orden)
+    {
+        $user = Auth::user();
+        if ($user->role !== 'cliente' || $orden->cliente_id !== $user->cliente_id) {
+            abort(403);
+        }
+        if ($orden->estado !== 'pendiente_valoracion') {
+            return redirect()->route('dashboard');
+        }
+        $orden->load(['tecnico', 'cliente']);
+        return view('cliente.valoracion', compact('orden'));
+    }
+
+    // Procesa la valoración del cliente y finaliza la orden
+    public function submitValoracion(Request $request, OrdenTrabajo $orden)
+    {
+        $user = Auth::user();
+        if ($user->role !== 'cliente' || $orden->cliente_id !== $user->cliente_id) {
+            abort(403);
+        }
+        if ($orden->estado !== 'pendiente_valoracion') {
+            return redirect()->route('dashboard');
+        }
+
+        $request->validate([
+            'satisfaccion'       => 'required|integer|min:1|max:5',
+            'comentario_cliente' => 'nullable|string|max:1000',
+            'firma_base64'       => 'nullable|string',
+        ]);
+
+        $pathFirma = $orden->firma_path;
+        if ($request->filled('firma_base64')) {
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->firma_base64));
+            $filename = 'firmas/' . Str::uuid() . '.png';
+            Storage::disk('public')->put($filename, $imageData);
+            $pathFirma = $filename;
+        }
+
+        $orden->update([
+            'estado'             => 'finalizada',
+            'satisfaccion'       => $request->satisfaccion,
+            'comentario_cliente' => $request->comentario_cliente,
+            'firma_path'         => $pathFirma,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', '¡Gracias por tu valoración! El servicio ha quedado finalizado.');
     }
 
     // Cancelar/eliminar una orden

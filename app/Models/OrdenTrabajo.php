@@ -13,7 +13,7 @@ class OrdenTrabajo extends Model
     protected $fillable = [
         'uuid', 'cliente_id', 'usuario_id', 'titulo', 'descripcion', 'prioridad', 'estado',
         'fecha_asignacion', 'fecha_entrega_prevista', 'observaciones', 'recomendaciones',
-        'satisfaccion', 'hora_inicio', 'hora_fin', 'firma_path',
+        'comentario_cliente', 'satisfaccion', 'satisfaccion_tecnico', 'hora_inicio', 'hora_fin', 'firma_path',
     ];
 
     protected function casts(): array
