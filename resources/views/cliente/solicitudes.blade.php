@@ -32,18 +32,20 @@
                 @if($ordenActiva)
                 @php
                     $statusMsg = match($ordenActiva->estado) {
-                        'pendiente' => ['El servicio está pendiente de asignación.',        'text-gray-500',    'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        'asignada'  => ['El técnico ha sido asignado a su servicio.',       'text-[#1D4ED8]',   'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'],
-                        'en_camino' => ['El técnico está en camino a su domicilio.',        'text-brand-green',   'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'],
-                        'en_proceso'=> ['El técnico está trabajando en su servicio.',       'text-[#D97706]',   'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z'],
-                        default     => ['Estado desconocido.', 'text-gray-500', 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'pendiente'            => ['El servicio está pendiente de asignación.',           'text-gray-500',    'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'asignada'             => ['El técnico ha sido asignado a su servicio.',          'text-[#1D4ED8]',   'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'],
+                        'en_camino'            => ['El técnico está en camino a su domicilio.',           'text-brand-green', 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'],
+                        'en_proceso'           => ['El técnico está trabajando en su servicio.',          'text-[#D97706]',   'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z'],
+                        'pendiente_valoracion' => ['El técnico ha finalizado el servicio. Por favor, valora la atención recibida.', 'text-[#065F46]', 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        default                => ['Estado desconocido.', 'text-gray-500', 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                     };
                     $badge = match($ordenActiva->estado) {
-                        'pendiente'  => ['Pendiente',          'bg-gray-100 text-gray-600'],
-                        'asignada'   => ['Asignada',           'bg-[#FEF3C7] text-[#D97706]'],
-                        'en_camino'  => ['En camino',          'bg-[#D1FAE5] text-[#065F46]'],
-                        'en_proceso' => ['En proceso',         'bg-[#DBEAFE] text-[#1D4ED8]'],
-                        default      => [ucfirst($ordenActiva->estado), 'bg-gray-100 text-gray-600'],
+                        'pendiente'            => ['Pendiente',           'bg-gray-100 text-gray-600'],
+                        'asignada'             => ['Asignada',            'bg-[#FEF3C7] text-[#D97706]'],
+                        'en_camino'            => ['En camino',           'bg-[#D1FAE5] text-[#065F46]'],
+                        'en_proceso'           => ['En proceso',          'bg-[#DBEAFE] text-[#1D4ED8]'],
+                        'pendiente_valoracion' => ['Pendiente valoración','bg-[#D1FAE5] text-[#065F46]'],
+                        default                => [ucfirst($ordenActiva->estado), 'bg-gray-100 text-gray-600'],
                     };
                 @endphp
 
@@ -88,7 +90,14 @@
                         </div>
 
                         {{-- Botones --}}
-                        <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="flex items-center gap-3 flex-shrink-0 flex-wrap">
+                            @if($ordenActiva->estado === 'pendiente_valoracion')
+                            <a href="{{ route('cliente.orden.valorar', $ordenActiva) }}"
+                               class="px-5 py-2.5 rounded-xl bg-brand-green hover:bg-brand-green-dark text-white text-sm font-semibold transition-all shadow-[0px_2px_8px_rgba(16,185,129,0.3)] flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                                Valorar Servicio
+                            </a>
+                            @else
                             @if($ordenActiva->cliente?->direccion && $ordenActiva->cliente->direccion !== 'N/A')
                             <a href="https://maps.google.com/?q={{ urlencode($ordenActiva->cliente->direccion) }}"
                                target="_blank"
@@ -102,11 +111,17 @@
                                 Contactar Técnico
                             </a>
                             @endif
+                            @endif
                         </div>
                     </div>
 
                     {{-- Barra de estado --}}
-                    <div class="mt-4 bg-[#F0FDF4] border border-[#BBF7D0] rounded-xl px-4 py-3 flex items-center gap-2">
+                    @php
+                        $barBg = $ordenActiva->estado === 'pendiente_valoracion'
+                            ? 'bg-[#D1FAE5] border-[#6EE7B7]'
+                            : 'bg-[#F0FDF4] border-[#BBF7D0]';
+                    @endphp
+                    <div class="mt-4 {{ $barBg }} border rounded-xl px-4 py-3 flex items-center gap-2">
                         <svg class="w-4 h-4 flex-shrink-0 {{ $statusMsg[1] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $statusMsg[2] }}"/></svg>
                         <p class="text-sm {{ $statusMsg[1] }}">{{ $statusMsg[0] }}</p>
                     </div>
