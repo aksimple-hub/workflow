@@ -52,8 +52,10 @@ class DashboardController extends Controller
         }
 
         if ($user->role === 'cliente') {
+            $clienteId = $user->cliente_id ?? $user->id;
+
             $todas = OrdenTrabajo::with(['tecnico.perfil', 'cliente'])
-                ->where('cliente_id', $user->cliente_id)
+                ->where('cliente_id', $clienteId)
                 ->latest()
                 ->get();
 
@@ -284,6 +286,8 @@ class DashboardController extends Controller
             'telefono' => $request->telefono,
             'direccion' => $request->direccion,
         ]);
+
+        $user->update(['cliente_id' => $user->id]);
 
         return redirect()->route('admin.clientes')->with('success', 'Cliente creado correctamente.');
     }
