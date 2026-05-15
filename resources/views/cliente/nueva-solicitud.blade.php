@@ -116,7 +116,7 @@
             @enderror
 
             <div class="bg-white p-8 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
-                <form action="{{ route('ordenes.store') }}" method="POST" {{ $hoyCount >= 3 ? 'onsubmit=return false' : '' }}>
+                <form action="{{ route('ordenes.store') }}" method="POST" enctype="multipart/form-data" {{ $hoyCount >= 3 ? 'onsubmit=return false' : '' }}>
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Título (Ocupa 2 columnas) -->
@@ -158,6 +158,33 @@
                                 placeholder="Por favor, describe con detalle el problema o la necesidad..."></textarea>
                         </div>
 
+                        <!-- Fotos de la avería -->
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-brand-dark mb-2">
+                                Fotos de la avería <span class="text-gray-400 font-normal">(opcional, máx. 5)</span>
+                            </label>
+
+                            {{-- Zona de drop --}}
+                            <div id="drop-zone"
+                                onclick="document.getElementById('fotos-input').click()"
+                                class="border-2 border-dashed border-gray-200 hover:border-brand-green rounded-xl p-6 text-center cursor-pointer transition-colors group">
+                                <svg class="w-8 h-8 text-gray-300 group-hover:text-brand-green mx-auto mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <p class="text-sm text-gray-400 group-hover:text-brand-green transition-colors">Haz clic o arrastra fotos aquí</p>
+                                <p class="text-xs text-gray-300 mt-1">JPG, PNG o WEBP · Máx. 5 MB por foto</p>
+                            </div>
+                            <input type="file" id="fotos-input" name="fotos[]"
+                                accept="image/jpeg,image/png,image/webp"
+                                multiple class="hidden" onchange="previewFotos(this)">
+
+                            {{-- Preview grid --}}
+                            <div id="fotos-preview" class="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-3 hidden"></div>
+
+                            @error('fotos')   <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                            @error('fotos.*') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                        </div>
+
                         <!-- Separador cita -->
                         <div class="col-span-2 border-t border-gray-100 pt-4">
                             <p class="text-sm font-semibold text-brand-dark mb-1">Preferencia de horario</p>
@@ -197,6 +224,39 @@
                             document.getElementById('address-edit').classList.add('hidden');
                             document.getElementById('address-display').classList.remove('hidden');
                         }
+                    </script>
+
+                    <script>
+                    function previewFotos(input) {
+                        const preview = document.getElementById('fotos-preview');
+                        preview.innerHTML = '';
+                        const files = Array.from(input.files).slice(0, 5);
+                        if (!files.length) { preview.classList.add('hidden'); return; }
+                        preview.classList.remove('hidden');
+                        files.forEach(file => {
+                            const reader = new FileReader();
+                            reader.onload = e => {
+                                const div = document.createElement('div');
+                                div.className = 'relative aspect-square rounded-xl overflow-hidden border border-gray-100';
+                                div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                                preview.appendChild(div);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                    }
+
+                    const dropZone = document.getElementById('drop-zone');
+                    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('border-brand-green','bg-[#F0FDF4]'); });
+                    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-brand-green','bg-[#F0FDF4]'));
+                    dropZone.addEventListener('drop', e => {
+                        e.preventDefault();
+                        dropZone.classList.remove('border-brand-green','bg-[#F0FDF4]');
+                        const input = document.getElementById('fotos-input');
+                        const dt = new DataTransfer();
+                        Array.from(e.dataTransfer.files).slice(0, 5).forEach(f => dt.items.add(f));
+                        input.files = dt.files;
+                        previewFotos(input);
+                    });
                     </script>
 
                     <div class="mt-8 flex items-center justify-between">

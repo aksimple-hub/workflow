@@ -34,4 +34,8 @@ class OrdenTrabajo extends Model
     public function Material() {
         return $this->hasMany(Material::class);
     }
+
+    public function fotos() {
+        return $this->hasMany(OrdenFoto::class, 'orden_trabajo_id');
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Material;
+use App\Models\OrdenFoto;
 use App\Models\User;
 use App\Models\OrdenTrabajo;
 use Illuminate\Http\Request;
@@ -65,6 +66,8 @@ class OrdenTrabajoController extends Controller
                 'prioridad'          => 'required|in:baja,media,alta',
                 'horario_preferido'  => 'required|in:mañana,mediodia,tarde,sin_preferencia',
                 'direccion_servicio' => 'nullable|string|max:500',
+                'fotos'              => 'nullable|array|max:5',
+                'fotos.*'            => 'image|mimes:jpg,jpeg,png,webp|max:5120',
             ]);
 
             // Límite de 3 solicitudes por día
@@ -123,17 +126,24 @@ class OrdenTrabajoController extends Controller
             default           => null,
         };
 
-        OrdenTrabajo::create([
-            'uuid'                   => (string) Str::uuid(),
-            'cliente_id'             => $cliente_id,
-            'usuario_id'             => $usuario_id,
-            'titulo'                 => $validated['titulo'],
-            'descripcion'            => $validated['descripcion'],
-            'prioridad'              => $validated['prioridad'],
-            'estado'                 => $usuario_id ? 'asignada' : 'pendiente',
-            'fecha_asignacion'       => $usuario_id ? now() : null,
-            'observaciones'          => $horarioLabel ? 'Horario preferido: ' . $horarioLabel : null,
+        $orden = OrdenTrabajo::create([
+            'uuid'             => (string) Str::uuid(),
+            'cliente_id'       => $cliente_id,
+            'usuario_id'       => $usuario_id,
+            'titulo'           => $validated['titulo'],
+            'descripcion'      => $validated['descripcion'],
+            'prioridad'        => $validated['prioridad'],
+            'estado'           => $usuario_id ? 'asignada' : 'pendiente',
+            'fecha_asignacion' => $usuario_id ? now() : null,
+            'observaciones'    => $horarioLabel ? 'Horario preferido: ' . $horarioLabel : null,
         ]);
+
+        if ($request->hasFile('fotos')) {
+            foreach ($request->file('fotos') as $foto) {
+                $path = $foto->store('orden_fotos', 'public');
+                OrdenFoto::create(['orden_trabajo_id' => $orden->id, 'path' => $path]);
+            }
+        }
 
         return redirect()->route('dashboard')->with('success', 'Orden de trabajo creada correctamente.');
     }
@@ -188,7 +198,7 @@ class OrdenTrabajoController extends Controller
             abort(403, 'No tienes permiso para ver esta orden.');
         }
 
-        $orden->load('cliente');
+        $orden->load(['cliente', 'fotos']);
         return view('tecnico.detalle', compact('orden'));
     }
 
