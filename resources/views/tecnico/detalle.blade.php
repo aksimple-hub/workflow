@@ -168,25 +168,59 @@
 
                     <!-- Fotos Adjuntas -->
                     @if($orden->fotos->count())
-                    <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
+                    @php $fotosUrls = $orden->fotos->map(fn($f) => Storage::url($f->path))->values(); @endphp
+                    <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6"
+                         x-data="{ lightbox: false, current: 0, fotos: {{ $fotosUrls->toJson() }} }">
                         <h2 class="text-base font-semibold text-brand-dark mb-4">
                             Fotos del Cliente
                             <span class="text-xs font-normal text-gray-400 ml-1">({{ $orden->fotos->count() }})</span>
                         </h2>
                         <div class="grid grid-cols-3 gap-3">
-                            @foreach($orden->fotos as $foto)
-                            <a href="{{ Storage::url($foto->path) }}" target="_blank"
-                               class="block relative aspect-square rounded-xl overflow-hidden border border-gray-100 hover:border-brand-green transition-colors group">
+                            @foreach($orden->fotos as $i => $foto)
+                            <button type="button" @click="current = {{ $i }}; lightbox = true"
+                               class="relative aspect-square rounded-xl overflow-hidden border border-gray-100 hover:border-brand-green transition-colors group">
                                 <img src="{{ Storage::url($foto->path) }}"
                                      alt="Foto avería"
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200">
-                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                     </svg>
                                 </div>
-                            </a>
+                            </button>
                             @endforeach
+                        </div>
+
+                        <!-- Lightbox -->
+                        <div x-show="lightbox" x-cloak
+                             @keydown.escape.window="lightbox = false"
+                             class="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+                             @click.self="lightbox = false">
+
+                            <!-- Cerrar -->
+                            <button @click="lightbox = false"
+                                class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+
+                            <!-- Contador -->
+                            <div class="absolute top-4 left-1/2 -translate-x-1/2 text-white/60 text-sm" x-text="(current + 1) + ' / ' + fotos.length"></div>
+
+                            <!-- Imagen -->
+                            <img :src="fotos[current]" alt="Foto avería"
+                                 class="max-h-[85vh] max-w-[90vw] rounded-xl object-contain select-none">
+
+                            <!-- Anterior -->
+                            <button x-show="fotos.length > 1" @click="current = (current - 1 + fotos.length) % fotos.length"
+                                class="absolute left-4 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                            </button>
+
+                            <!-- Siguiente -->
+                            <button x-show="fotos.length > 1" @click="current = (current + 1) % fotos.length"
+                                class="absolute right-4 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </button>
                         </div>
                     </div>
                     @endif
