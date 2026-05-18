@@ -96,23 +96,32 @@
             </form>
 
             <!-- Stats Grid -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
+                <a href="{{ route('dashboard') }}"
+                    class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ !$estado ? 'border-brand-dark ring-2 ring-brand-dark/20' : 'border-gray-100 hover:border-gray-300' }} transition-colors group block">
                     <p class="text-sm font-medium text-gray-500 mb-1">Total Órdenes</p>
                     <p class="text-3xl font-bold text-brand-dark">{{ $stats['total'] ?? 0 }}</p>
-                </div>
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
+                </a>
+                <button type="button" onclick="filtrarPorEstado('pendiente')"
+                    class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'pendiente' ? 'border-[#1D4ED8] ring-2 ring-[#1D4ED8]/20' : 'border-gray-100 hover:border-[#1D4ED8]/40' }} transition-colors text-left group">
                     <p class="text-sm font-medium text-gray-500 mb-1">Pendientes</p>
                     <p class="text-3xl font-bold text-[#1D4ED8]">{{ $stats['pendientes'] ?? 0 }}</p>
-                </div>
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
+                </button>
+                <button type="button" onclick="filtrarPorEstado('asignada')"
+                    class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'asignada' ? 'border-[#D97706] ring-2 ring-[#D97706]/20' : 'border-gray-100 hover:border-[#D97706]/40' }} transition-colors text-left group">
                     <p class="text-sm font-medium text-gray-500 mb-1">En Curso</p>
                     <p class="text-3xl font-bold text-[#D97706]">{{ $stats['en_curso'] ?? 0 }}</p>
-                </div>
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
+                </button>
+                <button type="button" onclick="filtrarPorEstado('finalizada')"
+                    class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'finalizada' ? 'border-brand-green ring-2 ring-brand-green/20' : 'border-gray-100 hover:border-brand-green/40' }} transition-colors text-left group">
                     <p class="text-sm font-medium text-gray-500 mb-1">Finalizadas</p>
                     <p class="text-3xl font-bold text-brand-green">{{ $stats['finalizadas'] ?? 0 }}</p>
-                </div>
+                </button>
+                <button type="button" onclick="filtrarPorEstado('cancelada')"
+                    class="bg-red-50 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'cancelada' ? 'border-red-500 ring-2 ring-red-500/20' : 'border-red-100 hover:border-red-300' }} transition-colors text-left group">
+                    <p class="text-sm font-medium text-red-400 mb-1">Canceladas</p>
+                    <p class="text-3xl font-bold text-red-600">{{ $stats['canceladas'] ?? 0 }}</p>
+                </button>
             </div>
 
             <!-- Tabla -->
@@ -155,6 +164,7 @@
                                     if(in_array($orden->estado, ['en_camino', 'en_curso', 'en_proceso'])) $bg = 'bg-blue-500 text-white';
                                     if($orden->estado == 'finalizada') $bg = 'bg-brand-green text-white';
                                     if(in_array($orden->estado, ['pendiente', 'asignada'])) $bg = 'bg-gray-400 text-white';
+                                    if($orden->estado === 'cancelada') $bg = 'bg-red-100 text-red-700';
                                 @endphp
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-4 py-4">
@@ -277,6 +287,13 @@ function toggleFiltros() {
 function setFiltro(campo, valor) {
     const input = document.getElementById('input' + campo.charAt(0).toUpperCase() + campo.slice(1));
     input.value = input.value === valor ? '' : valor;
+    document.getElementById('searchForm').submit();
+}
+
+// Filtrar desde las tarjetas de stats
+function filtrarPorEstado(valor) {
+    document.getElementById('inputEstado').value = valor;
+    document.getElementById('inputPrioridad').value = '';
     document.getElementById('searchForm').submit();
 }
 
