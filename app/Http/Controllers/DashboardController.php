@@ -18,6 +18,7 @@ class DashboardController extends Controller
                 'pendientes' => OrdenTrabajo::where('estado', 'pendiente')->count(),
                 'en_curso'   => OrdenTrabajo::whereIn('estado', ['en_camino', 'en_proceso', 'asignada'])->count(),
                 'finalizadas' => OrdenTrabajo::where('estado', 'finalizada')->count(),
+                'canceladas'  => OrdenTrabajo::where('estado', 'cancelada')->count(),
             ];
 
             $search   = request('search', '');
