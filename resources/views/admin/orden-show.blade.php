@@ -19,11 +19,13 @@
             <div class="ml-auto">
                 @php
                     $badgeClass = match($orden->estado) {
-                        'finalizada'  => 'bg-[#D1FAE5] text-[#065F46]',
-                        'en_proceso'  => 'bg-[#DBEAFE] text-[#1D4ED8]',
-                        'en_camino'   => 'bg-[#D1FAE5] text-[#065F46]',
-                        'asignada'    => 'bg-[#FEF3C7] text-[#D97706]',
-                        default       => 'bg-gray-100 text-gray-600',
+                        'finalizada'          => 'bg-[#D1FAE5] text-[#065F46]',
+                        'en_proceso'          => 'bg-[#DBEAFE] text-[#1D4ED8]',
+                        'en_camino'           => 'bg-[#D1FAE5] text-[#065F46]',
+                        'asignada'            => 'bg-[#FEF3C7] text-[#D97706]',
+                        'cancelada'           => 'bg-red-100 text-red-700',
+                        'pendiente_valoracion'=> 'bg-purple-100 text-purple-700',
+                        default               => 'bg-gray-100 text-gray-600',
                     };
                 @endphp
                 <span class="px-4 py-2 text-sm font-semibold rounded-full {{ $badgeClass }}">
@@ -38,14 +40,30 @@
                 {{-- ── COLUMNA IZQUIERDA (2/3) ── --}}
                 <div class="lg:col-span-2 space-y-5">
 
+                    {{-- Banner de cancelación --}}
+                    @if($orden->estado === 'cancelada')
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-5 flex items-start gap-4">
+                        <div class="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold text-red-800 mb-1">Servicio cancelado por el técnico</p>
+                            @if($orden->observaciones)
+                            <p class="text-sm text-red-700 leading-relaxed whitespace-pre-line">{{ $orden->observaciones }}</p>
+                            @endif
+                            <p class="text-xs text-red-400 mt-2">Reasigna la orden a otro técnico desde el panel de la derecha.</p>
+                        </div>
+                    </div>
+                    @endif
+
                     {{-- Descripción --}}
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6">
                         <h2 class="text-sm font-semibold text-brand-dark mb-3">Descripción del problema</h2>
                         <p class="text-sm text-gray-600 leading-relaxed">{{ $orden->descripcion ?: 'Sin descripción.' }}</p>
                     </div>
 
-                    {{-- Informe del técnico --}}
-                    @if($orden->observaciones)
+                    {{-- Informe del técnico (solo si no está cancelada) --}}
+                    @if($orden->observaciones && $orden->estado !== 'cancelada')
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6">
                         <h2 class="text-sm font-semibold text-brand-dark mb-3 flex items-center gap-2">
                             <svg class="w-4 h-4 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -149,6 +167,36 @@
                                 Asignar Técnico
                             </button>
                         </form>
+                        @endif
+
+                        {{-- CANCELADA: reasignación a nuevo técnico --}}
+                        @if($orden->estado === 'cancelada' && $tecnicos->count())
+                        <div class="mt-4 bg-red-50 border border-red-200 rounded-xl p-4 space-y-3">
+                            <p class="text-xs font-semibold text-red-700 flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                Reasignar a otro técnico
+                            </p>
+                            <form action="{{ route('ordenes.assign-tecnico', $orden) }}" method="POST" class="space-y-3">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="motivo" value="Reasignación tras cancelación del técnico anterior.">
+                                <div>
+                                    <label class="block text-xs font-semibold text-red-700 uppercase tracking-wide mb-1.5">Seleccionar nuevo técnico</label>
+                                    <select name="usuario_id" required
+                                        class="w-full bg-white border-2 border-red-200 focus:border-red-400 rounded-xl px-4 py-2 focus:outline-none transition-colors text-sm appearance-none">
+                                        <option value="" disabled selected>Elige el sustituto...</option>
+                                        @foreach($tecnicos as $tec)
+                                            @if($tec->id !== $orden->usuario_id)
+                                            <option value="{{ $tec->id }}">{{ $tec->name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+                                    Reasignar orden
+                                </button>
+                            </form>
+                        </div>
                         @endif
 
                         {{-- ASIGNADA: reasignación con motivo --}}
