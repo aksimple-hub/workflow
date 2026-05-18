@@ -98,32 +98,62 @@
                                 Valorar Servicio
                             </a>
                             @else
-                            @if($ordenActiva->cliente?->direccion && $ordenActiva->cliente->direccion !== 'N/A')
-                            <a href="https://maps.google.com/?q={{ urlencode($ordenActiva->cliente->direccion) }}"
-                               target="_blank"
-                               class="px-4 py-2 rounded-xl border border-gray-200 text-sm font-medium text-brand-dark hover:bg-gray-50 transition-colors">
-                                Ver en Mapa
+                            <a href="{{ route('cliente.orden.show', $ordenActiva) }}"
+                               class="px-5 py-2 rounded-xl border border-gray-200 hover:border-brand-green text-sm font-semibold text-brand-dark hover:text-brand-green transition-colors flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                Ver detalle
                             </a>
-                            @endif
-                            @if($ordenActiva->tecnico?->perfil?->telefono && $ordenActiva->tecnico->perfil->telefono !== 'N/A')
-                            <a href="tel:{{ $ordenActiva->tecnico->perfil->telefono }}"
-                               class="px-5 py-2 rounded-xl bg-brand-dark hover:bg-brand-dark-mid text-white text-sm font-semibold transition-colors">
-                                Contactar Técnico
-                            </a>
-                            @endif
                             @endif
                         </div>
                     </div>
 
-                    {{-- Barra de estado --}}
+                    {{-- Seguimiento por pasos --}}
                     @php
-                        $barBg = $ordenActiva->estado === 'pendiente_valoracion'
-                            ? 'bg-[#D1FAE5] border-[#6EE7B7]'
-                            : 'bg-[#F0FDF4] border-[#BBF7D0]';
+                        $pasos = [
+                            ['key' => 'pendiente',            'label' => 'Solicitud recibida'],
+                            ['key' => 'asignada',             'label' => 'Técnico asignado'],
+                            ['key' => 'en_camino',            'label' => 'En camino'],
+                            ['key' => 'en_proceso',           'label' => 'En reparación'],
+                            ['key' => 'pendiente_valoracion', 'label' => 'Finalizado'],
+                        ];
+                        $ordenEstados = ['pendiente', 'asignada', 'en_camino', 'en_proceso', 'pendiente_valoracion'];
+                        $pasoActual   = array_search($ordenActiva->estado, $ordenEstados) ?? 0;
                     @endphp
-                    <div class="mt-4 {{ $barBg }} border rounded-xl px-4 py-3 flex items-center gap-2">
-                        <svg class="w-4 h-4 flex-shrink-0 {{ $statusMsg[1] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $statusMsg[2] }}"/></svg>
-                        <p class="text-sm {{ $statusMsg[1] }}">{{ $statusMsg[0] }}</p>
+                    <div class="mt-5 pt-4 border-t border-gray-100">
+                        <div class="flex items-center justify-between gap-1">
+                            @foreach($pasos as $i => $paso)
+                            @php
+                                $completado = $i < $pasoActual;
+                                $activo     = $i === $pasoActual;
+                            @endphp
+                            <div class="flex flex-col items-center flex-1 min-w-0">
+                                <div class="w-full flex items-center">
+                                    {{-- Línea izquierda --}}
+                                    @if($i > 0)
+                                    <div class="flex-1 h-0.5 {{ $completado || $activo ? 'bg-brand-green' : 'bg-gray-200' }}"></div>
+                                    @endif
+                                    {{-- Círculo --}}
+                                    <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all
+                                        {{ $completado ? 'bg-brand-green' : ($activo ? 'bg-brand-green ring-4 ring-[#D1FAE5]' : 'bg-gray-200') }}">
+                                        @if($completado)
+                                        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                        @elseif($activo)
+                                        <div class="w-2.5 h-2.5 rounded-full bg-white"></div>
+                                        @endif
+                                    </div>
+                                    {{-- Línea derecha --}}
+                                    @if($i < count($pasos) - 1)
+                                    <div class="flex-1 h-0.5 {{ $completado ? 'bg-brand-green' : 'bg-gray-200' }}"></div>
+                                    @endif
+                                </div>
+                                <p class="text-xs mt-1.5 text-center leading-tight px-0.5
+                                    {{ $activo ? 'text-brand-green font-semibold' : ($completado ? 'text-gray-500' : 'text-gray-300') }}">
+                                    {{ $paso['label'] }}
+                                </p>
+                            </div>
+                            @endforeach
+                        </div>
+                        <p class="text-xs text-center mt-3 {{ $statusMsg[1] }}">{{ $statusMsg[0] }}</p>
                     </div>
                 </div>
 
