@@ -310,6 +310,29 @@ class OrdenTrabajoController extends Controller
         return redirect()->route('dashboard')->with('success', '¡Gracias por tu valoración! El servicio ha quedado finalizado.');
     }
 
+    // Cancela la orden por parte del técnico con un motivo
+    public function cancelarPorTecnico(Request $request, OrdenTrabajo $orden)
+    {
+        if (Auth::user()->role !== 'tecnico' || $orden->usuario_id !== Auth::id()) {
+            abort(403, 'No autorizado');
+        }
+
+        if (in_array($orden->estado, ['finalizada', 'cancelada', 'pendiente_valoracion'])) {
+            return redirect()->route('dashboard')->with('info', 'Esta orden ya fue procesada.');
+        }
+
+        $request->validate([
+            'motivo' => 'required|string|max:1000',
+        ]);
+
+        $orden->update([
+            'estado'        => 'cancelada',
+            'observaciones' => '[Cancelado por técnico ' . now()->format('d/m/Y H:i') . ']: ' . $request->motivo,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Servicio cancelado. El administrador será notificado.');
+    }
+
     // Cancelar/eliminar una orden
     public function destroy(OrdenTrabajo $orden)
     {

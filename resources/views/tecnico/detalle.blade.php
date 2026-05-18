@@ -243,14 +243,53 @@
                             </a>
                         @endif
 
-                        <a href="{{ route('dashboard') }}" class="px-6 flex items-center justify-center bg-white border border-gray-200 hover:border-gray-300 text-brand-dark py-3.5 rounded-xl font-semibold text-sm transition-colors">
+                        @if(!in_array($orden->estado, ['finalizada', 'cancelada', 'pendiente_valoracion']))
+                        <button type="button" onclick="document.getElementById('modal-cancelar').classList.remove('hidden')"
+                            class="px-6 flex items-center justify-center bg-white border border-red-200 hover:border-red-400 hover:bg-red-50 text-red-600 py-3.5 rounded-xl font-semibold text-sm transition-colors">
                             Cancelar Servicio
-                        </a>
+                        </button>
+                        @endif
                     </div>
 
                 </div>
             </div>
         </main>
+    </div>
+</div>
+
+<!-- Modal Cancelar Servicio -->
+<div id="modal-cancelar" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-base font-semibold text-gray-900">Cancelar servicio</h3>
+                <p class="text-xs text-gray-500">Esta acción no se puede deshacer</p>
+            </div>
+        </div>
+
+        <p class="text-sm text-gray-600 mb-4">Explica el motivo por el que no puedes realizar el servicio hoy. El administrador recibirá esta información.</p>
+
+        <form action="{{ route('ordenes.cancelar-tecnico', $orden) }}" method="POST">
+            @csrf
+            <textarea name="motivo" rows="4" required placeholder="Ej: El cliente no estaba disponible, no pude desplazarme por avería del vehículo..."
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent resize-none"></textarea>
+
+            <div class="flex gap-3 mt-4">
+                <button type="button" onclick="document.getElementById('modal-cancelar').classList.add('hidden')"
+                    class="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">
+                    Volver
+                </button>
+                <button type="submit"
+                    class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-colors">
+                    Confirmar cancelación
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection
