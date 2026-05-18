@@ -6,7 +6,7 @@
            -translate-x-full md:translate-x-0 md:relative md:inset-auto transition-transform duration-300 ease-in-out">
     <!-- Logo Area -->
     <div class="h-20 flex items-center justify-center border-b border-brand-dark-mid">
-        <h2 class="text-2xl font-bold text-white tracking-wide">WorkFlow</h2>
+        <a href="{{ route('dashboard') }}" class="text-2xl font-bold text-white tracking-wide hover:opacity-80 transition-opacity">WorkFlow</a>
     </div>
 
     <!-- Navigation -->
