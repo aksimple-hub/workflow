@@ -72,10 +72,18 @@
                                 Sin teléfono
                             </button>
                             @endif
-                            <button class="flex items-center justify-center gap-2 w-full bg-brand-dark hover:bg-brand-dark-mid text-white py-2.5 rounded-xl font-medium text-sm transition-colors">
+                            @if($orden->cliente && $orden->cliente->direccion && $orden->cliente->direccion !== 'N/A')
+                            <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($orden->cliente->direccion) }}" target="_blank"
+                               class="flex items-center justify-center gap-2 w-full bg-brand-dark hover:bg-brand-dark-mid text-white py-2.5 rounded-xl font-medium text-sm transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 Ver en Mapa
+                            </a>
+                            @else
+                            <button disabled class="flex items-center justify-center gap-2 w-full bg-gray-200 text-gray-400 py-2.5 rounded-xl font-medium text-sm cursor-not-allowed">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                Sin dirección
                             </button>
+                            @endif
                         </div>
                     </div>
 
@@ -90,10 +98,18 @@
                             </div>
                         </div>
                         <!-- Mapa placeholder -->
-                        <div class="bg-gray-100 rounded-xl h-32 flex flex-col items-center justify-center gap-1 cursor-pointer hover:bg-gray-200 transition-colors">
-                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            <p class="text-xs text-gray-500 font-medium">Vista del mapa</p>
+                        @if($orden->cliente && $orden->cliente->direccion && $orden->cliente->direccion !== 'N/A')
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($orden->cliente->direccion) }}" target="_blank"
+                           class="bg-gray-100 rounded-xl h-32 flex flex-col items-center justify-center gap-1 hover:bg-gray-200 transition-colors group">
+                            <svg class="w-8 h-8 text-gray-400 group-hover:text-brand-green transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <p class="text-xs text-gray-500 group-hover:text-brand-green font-medium transition-colors">Abrir en Google Maps</p>
+                        </a>
+                        @else
+                        <div class="bg-gray-100 rounded-xl h-32 flex flex-col items-center justify-center gap-1">
+                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <p class="text-xs text-gray-400 font-medium">Sin dirección registrada</p>
                         </div>
+                        @endif
                     </div>
 
                     <!-- Detalles del Servicio -->
