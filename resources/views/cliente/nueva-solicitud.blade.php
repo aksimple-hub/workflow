@@ -176,10 +176,13 @@
                             </div>
                             <input type="file" id="fotos-input" name="fotos[]"
                                 accept="image/jpeg,image/png,image/webp"
-                                multiple class="hidden" onchange="previewFotos(this)">
+                                multiple class="hidden">
+
+                            {{-- Contador --}}
+                            <p id="fotos-counter" class="text-xs text-gray-400 mt-2"></p>
 
                             {{-- Preview grid --}}
-                            <div id="fotos-preview" class="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-3 hidden"></div>
+                            <div id="fotos-preview" class="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-2 hidden"></div>
 
                             @error('fotos')   <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                             @error('fotos.*') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
@@ -227,23 +230,83 @@
                     </script>
 
                     <script>
-                    function previewFotos(input) {
+                    const MAX_FOTOS = 5;
+                    let allFiles = []; // acumula los File objects seleccionados
+
+                    function syncInput() {
+                        const dt = new DataTransfer();
+                        allFiles.forEach(f => dt.items.add(f));
+                        document.getElementById('fotos-input').files = dt.files;
+                    }
+
+                    function renderPreviews() {
                         const preview = document.getElementById('fotos-preview');
+                        const dropZone = document.getElementById('drop-zone');
+                        const counter = document.getElementById('fotos-counter');
+
                         preview.innerHTML = '';
-                        const files = Array.from(input.files).slice(0, 5);
-                        if (!files.length) { preview.classList.add('hidden'); return; }
+
+                        if (!allFiles.length) {
+                            preview.classList.add('hidden');
+                            dropZone.classList.remove('hidden');
+                            counter.textContent = '';
+                            return;
+                        }
+
                         preview.classList.remove('hidden');
-                        files.forEach(file => {
+                        counter.textContent = `${allFiles.length} / ${MAX_FOTOS} fotos seleccionadas`;
+
+                        // Ocultar drop zone si ya hay 5
+                        if (allFiles.length >= MAX_FOTOS) {
+                            dropZone.classList.add('hidden');
+                        } else {
+                            dropZone.classList.remove('hidden');
+                        }
+
+                        allFiles.forEach((file, index) => {
                             const reader = new FileReader();
                             reader.onload = e => {
                                 const div = document.createElement('div');
-                                div.className = 'relative aspect-square rounded-xl overflow-hidden border border-gray-100';
-                                div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                                div.className = 'relative aspect-square rounded-xl overflow-hidden border border-gray-100 group';
+                                div.innerHTML = `
+                                    <img src="${e.target.result}" class="w-full h-full object-cover">
+                                    <button type="button" onclick="removeFile(${index})"
+                                        class="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>`;
                                 preview.appendChild(div);
                             };
                             reader.readAsDataURL(file);
                         });
                     }
+
+                    function addFiles(newFiles) {
+                        const disponibles = MAX_FOTOS - allFiles.length;
+                        if (disponibles <= 0) return;
+
+                        Array.from(newFiles).slice(0, disponibles).forEach(file => {
+                            // Evitar duplicados por nombre + tamaño
+                            const existe = allFiles.some(f => f.name === file.name && f.size === file.size);
+                            if (!existe) allFiles.push(file);
+                        });
+
+                        syncInput();
+                        renderPreviews();
+                    }
+
+                    function removeFile(index) {
+                        allFiles.splice(index, 1);
+                        syncInput();
+                        renderPreviews();
+                    }
+
+                    document.getElementById('fotos-input').addEventListener('change', function() {
+                        addFiles(this.files);
+                        // Limpiar el input para que el mismo archivo pueda reseleccionarse si fue eliminado
+                        this.value = '';
+                    });
 
                     const dropZone = document.getElementById('drop-zone');
                     dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('border-brand-green','bg-[#F0FDF4]'); });
@@ -251,11 +314,7 @@
                     dropZone.addEventListener('drop', e => {
                         e.preventDefault();
                         dropZone.classList.remove('border-brand-green','bg-[#F0FDF4]');
-                        const input = document.getElementById('fotos-input');
-                        const dt = new DataTransfer();
-                        Array.from(e.dataTransfer.files).slice(0, 5).forEach(f => dt.items.add(f));
-                        input.files = dt.files;
-                        previewFotos(input);
+                        addFiles(e.dataTransfer.files);
                     });
                     </script>
 
