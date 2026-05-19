@@ -28,9 +28,11 @@
                     Dar de baja
                 </button>
                 @else
-                <span class="px-4 py-2 bg-red-50 border border-red-200 rounded-xl text-sm font-medium text-red-400">
-                    Cuenta inactiva
-                </span>
+                <button onclick="document.getElementById('modal-activar').classList.remove('hidden')"
+                    class="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-300 rounded-xl text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Activar técnico
+                </button>
                 @endif
             </div>
         </header>
@@ -214,6 +216,89 @@
         </main>
     </div>
 </div>
+
+<!-- Modal activar técnico (2 pasos) -->
+@if(!$tecnico->is_approved)
+<div id="modal-activar" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-gray-900/60" onclick="cerrarModalActivar()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-8">
+
+        {{-- Paso 1 --}}
+        <div id="activar-paso-1">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Activar cuenta de técnico</h2>
+                    <p class="text-sm text-gray-500">{{ $tecnico->name }} · {{ $tecnico->email }}</p>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-2">
+                Al activar esta cuenta el técnico podrá iniciar sesión y recibir órdenes de trabajo. Se le enviará una notificación automáticamente.
+            </p>
+            <p class="text-sm font-medium text-gray-700 mb-6">¿Has revisado sus datos y currículum antes de continuar?</p>
+            <div class="flex gap-3 justify-end">
+                <button type="button" onclick="cerrarModalActivar()"
+                    class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" onclick="activarPaso2()"
+                    class="px-5 py-2.5 text-sm font-semibold text-white bg-[#214371] rounded-xl hover:bg-[#1a3560] transition-colors">
+                    Sí, he revisado los datos →
+                </button>
+            </div>
+        </div>
+
+        {{-- Paso 2: confirmación final --}}
+        <div id="activar-paso-2" class="hidden">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Confirmación final</h2>
+                    <p class="text-sm text-gray-500">Esta acción activará la cuenta</p>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-6">
+                <strong>{{ $tecnico->name }}</strong> recibirá acceso completo a la plataforma. ¿Confirmas la activación?
+            </p>
+            <form method="POST" action="{{ route('admin.users.validate', $tecnico->id) }}">
+                @csrf
+                <div class="flex gap-3 justify-end">
+                    <button type="button" onclick="activarPaso1()"
+                        class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
+                        ← Volver
+                    </button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl transition-colors">
+                        Activar técnico
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function cerrarModalActivar() {
+        document.getElementById('modal-activar').classList.add('hidden');
+        activarPaso1();
+    }
+    function activarPaso2() {
+        document.getElementById('activar-paso-1').classList.add('hidden');
+        document.getElementById('activar-paso-2').classList.remove('hidden');
+    }
+    function activarPaso1() {
+        document.getElementById('activar-paso-2').classList.add('hidden');
+        document.getElementById('activar-paso-1').classList.remove('hidden');
+    }
+</script>
+@endif
 
 <!-- Modal dar de baja -->
 <div id="modal-baja" class="hidden fixed inset-0 z-50 flex items-center justify-center">

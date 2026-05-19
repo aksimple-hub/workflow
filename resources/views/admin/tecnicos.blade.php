@@ -50,13 +50,7 @@
                                     <span class="px-3 py-1 text-xs font-semibold rounded-full bg-[#FEF3C7] text-[#92400E]">Pendiente</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-right flex items-center justify-end gap-3">
-                                @if(!$tecnico->is_approved)
-                                    <form method="POST" action="{{ route('admin.users.validate', $tecnico->id) }}">
-                                        @csrf
-                                        <button type="submit" class="text-white bg-brand-green hover:bg-brand-green-dark px-3 py-1 rounded text-xs font-medium">Validar</button>
-                                    </form>
-                                @endif
+                            <td class="px-6 py-4 text-right">
                                 <a href="{{ route('admin.tecnico.show', $tecnico->id) }}" class="text-[#1D4ED8] hover:underline font-medium">Ver detalles</a>
                             </td>
                         </tr>
