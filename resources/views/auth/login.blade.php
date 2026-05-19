@@ -85,23 +85,6 @@
                     </div>
                 </div>
 
-                {{-- Stats bar --}}
-                <div class="mt-8 flex items-center gap-6 border-t border-white/10 pt-6 w-full justify-center">
-                    <div class="text-center">
-                        <div class="text-2xl font-extrabold text-white">3</div>
-                        <div class="text-xs text-blue-300 mt-0.5">Roles de usuario</div>
-                    </div>
-                    <div class="w-px h-8 bg-white/15"></div>
-                    <div class="text-center">
-                        <div class="text-2xl font-extrabold text-white">100%</div>
-                        <div class="text-xs text-blue-300 mt-0.5">Trazabilidad</div>
-                    </div>
-                    <div class="w-px h-8 bg-white/15"></div>
-                    <div class="text-center">
-                        <div class="text-2xl font-extrabold text-white">24/7</div>
-                        <div class="text-xs text-blue-300 mt-0.5">Disponible</div>
-                    </div>
-                </div>
             </div>
         </div>
 
