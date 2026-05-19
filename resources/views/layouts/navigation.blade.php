@@ -64,24 +64,41 @@
                             @forelse($notificacionesSinLeer->take(10) as $notif)
                             @php
                                 $data = $notif->data;
-                                $esAplazamiento = ($data['tipo'] ?? '') === 'aplazamiento';
-                                if ($esAplazamiento) {
+                                $tipo = $data['tipo'] ?? '';
+
+                                if (!empty($data['tecnico_id']) && !empty($data['tecnico_nombre']) && empty($data['orden_id']) && empty($data['mensaje'])) {
+                                    // NuevoTecnicoRegistrado
+                                    $titulo   = 'Nuevo técnico registrado';
+                                    $etiqueta = $data['tecnico_nombre'] . ' · ' . ($data['tecnico_email'] ?? '');
+                                    $dotColor = 'bg-blue-500';
+                                    $accion   = route('admin.tecnicos');
+                                } elseif (!empty($data['mensaje'])) {
+                                    // TecnicoAprobado
+                                    $titulo   = 'Cuenta activada';
+                                    $etiqueta = $data['mensaje'];
+                                    $dotColor = 'bg-green-500';
+                                    $accion   = route('dashboard');
+                                } elseif ($tipo === 'aplazamiento') {
+                                    $titulo   = $data['orden_titulo'] ?? 'Orden aplazada';
                                     $etiqueta = 'Técnico aplazó · ' . ($data['tecnico_nombre'] ?? 'Desconocido');
-                                    $dotColor  = 'bg-amber-400';
+                                    $dotColor = 'bg-amber-400';
+                                    $accion   = route('admin.orden.show', $data['orden_id'] ?? 0);
                                 } else {
                                     $canceladoPor = $data['cancelado_por'] ?? 'tecnico';
+                                    $titulo   = $data['orden_titulo'] ?? 'Orden #' . ($data['orden_id'] ?? '');
                                     $etiqueta = $canceladoPor === 'tecnico'
                                         ? 'Técnico canceló · ' . ($data['tecnico_nombre'] ?? 'Desconocido')
                                         : 'Cliente canceló · ' . ($data['cliente_nombre'] ?? 'Desconocido');
                                     $dotColor = 'bg-red-500';
+                                    $accion   = route('admin.orden.show', $data['orden_id'] ?? 0);
                                 }
                             @endphp
                             <div class="px-4 py-3 hover:bg-gray-50">
                                 <div class="flex items-start gap-3">
                                     <span class="mt-1.5 flex-shrink-0 w-2 h-2 rounded-full {{ $dotColor }}"></span>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-800 truncate">{{ $data['orden_titulo'] ?? 'Orden #' . $data['orden_id'] }}</p>
-                                        <p class="text-xs text-gray-500">{{ $etiqueta }}</p>
+                                        <p class="text-sm font-medium text-gray-800 truncate">{{ $titulo }}</p>
+                                        <p class="text-xs text-gray-500 truncate">{{ $etiqueta }}</p>
                                         @if(!empty($data['motivo']))
                                         <p class="text-xs text-gray-400 truncate mt-0.5">{{ str($data['motivo'])->limit(60) }}</p>
                                         @endif
@@ -89,8 +106,9 @@
                                     </div>
                                     <form method="POST" action="{{ route('notifications.read', $notif->id) }}">
                                         @csrf
+                                        <input type="hidden" name="redirect" value="{{ $accion }}">
                                         <button type="submit" class="flex-shrink-0 text-xs text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap">
-                                            Gestionar →
+                                            Ver →
                                         </button>
                                     </form>
                                 </div>

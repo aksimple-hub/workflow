@@ -252,7 +252,8 @@ class DashboardController extends Controller
     {
         $user = \App\Models\User::findOrFail($id);
         $user->update(['is_approved' => true]);
-        return redirect()->back()->with('success', 'Usuario validado correctamente.');
+        $user->notify(new \App\Notifications\TecnicoAprobado());
+        return redirect()->back()->with('success', 'Técnico "' . $user->name . '" activado correctamente. Se le ha notificado.');
     }
 
     public function createCliente()

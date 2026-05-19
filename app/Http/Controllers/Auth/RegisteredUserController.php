@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\NuevoTecnicoRegistrado;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -102,6 +103,9 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        return redirect(route('login', absolute: false))->with('status', 'Tu cuenta de técnico ha sido registrada y está pendiente de validación por un administrador.');
+        // Notificar a todos los admins
+        User::where('role', 'admin')->each(fn($admin) => $admin->notify(new NuevoTecnicoRegistrado($user)));
+
+        return redirect(route('login', absolute: false))->with('status', 'Tu solicitud ha sido enviada. Un administrador revisará tus datos y activará tu cuenta. Te avisaremos cuando esté lista.');
     }
 }

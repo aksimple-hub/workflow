@@ -179,7 +179,7 @@
                     </a>
                     <a href="{{ route('register.tecnico') }}"
                        class="flex-1 py-2.5 border-2 border-gray-300 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200 text-center">
-                        Soy técnico
+                        Registrarme como técnico
                     </a>
                 </div>
             </div>
