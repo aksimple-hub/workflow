@@ -299,9 +299,21 @@ class DashboardController extends Controller
         $notification = Auth::user()->notifications()->findOrFail($id);
         $notification->markAsRead();
 
-        $ordenId = $notification->data['orden_id'] ?? null;
-        if ($ordenId) {
-            return redirect()->route('admin.orden.show', $ordenId);
+        $data = $notification->data;
+
+        // Nuevo técnico registrado → ir a lista de técnicos pendientes
+        if (isset($data['tecnico_id']) && !isset($data['orden_id']) && !isset($data['mensaje'])) {
+            return redirect()->route('admin.tecnicos');
+        }
+
+        // Técnico aprobado → ir al dashboard del técnico
+        if (isset($data['mensaje'])) {
+            return redirect()->route('dashboard');
+        }
+
+        // Cancelación o aplazamiento de orden
+        if (isset($data['orden_id'])) {
+            return redirect()->route('admin.orden.show', $data['orden_id']);
         }
 
         return redirect()->route('dashboard');
