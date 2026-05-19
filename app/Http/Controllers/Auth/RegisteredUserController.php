@@ -82,7 +82,13 @@ class RegisteredUserController extends Controller
             'direccion' => ['required', 'string', 'max:255'],
             'experiencia' => ['nullable', 'string'],
             'cv_pdf'      => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
+            'foto_perfil' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        $fotoPerfil = null;
+        if ($request->hasFile('foto_perfil')) {
+            $fotoPerfil = $request->file('foto_perfil')->store('fotos-perfil', 'public');
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -90,6 +96,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => 'tecnico',
             'is_approved' => false,
+            'foto_perfil' => $fotoPerfil,
         ]);
 
         $cvPath = null;
@@ -105,6 +112,7 @@ class RegisteredUserController extends Controller
             'telefono' => $request->telefono,
             'direccion' => $request->direccion,
             'experiencia' => $request->experiencia,
+            'foto_perfil' => $fotoPerfil,
             'cv_path' => $cvPath,
         ]);
 
