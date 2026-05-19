@@ -12,7 +12,7 @@ class NuevoTecnicoRegistrado extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
     }
 
     public function toDatabase(object $notifiable): array
@@ -22,5 +22,18 @@ class NuevoTecnicoRegistrado extends Notification
             'tecnico_nombre' => $this->tecnico->name,
             'tecnico_email'  => $this->tecnico->email,
         ];
+    }
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('🔔 Nuevo técnico pendiente de validación — ' . $this->tecnico->name)
+            ->greeting('Hola, ' . $notifiable->name)
+            ->line('Un nuevo técnico se ha registrado en la plataforma y está esperando que lo actives.')
+            ->line('**Nombre:** ' . $this->tecnico->name)
+            ->line('**Email:** ' . $this->tecnico->email)
+            ->action('Revisar y activar técnico', route('admin.tecnico.show', $this->tecnico->id))
+            ->line('Accede a su perfil para revisar sus datos y currículum antes de activar la cuenta.')
+            ->salutation('Sistema Workflow');
     }
 }
