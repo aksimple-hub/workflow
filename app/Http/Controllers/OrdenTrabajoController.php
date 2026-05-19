@@ -12,6 +12,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\AsignacionOrdenTecnico;
+use App\Notifications\OrdenCanceladaAdmin;
+use Illuminate\Support\Facades\Notification;
 
 class OrdenTrabajoController extends Controller
 {
@@ -330,7 +332,10 @@ class OrdenTrabajoController extends Controller
             'observaciones' => '[Cancelado por técnico ' . now()->format('d/m/Y H:i') . ']: ' . $request->motivo,
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Servicio cancelado. El administrador será notificado.');
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new OrdenCanceladaAdmin($orden->fresh(), 'tecnico', $request->motivo));
+
+        return redirect()->route('dashboard')->with('success', 'Servicio cancelado. El administrador ha sido notificado.');
     }
 
     // Cancelar/eliminar una orden
@@ -353,6 +358,11 @@ class OrdenTrabajoController extends Controller
         }
 
         $orden->update(['estado' => 'cancelada']);
+
+        if ($user->role === 'cliente') {
+            $admins = User::where('role', 'admin')->get();
+            Notification::send($admins, new OrdenCanceladaAdmin($orden->fresh(), 'cliente'));
+        }
 
         return redirect()->route('dashboard')->with('success', 'Solicitud cancelada correctamente.');
     }

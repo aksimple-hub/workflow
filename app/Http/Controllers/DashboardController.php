@@ -292,4 +292,23 @@ class DashboardController extends Controller
 
         return redirect()->route('admin.clientes')->with('success', 'Cliente creado correctamente.');
     }
+
+    public function markNotificationRead(Request $request, string $id)
+    {
+        $notification = Auth::user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+
+        $ordenId = $notification->data['orden_id'] ?? null;
+        if ($ordenId) {
+            return redirect()->route('admin.orden.show', $ordenId);
+        }
+
+        return redirect()->route('dashboard');
+    }
+
+    public function markAllNotificationsRead()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+        return redirect()->back();
+    }
 }

@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/historial', [DashboardController::class, 'historial'])->name('admin.historial');
     Route::get('/ordenes-detalle/{id}', [DashboardController::class, 'ordenShow'])->name('admin.orden.show');
     Route::get('/configuracion', [DashboardController::class, 'configuracion'])->name('admin.configuracion');
+    Route::post('/notifications/{id}/read', [DashboardController::class, 'markNotificationRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [DashboardController::class, 'markAllNotificationsRead'])->name('notifications.read-all');
     
     // Rutas para Técnico (Estados y Cierre)
     Route::post('/ordenes/bulk-assign', [OrdenTrabajoController::class, 'bulkAssignTecnico'])->name('ordenes.bulk-assign');
