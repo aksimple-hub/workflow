@@ -14,9 +14,9 @@
             </a>
 
             {{-- Decorative blobs --}}
-            <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-10" style="background: radial-gradient(circle, #60a5fa, transparent)"></div>
-            <div class="absolute -bottom-20 -right-20 w-96 h-96 rounded-full opacity-10" style="background: radial-gradient(circle, #34d399, transparent)"></div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-5" style="background: radial-gradient(circle, #93c5fd, transparent)"></div>
+            <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-10 pointer-events-none" style="background: radial-gradient(circle, #60a5fa, transparent)"></div>
+            <div class="absolute -bottom-20 -right-20 w-96 h-96 rounded-full opacity-10 pointer-events-none" style="background: radial-gradient(circle, #34d399, transparent)"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-5 pointer-events-none" style="background: radial-gradient(circle, #93c5fd, transparent)"></div>
 
             <div class="relative z-10 flex flex-col items-center px-14 w-full max-w-2xl">
 
