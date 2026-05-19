@@ -293,17 +293,82 @@
                             </a>
                         @endif
 
-                        @if(!in_array($orden->estado, ['finalizada', 'cancelada', 'pendiente_valoracion']))
-                        <button type="button" onclick="document.getElementById('modal-cancelar').classList.remove('hidden')"
-                            class="px-6 flex items-center justify-center bg-white border border-red-200 hover:border-red-400 hover:bg-red-50 text-red-600 py-3.5 rounded-xl font-semibold text-sm transition-colors">
-                            Cancelar Servicio
+                        @if(!in_array($orden->estado, ['finalizada', 'cancelada', 'pendiente_valoracion', 'pendiente_reprogramacion']))
+                        <button type="button" onclick="document.getElementById('modal-aplazar').classList.remove('hidden')"
+                            class="px-5 flex items-center justify-center gap-1.5 bg-white border border-amber-300 hover:border-amber-400 hover:bg-amber-50 text-amber-600 py-3.5 rounded-xl font-semibold text-sm transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            Aplazar
                         </button>
+                        <button type="button" onclick="document.getElementById('modal-cancelar').classList.remove('hidden')"
+                            class="px-5 flex items-center justify-center bg-white border border-red-200 hover:border-red-400 hover:bg-red-50 text-red-600 py-3.5 rounded-xl font-semibold text-sm transition-colors">
+                            Cancelar
+                        </button>
+                        @endif
+                        @if($orden->estado === 'pendiente_reprogramacion')
+                        <div class="flex-1 flex items-center justify-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 py-3.5 rounded-xl text-sm font-semibold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Pendiente de reagendar por el admin
+                        </div>
                         @endif
                     </div>
 
                 </div>
             </div>
         </main>
+    </div>
+</div>
+
+<!-- Modal Aplazar Servicio -->
+<div id="modal-aplazar" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-base font-semibold text-gray-900">Aplazar servicio</h3>
+                <p class="text-xs text-gray-500">La orden quedará pendiente de reagendar por el administrador</p>
+            </div>
+        </div>
+
+        <p class="text-sm text-gray-600 mb-4">Selecciona el motivo por el que no se ha podido realizar el servicio hoy.</p>
+
+        <form action="{{ route('ordenes.aplazar', $orden) }}" method="POST">
+            @csrf
+
+            <div class="mb-3">
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Motivo <span class="text-red-500">*</span></label>
+                <select name="motivo" required
+                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white">
+                    <option value="" disabled selected>Selecciona un motivo...</option>
+                    <option value="Cliente ausente en el domicilio">Cliente ausente en el domicilio</option>
+                    <option value="Sin acceso al inmueble">Sin acceso al inmueble</option>
+                    <option value="Material o pieza pendiente de llegada">Material o pieza pendiente de llegada</option>
+                    <option value="Avería del vehículo del técnico">Avería del vehículo del técnico</option>
+                    <option value="Emergencia o imprevisto personal">Emergencia o imprevisto personal</option>
+                    <option value="Otro motivo">Otro motivo</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Nota adicional <span class="text-gray-400">(opcional)</span></label>
+                <textarea name="nota" rows="3" placeholder="Información adicional para el administrador..."
+                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent resize-none"></textarea>
+            </div>
+
+            <div class="flex gap-3">
+                <button type="button" onclick="document.getElementById('modal-aplazar').classList.add('hidden')"
+                    class="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">
+                    Volver
+                </button>
+                <button type="submit"
+                    class="flex-1 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition-colors">
+                    Confirmar aplazamiento
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 

@@ -24,7 +24,10 @@
             <!-- Campana de notificaciones (solo admin) -->
             @if(Auth::check() && Auth::user()->role === 'admin')
             @php
-                $notificacionesSinLeer = Auth::user()->unreadNotifications->where('type', 'App\Notifications\OrdenCanceladaAdmin');
+                $notificacionesSinLeer = Auth::user()->unreadNotifications->whereIn('type', [
+                    'App\Notifications\OrdenCanceladaAdmin',
+                    'App\Notifications\OrdenAplazadaAdmin',
+                ]);
                 $totalSinLeer = $notificacionesSinLeer->count();
             @endphp
             <div class="hidden sm:flex sm:items-center sm:ms-4" x-data="{ notifOpen: false }">
@@ -48,7 +51,7 @@
                         style="display: none;">
 
                         <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-                            <h3 class="text-sm font-semibold text-gray-800">Cancelaciones pendientes</h3>
+                            <h3 class="text-sm font-semibold text-gray-800">Incidencias pendientes</h3>
                             @if($totalSinLeer > 0)
                             <form method="POST" action="{{ route('notifications.read-all') }}">
                                 @csrf
@@ -61,16 +64,24 @@
                             @forelse($notificacionesSinLeer->take(10) as $notif)
                             @php
                                 $data = $notif->data;
-                                $quien = $data['cancelado_por'] === 'tecnico'
-                                    ? 'Técnico: ' . ($data['tecnico_nombre'] ?? 'Desconocido')
-                                    : 'Cliente: ' . ($data['cliente_nombre'] ?? 'Desconocido');
+                                $esAplazamiento = ($data['tipo'] ?? '') === 'aplazamiento';
+                                if ($esAplazamiento) {
+                                    $etiqueta = 'Técnico aplazó · ' . ($data['tecnico_nombre'] ?? 'Desconocido');
+                                    $dotColor  = 'bg-amber-400';
+                                } else {
+                                    $canceladoPor = $data['cancelado_por'] ?? 'tecnico';
+                                    $etiqueta = $canceladoPor === 'tecnico'
+                                        ? 'Técnico canceló · ' . ($data['tecnico_nombre'] ?? 'Desconocido')
+                                        : 'Cliente canceló · ' . ($data['cliente_nombre'] ?? 'Desconocido');
+                                    $dotColor = 'bg-red-500';
+                                }
                             @endphp
                             <div class="px-4 py-3 hover:bg-gray-50">
                                 <div class="flex items-start gap-3">
-                                    <span class="mt-0.5 flex-shrink-0 w-2 h-2 rounded-full bg-red-500"></span>
+                                    <span class="mt-1.5 flex-shrink-0 w-2 h-2 rounded-full {{ $dotColor }}"></span>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-medium text-gray-800 truncate">{{ $data['orden_titulo'] ?? 'Orden #' . $data['orden_id'] }}</p>
-                                        <p class="text-xs text-gray-500">{{ $quien }} canceló</p>
+                                        <p class="text-xs text-gray-500">{{ $etiqueta }}</p>
                                         @if(!empty($data['motivo']))
                                         <p class="text-xs text-gray-400 truncate mt-0.5">{{ str($data['motivo'])->limit(60) }}</p>
                                         @endif

@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ordenes/{orden}/cierre', [OrdenTrabajoController::class, 'showCierre'])->name('ordenes.cierre');
     Route::post('/ordenes/{orden}/cerrar', [OrdenTrabajoController::class, 'cerrar'])->name('ordenes.cerrar');
     Route::post('/ordenes/{orden}/cancelar-tecnico', [OrdenTrabajoController::class, 'cancelarPorTecnico'])->name('ordenes.cancelar-tecnico');
+    Route::post('/ordenes/{orden}/aplazar', [OrdenTrabajoController::class, 'aplazarOrden'])->name('ordenes.aplazar');
 
     // Rutas para Cliente (Nueva Solicitud + Detalle + Valoración)
     Route::get('/solicitud/nueva', [OrdenTrabajoController::class, 'nuevaSolicitud'])->name('solicitud.nueva');

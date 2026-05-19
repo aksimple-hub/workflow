@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\AsignacionOrdenTecnico;
 use App\Notifications\OrdenCanceladaAdmin;
+use App\Notifications\OrdenAplazadaAdmin;
 use Illuminate\Support\Facades\Notification;
 
 class OrdenTrabajoController extends Controller
@@ -336,6 +337,38 @@ class OrdenTrabajoController extends Controller
         Notification::send($admins, new OrdenCanceladaAdmin($orden->fresh(), 'tecnico', $request->motivo));
 
         return redirect()->route('dashboard')->with('success', 'Servicio cancelado. El administrador ha sido notificado.');
+    }
+
+    // Aplazar la orden por parte del técnico (no cancela, queda pendiente de reagendar)
+    public function aplazarOrden(Request $request, OrdenTrabajo $orden)
+    {
+        if (Auth::user()->role !== 'tecnico' || $orden->usuario_id !== Auth::id()) {
+            abort(403, 'No autorizado');
+        }
+
+        if (in_array($orden->estado, ['finalizada', 'cancelada', 'pendiente_valoracion', 'pendiente_reprogramacion'])) {
+            return redirect()->route('dashboard')->with('info', 'Esta orden ya fue procesada o está pendiente de reagendar.');
+        }
+
+        $request->validate([
+            'motivo' => 'required|string|max:500',
+            'nota'   => 'nullable|string|max:1000',
+        ]);
+
+        $observacion = '[Aplazado por técnico ' . now()->format('d/m/Y H:i') . '] Motivo: ' . $request->motivo;
+        if ($request->filled('nota')) {
+            $observacion .= ' - ' . $request->nota;
+        }
+
+        $orden->update([
+            'estado'        => 'pendiente_reprogramacion',
+            'observaciones' => $observacion,
+        ]);
+
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new OrdenAplazadaAdmin($orden->fresh(), $request->motivo, $request->nota));
+
+        return redirect()->route('dashboard')->with('success', 'Servicio aplazado. El administrador ha sido notificado para reagendarlo.');
     }
 
     // Cancelar/eliminar una orden
