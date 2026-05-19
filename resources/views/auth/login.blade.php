@@ -4,6 +4,15 @@
         <div class="hidden lg:flex lg:w-7/12 relative flex-col justify-center items-center text-white overflow-hidden"
              style="background: linear-gradient(145deg, #0f2349 0%, #214371 55%, #1a5c8a 100%);">
 
+            {{-- Back button --}}
+            <a href="{{ url('/') }}"
+               class="absolute top-6 left-6 flex items-center gap-1.5 text-blue-200 hover:text-white text-sm font-medium transition-colors duration-150 group">
+                <svg class="w-4 h-4 transition-transform duration-150 group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Vista principal
+            </a>
+
             {{-- Decorative blobs --}}
             <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-10" style="background: radial-gradient(circle, #60a5fa, transparent)"></div>
             <div class="absolute -bottom-20 -right-20 w-96 h-96 rounded-full opacity-10" style="background: radial-gradient(circle, #34d399, transparent)"></div>
