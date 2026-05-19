@@ -110,6 +110,20 @@
                 <h2 class="text-3xl font-bold text-gray-900 mb-1">Bienvenido de nuevo</h2>
                 <p class="text-gray-500 mb-4">Ingresa tus credenciales para continuar</p>
 
+                @if (session('status'))
+                    <div class="mb-5 p-4 bg-blue-50 border border-blue-200 rounded-2xl flex items-start gap-3">
+                        <div class="flex-shrink-0 w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-blue-800">Solicitud enviada correctamente</p>
+                            <p class="text-sm text-blue-700 mt-0.5">{{ session('status') }}</p>
+                        </div>
+                    </div>
+                @endif
+
                 @if ($errors->any())
                     <div class="mb-4 p-3 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm">
                         <ul class="text-sm space-y-1">
