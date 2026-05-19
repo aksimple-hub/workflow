@@ -163,7 +163,7 @@
                             <p class="text-sm text-gray-400">Sin técnico asignado</p>
                         @endif
 
-                        @php $tecnicos = \App\Models\User::where('role', 'tecnico')->get(); @endphp
+                        @php $tecnicos = \App\Models\User::where('role', 'tecnico')->where('is_approved', true)->get(); @endphp
 
                         {{-- PENDIENTE: asignación directa --}}
                         @if($orden->estado === 'pendiente' && $tecnicos->count())

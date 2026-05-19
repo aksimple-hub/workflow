@@ -47,7 +47,7 @@ class OrdenTrabajoController extends Controller
         }
 
         $clientes = Cliente::all();
-        $tecnicos = User::where('role', 'tecnico')->get();
+        $tecnicos = User::where('role', 'tecnico')->where('is_approved', true)->get();
 
         return view('admin.rutas', compact('clientes', 'tecnicos'));
     }

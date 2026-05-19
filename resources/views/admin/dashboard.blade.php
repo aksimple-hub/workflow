@@ -245,7 +245,7 @@
                 <select id="bulkTecnicoSelect"
                     class="w-full bg-white/10 border border-white/20 text-white rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-brand-green appearance-none">
                     <option value="" class="text-gray-900">Seleccionar técnico...</option>
-                    @foreach(\App\Models\User::where('role','tecnico')->get() as $tec)
+                    @foreach(\App\Models\User::where('role','tecnico')->where('is_approved',true)->get() as $tec)
                     <option value="{{ $tec->id }}" class="text-gray-900">{{ $tec->name }}</option>
                     @endforeach
                 </select>
