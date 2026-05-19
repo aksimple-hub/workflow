@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\SocialAuthController;
 
 Route::get('/', function () {
     return auth()->check() ? redirect('/dashboard') : view('landing');
-});
+})->name('landing');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
