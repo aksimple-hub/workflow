@@ -158,9 +158,22 @@
                             </div>
                         </div>
 
-                        <div class="mb-8">
+                        <div class="mb-6">
                             <label class="block text-sm font-bold text-brand-dark mb-2">Experiencia y Especialidad (Opcional)</label>
                             <textarea name="experiencia" class="w-full h-24 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green">{{ old('experiencia') }}</textarea>
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="block text-sm font-bold text-brand-dark mb-2">Currículum Vitae en PDF (Opcional)</label>
+                            <div id="cv-drop-zone" class="w-full border-2 border-dashed border-gray-300 rounded-xl p-6 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onclick="document.getElementById('cv_pdf').click()">
+                                <svg class="mx-auto h-10 w-10 text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <p id="cv-label" class="text-sm text-gray-500 font-medium">Haz clic para subir tu CV</p>
+                                <p class="text-xs text-gray-400 mt-1">Solo PDF · Máximo 5MB</p>
+                                <input type="file" id="cv_pdf" name="cv_pdf" class="hidden" accept="application/pdf"
+                                    onchange="document.getElementById('cv-label').textContent = this.files[0] ? this.files[0].name : 'Haz clic para subir tu CV'">
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">

@@ -81,6 +81,7 @@ class RegisteredUserController extends Controller
             'telefono' => ['required', 'string', 'max:20'],
             'direccion' => ['required', 'string', 'max:255'],
             'experiencia' => ['nullable', 'string'],
+            'cv_pdf'      => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
         ]);
 
         $user = User::create([
@@ -91,6 +92,11 @@ class RegisteredUserController extends Controller
             'is_approved' => false,
         ]);
 
+        $cvPath = null;
+        if ($request->hasFile('cv_pdf')) {
+            $cvPath = $request->file('cv_pdf')->store('cvs', 'public');
+        }
+
         \App\Models\Tecnico::create([
             'id' => $user->id,
             'nombre' => $request->name,
@@ -99,6 +105,7 @@ class RegisteredUserController extends Controller
             'telefono' => $request->telefono,
             'direccion' => $request->direccion,
             'experiencia' => $request->experiencia,
+            'cv_path' => $cvPath,
         ]);
 
         event(new Registered($user));
