@@ -19,13 +19,14 @@
             <div class="ml-auto">
                 @php
                     $badgeClass = match($orden->estado) {
-                        'finalizada'          => 'bg-[#D1FAE5] text-[#065F46]',
-                        'en_proceso'          => 'bg-[#DBEAFE] text-[#1D4ED8]',
-                        'en_camino'           => 'bg-[#D1FAE5] text-[#065F46]',
-                        'asignada'            => 'bg-[#FEF3C7] text-[#D97706]',
-                        'cancelada'           => 'bg-red-100 text-red-700',
-                        'pendiente_valoracion'=> 'bg-purple-100 text-purple-700',
-                        default               => 'bg-gray-100 text-gray-600',
+                        'finalizada'               => 'bg-[#D1FAE5] text-[#065F46]',
+                        'en_proceso'               => 'bg-[#DBEAFE] text-[#1D4ED8]',
+                        'en_camino'                => 'bg-[#D1FAE5] text-[#065F46]',
+                        'asignada'                 => 'bg-[#FEF3C7] text-[#D97706]',
+                        'cancelada'                => 'bg-red-100 text-red-700',
+                        'pendiente_valoracion'     => 'bg-purple-100 text-purple-700',
+                        'pendiente_reprogramacion' => 'bg-amber-100 text-amber-700',
+                        default                    => 'bg-gray-100 text-gray-600',
                     };
                 @endphp
                 <span class="px-4 py-2 text-sm font-semibold rounded-full {{ $badgeClass }}">
@@ -39,6 +40,22 @@
 
                 {{-- ── COLUMNA IZQUIERDA (2/3) ── --}}
                 <div class="lg:col-span-2 space-y-5">
+
+                    {{-- Banner de aplazamiento --}}
+                    @if($orden->estado === 'pendiente_reprogramacion')
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 flex items-start gap-4">
+                        <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold text-amber-800 mb-1">Servicio aplazado — pendiente de reagendar</p>
+                            @if($orden->observaciones)
+                            <p class="text-sm text-amber-700 leading-relaxed whitespace-pre-line">{{ $orden->observaciones }}</p>
+                            @endif
+                            <p class="text-xs text-amber-500 mt-2">Usa el panel de la derecha para asignar una nueva fecha y técnico.</p>
+                        </div>
+                    </div>
+                    @endif
 
                     {{-- Banner de cancelación --}}
                     @if($orden->estado === 'cancelada')
@@ -194,6 +211,41 @@
                                 </div>
                                 <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors">
                                     Reasignar orden
+                                </button>
+                            </form>
+                        </div>
+                        @endif
+
+                        {{-- PENDIENTE_REPROGRAMACION: reagendar --}}
+                        @if($orden->estado === 'pendiente_reprogramacion' && $tecnicos->count())
+                        <div class="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
+                            <p class="text-xs font-semibold text-amber-700 flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                Reagendar servicio
+                            </p>
+                            <form action="{{ route('ordenes.reagendar', $orden) }}" method="POST" class="space-y-3">
+                                @csrf
+                                <div>
+                                    <label class="block text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1.5">Nueva fecha <span class="text-red-500">*</span></label>
+                                    <input type="date" name="fecha_entrega_prevista" required
+                                        min="{{ now()->toDateString() }}"
+                                        value="{{ $orden->fecha_entrega_prevista ? \Carbon\Carbon::parse($orden->fecha_entrega_prevista)->toDateString() : '' }}"
+                                        class="w-full bg-white border-2 border-amber-200 focus:border-amber-400 rounded-xl px-4 py-2 text-sm focus:outline-none transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1.5">Técnico <span class="text-red-500">*</span></label>
+                                    <select name="usuario_id" required
+                                        class="w-full bg-white border-2 border-amber-200 focus:border-amber-400 rounded-xl px-4 py-2 focus:outline-none transition-colors text-sm appearance-none">
+                                        <option value="" disabled selected>Elige técnico...</option>
+                                        @foreach($tecnicos as $tec)
+                                        <option value="{{ $tec->id }}" {{ $tec->id === $orden->usuario_id ? 'selected' : '' }}>
+                                            {{ $tec->name }}{{ $tec->id === $orden->usuario_id ? ' (actual)' : '' }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+                                    Confirmar reagendación
                                 </button>
                             </form>
                         </div>

@@ -371,6 +371,40 @@ class OrdenTrabajoController extends Controller
         return redirect()->route('dashboard')->with('success', 'Servicio aplazado. El administrador ha sido notificado para reagendarlo.');
     }
 
+    // Reagendar una orden aplazada (solo admin)
+    public function reagendarOrden(Request $request, OrdenTrabajo $orden)
+    {
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'No autorizado');
+        }
+
+        if ($orden->estado !== 'pendiente_reprogramacion') {
+            return back()->with('info', 'Esta orden no está pendiente de reagendación.');
+        }
+
+        $request->validate([
+            'usuario_id'           => 'required|exists:users,id',
+            'fecha_entrega_prevista' => 'required|date|after_or_equal:today',
+        ]);
+
+        $tecnico = User::findOrFail($request->usuario_id);
+        if ($tecnico->role !== 'tecnico') {
+            return back()->withErrors(['usuario_id' => 'El usuario seleccionado no es un técnico.']);
+        }
+
+        $orden->update([
+            'estado'                 => 'asignada',
+            'usuario_id'             => $tecnico->id,
+            'fecha_entrega_prevista' => $request->fecha_entrega_prevista,
+            'fecha_asignacion'       => now(),
+        ]);
+
+        $tecnico->notify(new AsignacionOrdenTecnico($orden->fresh()));
+
+        return redirect()->route('admin.orden.show', $orden->id)
+            ->with('success', 'Orden reagendada correctamente. Se ha notificado al técnico.');
+    }
+
     // Cancelar/eliminar una orden
     public function destroy(OrdenTrabajo $orden)
     {
