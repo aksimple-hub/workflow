@@ -10,7 +10,7 @@
                 <svg class="w-4 h-4 transition-transform duration-150 group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
-                Vista principal
+                Volver al inicio
             </a>
 
             {{-- Decorative blobs --}}
