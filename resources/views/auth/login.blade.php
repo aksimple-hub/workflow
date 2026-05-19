@@ -1,38 +1,106 @@
 ﻿<x-guest-layout>
     <div class="flex h-screen overflow-hidden bg-white">
 
-        <div class="hidden lg:flex lg:w-7/12 bg-[#214371] p-10 flex-col justify-center items-center text-white">
-            <div class="bg-white px-6 py-3 rounded-xl mb-6 shadow-lg">
-                <span class="text-[#214371] text-4xl font-bold tracking-tight">Workflow</span>
-            </div>
+        <div class="hidden lg:flex lg:w-7/12 relative flex-col justify-center items-center text-white overflow-hidden"
+             style="background: linear-gradient(145deg, #0f2349 0%, #214371 55%, #1a5c8a 100%);">
 
-            <div class="text-center max-w-xl">
-                <h1 class="text-4xl font-bold mb-3">Optimiza tu flujo de trabajo</h1>
-                <p class="text-lg text-blue-100 leading-relaxed mb-8 px-10">
-                    Sistema inteligente de gestión de servicios de campo. Coordina equipos, asigna rutas y mejora la satisfacción del cliente.
-                </p>
-            </div>
+            {{-- Decorative blobs --}}
+            <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-10" style="background: radial-gradient(circle, #60a5fa, transparent)"></div>
+            <div class="absolute -bottom-20 -right-20 w-96 h-96 rounded-full opacity-10" style="background: radial-gradient(circle, #34d399, transparent)"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-5" style="background: radial-gradient(circle, #93c5fd, transparent)"></div>
 
-            <div class="grid grid-cols-2 gap-4 w-full max-w-2xl">
-                <div class="bg-brand-dark-mid/50 p-5 rounded-2xl border border-blue-400/30 text-center">
-                    <span class="text-2xl mb-2 block">📍</span>
-                    <h4 class="text-base font-bold">Gestión de Rutas</h4>
-                    <p class="text-xs text-blue-200">Optimización automática</p>
+            <div class="relative z-10 flex flex-col items-center px-14 w-full max-w-2xl">
+
+                {{-- Logo --}}
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 rounded-xl bg-white/20 border border-white/30 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <span class="text-3xl font-extrabold tracking-tight">Workflow</span>
                 </div>
-                <div class="bg-brand-dark-mid/50 p-5 rounded-2xl border border-blue-400/30 text-center">
-                    <span class="text-2xl mb-2 block">⚡</span>
-                    <h4 class="text-base font-bold">Tiempo Real</h4>
-                    <p class="text-xs text-blue-200">Seguimiento en vivo</p>
+
+                {{-- Headline --}}
+                <div class="text-center mb-10">
+                    <h1 class="text-4xl font-extrabold leading-tight mb-3">
+                        Gestión de servicios<br>
+                        <span class="text-blue-300">sin complicaciones</span>
+                    </h1>
+                    <p class="text-blue-200 text-base leading-relaxed max-w-sm mx-auto">
+                        Conecta administradores, técnicos y clientes en una sola plataforma inteligente.
+                    </p>
                 </div>
-                <div class="bg-brand-dark-mid/50 p-5 rounded-2xl border border-blue-400/30 text-center">
-                    <span class="text-2xl mb-2 block">📊</span>
-                    <h4 class="text-base font-bold">Reportes</h4>
-                    <p class="text-xs text-blue-200">Análisis detallados</p>
+
+                {{-- Feature cards --}}
+                <div class="grid grid-cols-2 gap-3 w-full">
+
+                    <div class="bg-white/8 hover:bg-white/12 border border-white/10 rounded-2xl p-5 flex items-start gap-4 transition-all duration-200" style="background:rgba(255,255,255,0.07)">
+                        <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:rgba(96,165,250,0.25)">
+                            <svg class="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Órdenes de trabajo</h4>
+                            <p class="text-xs text-blue-200 mt-0.5 leading-snug">Crea, asigna y cierra servicios al instante</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-white/10 rounded-2xl p-5 flex items-start gap-4 transition-all duration-200" style="background:rgba(255,255,255,0.07)">
+                        <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:rgba(52,211,153,0.25)">
+                            <svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Seguimiento en vivo</h4>
+                            <p class="text-xs text-blue-200 mt-0.5 leading-snug">El cliente sigue su servicio paso a paso</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-white/10 rounded-2xl p-5 flex items-start gap-4 transition-all duration-200" style="background:rgba(255,255,255,0.07)">
+                        <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:rgba(251,146,60,0.25)">
+                            <svg class="w-5 h-5 text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Informes y reportes</h4>
+                            <p class="text-xs text-blue-200 mt-0.5 leading-snug">Historial completo con fotos y firma digital</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-white/10 rounded-2xl p-5 flex items-start gap-4 transition-all duration-200" style="background:rgba(255,255,255,0.07)">
+                        <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:rgba(251,191,36,0.25)">
+                            <svg class="w-5 h-5 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Valoraciones</h4>
+                            <p class="text-xs text-blue-200 mt-0.5 leading-snug">Calidad medible en cada intervención</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-brand-dark-mid/50 p-5 rounded-2xl border border-blue-400/30 text-center">
-                    <span class="text-2xl mb-2 block">👥</span>
-                    <h4 class="text-base font-bold">Colaboración</h4>
-                    <p class="text-xs text-blue-200">Equipo conectado</p>
+
+                {{-- Stats bar --}}
+                <div class="mt-8 flex items-center gap-6 border-t border-white/10 pt-6 w-full justify-center">
+                    <div class="text-center">
+                        <div class="text-2xl font-extrabold text-white">3</div>
+                        <div class="text-xs text-blue-300 mt-0.5">Roles de usuario</div>
+                    </div>
+                    <div class="w-px h-8 bg-white/15"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-extrabold text-white">100%</div>
+                        <div class="text-xs text-blue-300 mt-0.5">Trazabilidad</div>
+                    </div>
+                    <div class="w-px h-8 bg-white/15"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-extrabold text-white">24/7</div>
+                        <div class="text-xs text-blue-300 mt-0.5">Disponible</div>
+                    </div>
                 </div>
             </div>
         </div>
