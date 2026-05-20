@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -7,13 +7,13 @@
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
             <div class="flex items-center gap-3">
-                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
-                <a href="{{ route('admin.tecnicos') }}" class="text-gray-400 hover:text-[#10B981] transition-colors flex-shrink-0">
+                <a href="{{ route('admin.tecnicos') }}" class="text-gray-400 hover:text-brand-green transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 </a>
-                <h1 class="text-xl md:text-2xl font-medium text-[#1E3A5F]">Perfil del Técnico</h1>
+                <h1 class="text-xl md:text-2xl font-medium text-brand-dark">Perfil del Técnico</h1>
             </div>
             <div class="flex items-center gap-3 flex-wrap flex-shrink-0">
                 <button onclick="toggleEdit()"
@@ -28,9 +28,11 @@
                     Dar de baja
                 </button>
                 @else
-                <span class="px-4 py-2 bg-red-50 border border-red-200 rounded-xl text-sm font-medium text-red-400">
-                    Cuenta inactiva
-                </span>
+                <button onclick="document.getElementById('modal-activar').classList.remove('hidden')"
+                    class="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-300 rounded-xl text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Activar técnico
+                </button>
                 @endif
             </div>
         </header>
@@ -46,12 +48,12 @@
 
                 <!-- Vista de datos -->
                 <div id="view-mode" class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-8 flex items-start gap-6">
-                    <div class="w-20 h-20 rounded-full bg-[#1E3A5F] text-white flex items-center justify-center font-bold text-3xl flex-shrink-0">
+                    <div class="w-20 h-20 rounded-full bg-brand-dark text-white flex items-center justify-center font-bold text-3xl flex-shrink-0">
                         {{ substr($tecnico->name, 0, 1) }}
                     </div>
                     <div class="flex-1">
                         <div class="flex items-center gap-3 mb-1">
-                            <h2 class="text-3xl font-medium text-[#1E3A5F]">{{ $tecnico->name }} {{ $perfil->apellidos ?? '' }}</h2>
+                            <h2 class="text-3xl font-medium text-brand-dark">{{ $tecnico->name }} {{ $perfil->apellidos ?? '' }}</h2>
                             @if($tecnico->is_approved)
                                 <span class="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Activo</span>
                             @else
@@ -83,12 +85,41 @@
                             </div>
                             @endif
                         </div>
+
+                        @if($perfil && $perfil->cv_path)
+                        <div class="mt-5 pt-5 border-t border-gray-100">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-3">Currículum Vitae</p>
+                            <div class="flex items-center gap-4 p-4 bg-red-50 border border-red-100 rounded-xl">
+                                <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-gray-800">CV adjunto</p>
+                                    <p class="text-xs text-gray-400 truncate">{{ basename($perfil->cv_path) }}</p>
+                                </div>
+                                <a href="{{ Storage::url($perfil->cv_path) }}" target="_blank"
+                                   class="flex items-center gap-1.5 px-4 py-2 bg-[#214371] hover:bg-[#1a3560] text-white text-xs font-semibold rounded-lg transition-colors flex-shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                    </svg>
+                                    Ver / Descargar
+                                </a>
+                            </div>
+                        </div>
+                        @else
+                        <div class="mt-5 pt-5 border-t border-gray-100">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-2">Currículum Vitae</p>
+                            <p class="text-sm text-gray-400 italic">No adjuntó CV al registrarse</p>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
                 <!-- Formulario de edición -->
-                <div id="edit-mode" class="hidden bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-[#10B981] p-8">
-                    <h3 class="text-lg font-semibold text-[#1E3A5F] mb-6">Editar datos del técnico</h3>
+                <div id="edit-mode" class="hidden bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-brand-green p-8">
+                    <h3 class="text-lg font-semibold text-brand-dark mb-6">Editar datos del técnico</h3>
                     <form method="POST" action="{{ route('admin.tecnico.update', $tecnico->id) }}">
                         @csrf
                         @method('PATCH')
@@ -96,47 +127,47 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Nombre</label>
                                 <input type="text" name="name" value="{{ old('name', $tecnico->name) }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('name')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Apellidos</label>
                                 <input type="text" name="apellidos" value="{{ old('apellidos', $perfil->apellidos ?? '') }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('apellidos')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
                                 <input type="email" name="email" value="{{ old('email', $tecnico->email) }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('email')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">DNI / NIE</label>
                                 <input type="text" name="dni_nie" value="{{ old('dni_nie', $perfil->dni_nie ?? '') }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('dni_nie')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Teléfono</label>
                                 <input type="text" name="telefono" value="{{ old('telefono', $perfil->telefono ?? '') }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('telefono')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Dirección</label>
                                 <input type="text" name="direccion" value="{{ old('direccion', $perfil->direccion ?? '') }}" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]">
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green">
                                 @error('direccion')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Experiencia</label>
                                 <textarea name="experiencia" rows="3"
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] resize-none">{{ old('experiencia', $perfil->experiencia ?? '') }}</textarea>
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green resize-none">{{ old('experiencia', $perfil->experiencia ?? '') }}</textarea>
                             </div>
                         </div>
                         <div class="flex gap-3 mt-6">
-                            <button type="submit" class="px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] text-white text-sm font-medium rounded-xl transition-colors">
+                            <button type="submit" class="px-6 py-2.5 bg-brand-green hover:bg-brand-green-dark text-white text-sm font-medium rounded-xl transition-colors">
                                 Guardar cambios
                             </button>
                             <button type="button" onclick="toggleEdit()" class="px-6 py-2.5 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors">
@@ -148,7 +179,7 @@
 
                 <!-- Órdenes asignadas -->
                 <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
-                    <h3 class="text-xl font-medium text-[#1E3A5F] mb-4">
+                    <h3 class="text-xl font-medium text-brand-dark mb-4">
                         Órdenes asignadas
                         <span class="text-sm font-normal text-gray-400 ml-2">{{ $ordenes->count() }} en total</span>
                     </h3>
@@ -162,10 +193,10 @@
                                 default                  => 'bg-gray-100 text-gray-600',
                             };
                         @endphp
-                        <div class="border border-gray-100 rounded-xl p-4 flex justify-between items-center hover:border-[#10B981] transition-colors">
+                        <div class="border border-gray-100 rounded-xl p-4 flex justify-between items-center hover:border-brand-green transition-colors">
                             <div>
                                 <span class="text-xs font-bold text-gray-400 uppercase">#OT-{{ $orden->id }}</span>
-                                <h4 class="text-base font-medium text-[#1E3A5F]">{{ $orden->titulo }}</h4>
+                                <h4 class="text-base font-medium text-brand-dark">{{ $orden->titulo }}</h4>
                                 <p class="text-xs text-gray-500 mt-0.5">{{ $orden->cliente->nombre ?? '—' }} · {{ $orden->created_at->format('d/m/Y') }}</p>
                             </div>
                             <div class="flex items-center gap-4">
@@ -185,6 +216,89 @@
         </main>
     </div>
 </div>
+
+<!-- Modal activar técnico (2 pasos) -->
+@if(!$tecnico->is_approved)
+<div id="modal-activar" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-gray-900/60" onclick="cerrarModalActivar()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-8">
+
+        {{-- Paso 1 --}}
+        <div id="activar-paso-1">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Activar cuenta de técnico</h2>
+                    <p class="text-sm text-gray-500">{{ $tecnico->name }} · {{ $tecnico->email }}</p>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-2">
+                Al activar esta cuenta el técnico podrá iniciar sesión y recibir órdenes de trabajo. Se le enviará una notificación automáticamente.
+            </p>
+            <p class="text-sm font-medium text-gray-700 mb-6">¿Has revisado sus datos y currículum antes de continuar?</p>
+            <div class="flex gap-3 justify-end">
+                <button type="button" onclick="cerrarModalActivar()"
+                    class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" onclick="activarPaso2()"
+                    class="px-5 py-2.5 text-sm font-semibold text-white bg-[#214371] rounded-xl hover:bg-[#1a3560] transition-colors">
+                    Sí, he revisado los datos →
+                </button>
+            </div>
+        </div>
+
+        {{-- Paso 2: confirmación final --}}
+        <div id="activar-paso-2" class="hidden">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Confirmación final</h2>
+                    <p class="text-sm text-gray-500">Esta acción activará la cuenta</p>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-6">
+                <strong>{{ $tecnico->name }}</strong> recibirá acceso completo a la plataforma. ¿Confirmas la activación?
+            </p>
+            <form method="POST" action="{{ route('admin.users.validate', $tecnico->id) }}">
+                @csrf
+                <div class="flex gap-3 justify-end">
+                    <button type="button" onclick="activarPaso1()"
+                        class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
+                        ← Volver
+                    </button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl transition-colors">
+                        Activar técnico
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function cerrarModalActivar() {
+        document.getElementById('modal-activar').classList.add('hidden');
+        activarPaso1();
+    }
+    function activarPaso2() {
+        document.getElementById('activar-paso-1').classList.add('hidden');
+        document.getElementById('activar-paso-2').classList.remove('hidden');
+    }
+    function activarPaso1() {
+        document.getElementById('activar-paso-2').classList.add('hidden');
+        document.getElementById('activar-paso-1').classList.remove('hidden');
+    }
+</script>
+@endif
 
 <!-- Modal dar de baja -->
 <div id="modal-baja" class="hidden fixed inset-0 z-50 flex items-center justify-center">

@@ -1,6 +1,6 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <div class="flex min-h-screen bg-white relative">
-        <a href="{{ route('login') }}" class="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-[#10b981] font-medium transition-colors z-50 bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-gray-100 lg:bg-transparent lg:border-none lg:shadow-none lg:text-white lg:hover:text-blue-200">
+        <a href="{{ route('login') }}" class="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-brand-green font-medium transition-colors z-50 bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-gray-100 lg:bg-transparent lg:border-none lg:shadow-none lg:text-white lg:hover:text-blue-200">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Volver
         </a>
@@ -43,7 +43,7 @@
             
             <div class="w-full max-w-2xl bg-white p-10 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100">
                 <div class="mb-8">
-                    <h2 id="step-title" class="text-3xl font-bold text-[#1E3A5F]">Datos Personales</h2>
+                    <h2 id="step-title" class="text-3xl font-bold text-brand-dark">Datos Personales</h2>
                     <p id="step-subtitle" class="text-gray-500">Ingresa tu información básica y de contacto</p>
                 </div>
 
@@ -68,38 +68,38 @@
                     <!-- STEP 1: Datos Personales -->
                     <div id="step-1" class="step-content">
                         <div class="mb-6">
-                            <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Nombre / Empresa *</label>
-                            <input type="text" name="name" value="{{ old('name') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                            <label class="block text-sm font-bold text-brand-dark mb-2">Nombre / Empresa *</label>
+                            <input type="text" name="name" value="{{ old('name') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <!-- Tipo y Documento -->
                             <div>
-                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Documento *</label>
+                                <label class="block text-sm font-bold text-brand-dark mb-2">Documento *</label>
                                 <div class="flex">
-                                    <select name="tipo_documento" class="w-24 h-12 px-2 bg-gray-50 border border-gray-200 rounded-l-xl focus:ring-2 focus:ring-[#10b981] border-r-0 text-sm font-medium text-gray-700 focus:outline-none">
+                                    <select name="tipo_documento" class="w-24 h-12 px-2 bg-gray-50 border border-gray-200 rounded-l-xl focus:ring-2 focus:ring-brand-green border-r-0 text-sm font-medium text-gray-700 focus:outline-none">
                                         <option value="DNI">DNI</option>
                                         <option value="NIE">NIE</option>
                                         <option value="CIF">CIF</option>
                                     </select>
-                                    <input type="text" name="dni_cif" value="{{ old('dni_cif') }}" class="flex-1 w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-r-xl focus:ring-2 focus:ring-[#10b981]" placeholder="Número..." required />
+                                    <input type="text" name="dni_cif" value="{{ old('dni_cif') }}" class="flex-1 w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-r-xl focus:ring-2 focus:ring-brand-green" placeholder="Número..." required />
                                 </div>
                             </div>
                             <!-- Teléfono -->
                             <div>
-                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Teléfono *</label>
-                                <input type="text" name="telefono" value="{{ old('telefono') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                                <label class="block text-sm font-bold text-brand-dark mb-2">Teléfono *</label>
+                                <input type="text" name="telefono" value="{{ old('telefono') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                             </div>
                         </div>
 
                         <div class="mb-6">
-                            <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Dirección *</label>
-                            <input type="text" name="direccion" value="{{ old('direccion') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                            <label class="block text-sm font-bold text-brand-dark mb-2">Dirección *</label>
+                            <input type="text" name="direccion" value="{{ old('direccion') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                         </div>
 
                         <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
                             <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-900 font-medium">¿Ya tienes cuenta? Inicia sesión</a>
-                            <button type="button" onclick="goToStep(2)" class="bg-[#10B981] hover:bg-[#059669] text-white px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2">
+                            <button type="button" onclick="goToStep(2)" class="bg-brand-green hover:bg-brand-green-dark text-white px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2">
                                 Siguiente <span class="text-xl leading-none">&rarr;</span>
                             </button>
                         </div>
@@ -108,25 +108,25 @@
                     <!-- STEP 2: Credenciales -->
                     <div id="step-2" class="step-content hidden">
                         <div class="mb-6">
-                            <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Email *</label>
-                            <input type="email" name="email" value="{{ old('email') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                            <label class="block text-sm font-bold text-brand-dark mb-2">Email *</label>
+                            <input type="email" name="email" value="{{ old('email') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                             <!-- Contraseña -->
                             <div>
-                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Contraseña *</label>
-                                <input type="password" name="password" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                                <label class="block text-sm font-bold text-brand-dark mb-2">Contraseña *</label>
+                                <input type="password" name="password" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                             </div>
                             <!-- Confirmar -->
                             <div>
-                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Confirmar Contraseña *</label>
-                                <input type="password" name="password_confirmation" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                                <label class="block text-sm font-bold text-brand-dark mb-2">Confirmar Contraseña *</label>
+                                <input type="password" name="password_confirmation" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                             </div>
                         </div>
 
                         <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
-                            <button type="button" onclick="goToStep(1)" class="text-sm font-medium text-gray-600 hover:text-[#1E3A5F]">
+                            <button type="button" onclick="goToStep(1)" class="text-sm font-medium text-gray-600 hover:text-brand-dark">
                                 &larr; Volver
                             </button>
                             <button type="submit" class="bg-[#214371] hover:bg-[#152e50] text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl">

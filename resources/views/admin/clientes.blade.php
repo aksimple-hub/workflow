@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -7,15 +7,15 @@
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
             <div class="flex items-center gap-3 min-w-0">
-                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
                 <div>
-                    <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Clientes Registrados</h1>
+                    <h1 class="text-2xl md:text-4xl font-medium text-brand-dark">Clientes Registrados</h1>
                     <p class="text-sm md:text-base text-gray-500 mt-0.5">Directorio de clientes y empresas</p>
                 </div>
             </div>
-            <a href="{{ route('admin.clientes.create') }}" class="flex-shrink-0 bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            <a href="{{ route('admin.clientes.create') }}" class="flex-shrink-0 bg-brand-green hover:bg-brand-green-dark text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                 + Nuevo Cliente
             </a>
         </header>
@@ -36,7 +36,7 @@
                     <tbody class="text-sm divide-y divide-gray-100">
                         @forelse($clientes as $cliente)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-[#1E3A5F]">{{ $cliente->nombre }}</td>
+                            <td class="px-6 py-4 font-medium text-brand-dark">{{ $cliente->nombre }}</td>
                             <td class="px-6 py-4 text-gray-600">{{ $cliente->dni_cif }}</td>
                             <td class="px-6 py-4 text-gray-600">
                                 <div>{{ $cliente->telefono }}</div>
@@ -57,7 +57,7 @@
                                 @if($user && !$user->is_approved)
                                     <form method="POST" action="{{ route('admin.users.validate', $user->id) }}">
                                         @csrf
-                                        <button type="submit" class="text-white bg-[#10B981] hover:bg-[#059669] px-3 py-1 rounded text-xs font-medium">Validar</button>
+                                        <button type="submit" class="text-white bg-brand-green hover:bg-brand-green-dark px-3 py-1 rounded text-xs font-medium">Validar</button>
                                     </form>
                                 @endif
                                 <a href="{{ route('admin.cliente.show', $cliente->id) }}" class="text-[#1D4ED8] hover:underline font-medium">Ver detalles</a>

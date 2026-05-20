@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
             Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            return redirect('/login')->withErrors(['email' => 'Tu cuenta está pendiente de validación por un administrador.']);
+            return redirect('/login')->withErrors(['email' => 'Tu cuenta está pendiente de validación por un administrador. No puedes acceder a esta cuenta de momento.']);
         }
 
         $request->session()->regenerate();

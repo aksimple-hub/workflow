@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -6,14 +6,14 @@
 
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3">
-            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
-            <a href="{{ route('admin.clientes') }}" class="text-gray-400 hover:text-[#10B981] transition-colors flex-shrink-0">
+            <a href="{{ route('admin.clientes') }}" class="text-gray-400 hover:text-brand-green transition-colors flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             </a>
             <div>
-                <h1 class="text-xl md:text-3xl font-bold text-[#1E3A5F]">Añadir Nuevo Cliente</h1>
+                <h1 class="text-xl md:text-3xl font-bold text-brand-dark">Añadir Nuevo Cliente</h1>
                 <p class="text-sm text-gray-500 mt-0.5 hidden sm:block">Crea un perfil de cliente para darle acceso al portal</p>
             </div>
         </header>
@@ -26,7 +26,7 @@
                         <span class="text-white text-xl font-bold tracking-tight">Workflow</span>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-[#1E3A5F]">Ficha de Cliente</h2>
+                        <h2 class="text-2xl font-bold text-brand-dark">Ficha de Cliente</h2>
                         <p class="text-gray-500 text-sm">Completa los datos solicitados</p>
                     </div>
                 </div>
@@ -45,62 +45,62 @@
                     @csrf
                     
                     <div class="mb-8">
-                        <h3 class="text-lg font-bold text-[#1E3A5F] mb-4 border-b pb-2">1. Datos Personales</h3>
+                        <h3 class="text-lg font-bold text-brand-dark mb-4 border-b pb-2">1. Datos Personales</h3>
                         
                         <div class="mb-5">
-                            <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Nombre / Empresa *</label>
-                            <input type="text" name="nombre" value="{{ old('nombre') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                            <label class="block text-sm font-bold text-brand-dark mb-2">Nombre / Empresa *</label>
+                            <input type="text" name="nombre" value="{{ old('nombre') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                             <div>
-                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Documento *</label>
+                                <label class="block text-sm font-bold text-brand-dark mb-2">Documento *</label>
                                 <div class="flex">
-                                    <select name="tipo_documento" class="w-24 h-12 px-2 bg-gray-50 border border-gray-200 rounded-l-xl focus:ring-2 focus:ring-[#10b981] border-r-0 text-sm font-medium text-gray-700 focus:outline-none">
+                                    <select name="tipo_documento" class="w-24 h-12 px-2 bg-gray-50 border border-gray-200 rounded-l-xl focus:ring-2 focus:ring-brand-green border-r-0 text-sm font-medium text-gray-700 focus:outline-none">
                                         <option value="DNI">DNI</option>
                                         <option value="NIE">NIE</option>
                                         <option value="CIF">CIF</option>
                                     </select>
-                                    <input type="text" name="dni_cif" value="{{ old('dni_cif') }}" class="flex-1 w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-r-xl focus:ring-2 focus:ring-[#10b981]" placeholder="Número..." required />
+                                    <input type="text" name="dni_cif" value="{{ old('dni_cif') }}" class="flex-1 w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-r-xl focus:ring-2 focus:ring-brand-green" placeholder="Número..." required />
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Teléfono *</label>
-                                <input type="text" name="telefono" value="{{ old('telefono') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                                <label class="block text-sm font-bold text-brand-dark mb-2">Teléfono *</label>
+                                <input type="text" name="telefono" value="{{ old('telefono') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                             </div>
                         </div>
 
                         <div class="mb-5">
-                            <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Dirección *</label>
-                            <input type="text" name="direccion" value="{{ old('direccion') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                            <label class="block text-sm font-bold text-brand-dark mb-2">Dirección *</label>
+                            <input type="text" name="direccion" value="{{ old('direccion') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                         </div>
                     </div>
 
                     <div class="mb-8">
-                        <h3 class="text-lg font-bold text-[#1E3A5F] mb-4 border-b pb-2">2. Credenciales de Acceso</h3>
+                        <h3 class="text-lg font-bold text-brand-dark mb-4 border-b pb-2">2. Credenciales de Acceso</h3>
                         
                         <div class="mb-5">
-                            <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Email *</label>
-                            <input type="email" name="email" value="{{ old('email') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                            <label class="block text-sm font-bold text-brand-dark mb-2">Email *</label>
+                            <input type="email" name="email" value="{{ old('email') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                             <div>
-                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Contraseña *</label>
-                                <input type="password" name="password" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                                <label class="block text-sm font-bold text-brand-dark mb-2">Contraseña *</label>
+                                <input type="password" name="password" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-[#1E3A5F] mb-2">Confirmar Contraseña *</label>
-                                <input type="password" name="password_confirmation" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#10b981]" required />
+                                <label class="block text-sm font-bold text-brand-dark mb-2">Confirmar Contraseña *</label>
+                                <input type="password" name="password_confirmation" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                             </div>
                         </div>
                     </div>
 
                     <div class="flex items-center justify-end mt-8 pt-6 border-t border-gray-100 gap-4">
-                        <a href="{{ route('admin.clientes') }}" class="text-sm font-medium text-gray-600 hover:text-[#1E3A5F]">
+                        <a href="{{ route('admin.clientes') }}" class="text-sm font-medium text-gray-600 hover:text-brand-dark">
                             Cancelar
                         </a>
-                        <button type="submit" class="bg-[#10B981] hover:bg-[#059669] text-white px-8 py-3 rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                        <button type="submit" class="bg-brand-green hover:bg-brand-green-dark text-white px-8 py-3 rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center gap-2">
                             Crear Cliente
                         </button>
                     </div>

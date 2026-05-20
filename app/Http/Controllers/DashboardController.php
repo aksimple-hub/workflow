@@ -18,6 +18,7 @@ class DashboardController extends Controller
                 'pendientes' => OrdenTrabajo::where('estado', 'pendiente')->count(),
                 'en_curso'   => OrdenTrabajo::whereIn('estado', ['en_camino', 'en_proceso', 'asignada'])->count(),
                 'finalizadas' => OrdenTrabajo::where('estado', 'finalizada')->count(),
+                'canceladas'  => OrdenTrabajo::where('estado', 'cancelada')->count(),
             ];
 
             $search   = request('search', '');
@@ -251,7 +252,8 @@ class DashboardController extends Controller
     {
         $user = \App\Models\User::findOrFail($id);
         $user->update(['is_approved' => true]);
-        return redirect()->back()->with('success', 'Usuario validado correctamente.');
+        $user->notify(new \App\Notifications\TecnicoAprobado());
+        return redirect()->back()->with('success', 'Técnico "' . $user->name . '" activado correctamente. Se le ha notificado.');
     }
 
     public function createCliente()
@@ -290,5 +292,36 @@ class DashboardController extends Controller
         $user->update(['cliente_id' => $user->id]);
 
         return redirect()->route('admin.clientes')->with('success', 'Cliente creado correctamente.');
+    }
+
+    public function markNotificationRead(Request $request, string $id)
+    {
+        $notification = Auth::user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+
+        $data = $notification->data;
+
+        // Nuevo técnico registrado → ir a lista de técnicos pendientes
+        if (isset($data['tecnico_id']) && !isset($data['orden_id']) && !isset($data['mensaje'])) {
+            return redirect()->route('admin.tecnicos');
+        }
+
+        // Técnico aprobado → ir al dashboard del técnico
+        if (isset($data['mensaje'])) {
+            return redirect()->route('dashboard');
+        }
+
+        // Cancelación o aplazamiento de orden
+        if (isset($data['orden_id'])) {
+            return redirect()->route('admin.orden.show', $data['orden_id']);
+        }
+
+        return redirect()->route('dashboard');
+    }
+
+    public function markAllNotificationsRead()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+        return redirect()->back();
     }
 }

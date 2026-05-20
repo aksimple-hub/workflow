@@ -13,7 +13,7 @@ class OrdenTrabajo extends Model
     protected $fillable = [
         'uuid', 'cliente_id', 'usuario_id', 'titulo', 'descripcion', 'prioridad', 'estado',
         'fecha_asignacion', 'fecha_entrega_prevista', 'observaciones', 'recomendaciones',
-        'satisfaccion', 'hora_inicio', 'hora_fin', 'firma_path',
+        'comentario_cliente', 'satisfaccion', 'satisfaccion_tecnico', 'hora_inicio', 'hora_fin', 'firma_path',
     ];
 
     protected function casts(): array
@@ -33,5 +33,9 @@ class OrdenTrabajo extends Model
     }
     public function Material() {
         return $this->hasMany(Material::class);
+    }
+
+    public function fotos() {
+        return $this->hasMany(OrdenFoto::class, 'orden_trabajo_id');
     }
 }

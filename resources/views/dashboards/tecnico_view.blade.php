@@ -1,4 +1,4 @@
-<div class="space-y-4">
+﻿<div class="space-y-4">
     <div class="flex justify-between items-center mb-6">
         <h3 class="text-lg font-bold text-gray-800 uppercase tracking-wider">Mi Agenda Diaria</h3>
         <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Ruta Activa</span>
@@ -34,7 +34,7 @@
                 <a href="tel:{{ $orden->cliente->telefono ?? '#' }}" class="flex items-center justify-center gap-2 bg-gray-100 text-gray-700 py-3 rounded-xl text-sm font-bold active:scale-95 transition">
                     📞 Llamar
                 </a>
-                <a href="{{ route('ordenes.show', $orden) }}" class="flex items-center justify-center gap-2 bg-[#10b981] text-white py-3 rounded-xl text-sm font-bold shadow-lg shadow-green-100 active:scale-95 transition">
+                <a href="{{ route('ordenes.show', $orden) }}" class="flex items-center justify-center gap-2 bg-brand-green text-white py-3 rounded-xl text-sm font-bold shadow-lg shadow-green-100 active:scale-95 transition">
                     🚀 Iniciar
                 </a>
             </div>

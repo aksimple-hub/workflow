@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\OrdenTrabajoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\SocialAuthController;
 
 Route::get('/', function () {
-    return auth()->check() ? redirect('/dashboard') : redirect('/login');
-});
+    return auth()->check() ? redirect('/dashboard') : view('landing');
+})->name('landing');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -43,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/historial', [DashboardController::class, 'historial'])->name('admin.historial');
     Route::get('/ordenes-detalle/{id}', [DashboardController::class, 'ordenShow'])->name('admin.orden.show');
     Route::get('/configuracion', [DashboardController::class, 'configuracion'])->name('admin.configuracion');
+    Route::post('/notifications/{id}/read', [DashboardController::class, 'markNotificationRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [DashboardController::class, 'markAllNotificationsRead'])->name('notifications.read-all');
     
     // Rutas para Técnico (Estados y Cierre)
     Route::post('/ordenes/bulk-assign', [OrdenTrabajoController::class, 'bulkAssignTecnico'])->name('ordenes.bulk-assign');
@@ -51,14 +54,23 @@ Route::middleware('auth')->group(function () {
     Route::patch('/ordenes/{orden}/tecnico', [OrdenTrabajoController::class, 'assignTecnico'])->name('ordenes.assign-tecnico');
     Route::get('/ordenes/{orden}/cierre', [OrdenTrabajoController::class, 'showCierre'])->name('ordenes.cierre');
     Route::post('/ordenes/{orden}/cerrar', [OrdenTrabajoController::class, 'cerrar'])->name('ordenes.cerrar');
+    Route::post('/ordenes/{orden}/cancelar-tecnico', [OrdenTrabajoController::class, 'cancelarPorTecnico'])->name('ordenes.cancelar-tecnico');
+    Route::post('/ordenes/{orden}/aplazar', [OrdenTrabajoController::class, 'aplazarOrden'])->name('ordenes.aplazar');
+    Route::post('/ordenes/{orden}/reagendar', [OrdenTrabajoController::class, 'reagendarOrden'])->name('ordenes.reagendar');
 
-    // Rutas para Cliente (Nueva Solicitud + Detalle)
+    // Rutas para Cliente (Nueva Solicitud + Detalle + Valoración)
     Route::get('/solicitud/nueva', [OrdenTrabajoController::class, 'nuevaSolicitud'])->name('solicitud.nueva');
+    Route::get('/mis-servicios/{orden}/valorar', [OrdenTrabajoController::class, 'showValoracion'])->name('cliente.orden.valorar');
+    Route::post('/mis-servicios/{orden}/valorar', [OrdenTrabajoController::class, 'submitValoracion'])->name('cliente.orden.valorar.submit');
     Route::get('/mis-servicios/{orden}', [OrdenTrabajoController::class, 'showCliente'])->name('cliente.orden.show');
 
     // Rutas para Técnico
     Route::get('/mi-historial', [DashboardController::class, 'historialTecnico'])->name('tecnico.historial');
 });
+
+// Google OAuth
+Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 // Rutas de registro de técnicos (públicas)
 Route::middleware('guest')->group(function () {

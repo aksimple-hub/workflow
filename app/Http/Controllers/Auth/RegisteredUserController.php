@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\NuevoTecnicoRegistrado;
+use App\Notifications\TecnicoRegistrado;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +34,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'dni_cif' => ['required', 'string', 'max:20', 'unique:clientes,dni_cif'],
             'telefono' => ['required', 'string', 'max:20'],
@@ -74,13 +76,20 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'apellidos' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'dni_nie' => ['required', 'string', 'max:20', 'unique:tecnicos,dni_nie'],
             'telefono' => ['required', 'string', 'max:20'],
             'direccion' => ['required', 'string', 'max:255'],
             'experiencia' => ['nullable', 'string'],
+            'cv_pdf'      => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
+            'foto_perfil' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        $fotoPerfil = null;
+        if ($request->hasFile('foto_perfil')) {
+            $fotoPerfil = $request->file('foto_perfil')->store('fotos-perfil', 'public');
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -88,7 +97,13 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => 'tecnico',
             'is_approved' => false,
+            'foto_perfil' => $fotoPerfil,
         ]);
+
+        $cvPath = null;
+        if ($request->hasFile('cv_pdf')) {
+            $cvPath = $request->file('cv_pdf')->store('cvs', 'public');
+        }
 
         \App\Models\Tecnico::create([
             'id' => $user->id,
@@ -98,10 +113,18 @@ class RegisteredUserController extends Controller
             'telefono' => $request->telefono,
             'direccion' => $request->direccion,
             'experiencia' => $request->experiencia,
+            'foto_perfil' => $fotoPerfil,
+            'cv_path' => $cvPath,
         ]);
 
         event(new Registered($user));
 
-        return redirect(route('login', absolute: false))->with('status', 'Tu cuenta de técnico ha sido registrada y está pendiente de validación por un administrador.');
+        // Confirmar al técnico que su registro fue recibido
+        $user->notify(new TecnicoRegistrado());
+
+        // Notificar a todos los admins
+        User::where('role', 'admin')->each(fn($admin) => $admin->notify(new NuevoTecnicoRegistrado($user)));
+
+        return redirect(route('login', absolute: false))->with('status', 'Tu solicitud ha sido enviada. Un administrador revisará tus datos y activará tu cuenta. Te avisaremos cuando esté lista.');
     }
 }

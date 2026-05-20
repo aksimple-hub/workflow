@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -9,25 +9,25 @@
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between gap-3 flex-wrap">
             <div class="flex items-center gap-3 min-w-0">
-                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
                 <div>
-                    <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Panel de Control</h1>
+                    <h1 class="text-2xl md:text-4xl font-medium text-brand-dark">Panel de Control</h1>
                     <p class="text-sm md:text-base text-gray-500 mt-0.5">Gestión de Órdenes de Trabajo</p>
                 </div>
             </div>
             <div class="flex items-center gap-3 flex-shrink-0">
                 <button type="button" onclick="toggleFiltros()"
-                    class="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-white rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ ($estado || $prioridad) ? 'border-[#10B981] text-[#10B981]' : '' }}">
+                    class="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-white rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors {{ ($estado || $prioridad) ? 'border-brand-green text-brand-green' : '' }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
                     Filtrar
                     @if($estado || $prioridad)
-                        <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+                        <span class="w-2 h-2 rounded-full bg-brand-green"></span>
                     @endif
                 </button>
                 <a href="{{ route('ordenes.create') }}"
-                    class="flex items-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
+                    class="flex items-center gap-2 bg-brand-green hover:bg-brand-green-dark text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     Nueva Orden
                 </a>
@@ -48,7 +48,7 @@
                         <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg>
                         <input type="text" name="search" value="{{ $search }}"
                             placeholder="Buscar por cliente, ID de orden o técnico..."
-                            class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-colors"
+                            class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-colors"
                             oninput="debounceSearch(this)">
                         @if($search)
                         <a href="{{ route('dashboard', array_filter(['estado' => $estado, 'prioridad' => $prioridad])) }}"
@@ -96,29 +96,38 @@
             </form>
 
             <!-- Stats Grid -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
+                <a href="{{ route('dashboard') }}"
+                    class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ !$estado ? 'border-brand-dark ring-2 ring-brand-dark/20' : 'border-gray-100 hover:border-gray-300' }} transition-colors group block">
                     <p class="text-sm font-medium text-gray-500 mb-1">Total Órdenes</p>
-                    <p class="text-3xl font-bold text-[#1E3A5F]">{{ $stats['total'] ?? 0 }}</p>
-                </div>
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
+                    <p class="text-3xl font-bold text-brand-dark">{{ $stats['total'] ?? 0 }}</p>
+                </a>
+                <button type="button" onclick="filtrarPorEstado('pendiente')"
+                    class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'pendiente' ? 'border-[#1D4ED8] ring-2 ring-[#1D4ED8]/20' : 'border-gray-100 hover:border-[#1D4ED8]/40' }} transition-colors text-left group">
                     <p class="text-sm font-medium text-gray-500 mb-1">Pendientes</p>
                     <p class="text-3xl font-bold text-[#1D4ED8]">{{ $stats['pendientes'] ?? 0 }}</p>
-                </div>
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
+                </button>
+                <button type="button" onclick="filtrarPorEstado('asignada')"
+                    class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'asignada' ? 'border-[#D97706] ring-2 ring-[#D97706]/20' : 'border-gray-100 hover:border-[#D97706]/40' }} transition-colors text-left group">
                     <p class="text-sm font-medium text-gray-500 mb-1">En Curso</p>
                     <p class="text-3xl font-bold text-[#D97706]">{{ $stats['en_curso'] ?? 0 }}</p>
-                </div>
-                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border border-gray-100">
+                </button>
+                <button type="button" onclick="filtrarPorEstado('finalizada')"
+                    class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'finalizada' ? 'border-brand-green ring-2 ring-brand-green/20' : 'border-gray-100 hover:border-brand-green/40' }} transition-colors text-left group">
                     <p class="text-sm font-medium text-gray-500 mb-1">Finalizadas</p>
-                    <p class="text-3xl font-bold text-[#10B981]">{{ $stats['finalizadas'] ?? 0 }}</p>
-                </div>
+                    <p class="text-3xl font-bold text-brand-green">{{ $stats['finalizadas'] ?? 0 }}</p>
+                </button>
+                <button type="button" onclick="filtrarPorEstado('cancelada')"
+                    class="bg-red-50 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'cancelada' ? 'border-red-500 ring-2 ring-red-500/20' : 'border-red-100 hover:border-red-300' }} transition-colors text-left group">
+                    <p class="text-sm font-medium text-red-400 mb-1">Canceladas</p>
+                    <p class="text-3xl font-bold text-red-600">{{ $stats['canceladas'] ?? 0 }}</p>
+                </button>
             </div>
 
             <!-- Tabla -->
             <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
                 <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                    <h2 class="text-xl font-medium text-[#1E3A5F]">
+                    <h2 class="text-xl font-medium text-brand-dark">
                         Órdenes de Trabajo
                         @if($search || $estado || $prioridad)
                             <span class="ml-2 text-sm font-normal text-gray-400">— {{ $ordenes->total() }} resultado(s)</span>
@@ -136,7 +145,7 @@
                                 <tr class="bg-[#F5F7FA] text-gray-500 text-sm border-b border-gray-200">
                                     <th class="px-4 py-3 w-10">
                                         <input type="checkbox" id="selectAll"
-                                            class="w-4 h-4 rounded border-gray-300 text-[#10B981] focus:ring-[#10B981] cursor-pointer">
+                                            class="w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer">
                                     </th>
                                     <th class="px-6 py-3 font-medium whitespace-nowrap">ID Orden</th>
                                     <th class="px-6 py-3 font-medium">Cliente</th>
@@ -153,19 +162,20 @@
                                     $asignable = $orden->estado === 'pendiente';
                                     $bg = 'bg-gray-100 text-gray-600';
                                     if(in_array($orden->estado, ['en_camino', 'en_curso', 'en_proceso'])) $bg = 'bg-blue-500 text-white';
-                                    if($orden->estado == 'finalizada') $bg = 'bg-[#10B981] text-white';
+                                    if($orden->estado == 'finalizada') $bg = 'bg-brand-green text-white';
                                     if(in_array($orden->estado, ['pendiente', 'asignada'])) $bg = 'bg-gray-400 text-white';
+                                    if($orden->estado === 'cancelada') $bg = 'bg-red-100 text-red-700';
                                 @endphp
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-4 py-4">
                                         @if($asignable)
                                         <input type="checkbox" name="orden_ids[]" value="{{ $orden->id }}"
-                                            class="orden-checkbox w-4 h-4 rounded border-gray-300 text-[#10B981] focus:ring-[#10B981] cursor-pointer">
+                                            class="orden-checkbox w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer">
                                         @else
                                         <span class="w-4 h-4 block"></span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 font-medium text-[#1E3A5F]">#OT-{{ $orden->id }}</td>
+                                    <td class="px-6 py-4 font-medium text-brand-dark">#OT-{{ $orden->id }}</td>
                                     <td class="px-6 py-4 text-gray-700">{{ $orden->cliente->nombre ?? 'N/A' }}</td>
                                     <td class="px-6 py-4 text-gray-500 text-sm max-w-xs truncate" title="{{ $orden->cliente->direccion ?? 'N/A' }}">{{ $orden->cliente->direccion ?? 'N/A' }}</td>
                                     <td class="px-6 py-4 text-gray-700">{{ $orden->tecnico->name ?? 'No asignado' }}</td>
@@ -176,7 +186,7 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-right">
-                                        <a href="{{ route('admin.orden.show', $orden->id) }}" class="text-[#10B981] hover:text-[#059669] font-medium text-sm">Ver detalles</a>
+                                        <a href="{{ route('admin.orden.show', $orden->id) }}" class="text-brand-green hover:text-brand-green-dark font-medium text-sm">Ver detalles</a>
                                     </td>
                                 </tr>
                                 @empty
@@ -225,24 +235,24 @@
 {{-- ── BARRA FLOTANTE DE ASIGNACIÓN MASIVA ── --}}
 <div id="bulkBar" class="fixed bottom-0 left-0 right-0 z-50 hidden">
     <div class="mx-auto max-w-4xl mb-6 px-6">
-        <div class="bg-[#1E3A5F] rounded-2xl shadow-2xl px-6 py-4 flex items-center gap-4 flex-wrap">
+        <div class="bg-brand-dark rounded-2xl shadow-2xl px-6 py-4 flex items-center gap-4 flex-wrap">
             <div class="flex items-center gap-2 text-white flex-shrink-0">
-                <div class="w-7 h-7 bg-[#10B981] rounded-full flex items-center justify-center font-bold text-sm" id="selectedCount">0</div>
+                <div class="w-7 h-7 bg-brand-green rounded-full flex items-center justify-center font-bold text-sm" id="selectedCount">0</div>
                 <span class="font-medium text-sm">orden(es) seleccionada(s)</span>
             </div>
 
             <div class="flex-1 min-w-48">
                 <select id="bulkTecnicoSelect"
-                    class="w-full bg-white/10 border border-white/20 text-white rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#10B981] appearance-none">
+                    class="w-full bg-white/10 border border-white/20 text-white rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-brand-green appearance-none">
                     <option value="" class="text-gray-900">Seleccionar técnico...</option>
-                    @foreach(\App\Models\User::where('role','tecnico')->get() as $tec)
+                    @foreach(\App\Models\User::where('role','tecnico')->where('is_approved',true)->get() as $tec)
                     <option value="{{ $tec->id }}" class="text-gray-900">{{ $tec->name }}</option>
                     @endforeach
                 </select>
             </div>
 
             <button type="button" id="bulkAssignBtn"
-                class="bg-[#10B981] hover:bg-[#059669] text-white px-5 py-2 rounded-xl text-sm font-semibold transition-colors flex-shrink-0">
+                class="bg-brand-green hover:bg-brand-green-dark text-white px-5 py-2 rounded-xl text-sm font-semibold transition-colors flex-shrink-0">
                 Asignar técnico
             </button>
 
@@ -277,6 +287,13 @@ function toggleFiltros() {
 function setFiltro(campo, valor) {
     const input = document.getElementById('input' + campo.charAt(0).toUpperCase() + campo.slice(1));
     input.value = input.value === valor ? '' : valor;
+    document.getElementById('searchForm').submit();
+}
+
+// Filtrar desde las tarjetas de stats
+function filtrarPorEstado(valor) {
+    document.getElementById('inputEstado').value = valor;
+    document.getElementById('inputPrioridad').value = '';
     document.getElementById('searchForm').submit();
 }
 

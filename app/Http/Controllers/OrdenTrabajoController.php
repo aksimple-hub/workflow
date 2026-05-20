@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Material;
+use App\Models\OrdenFoto;
 use App\Models\User;
 use App\Models\OrdenTrabajo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\AsignacionOrdenTecnico;
+use App\Notifications\OrdenCanceladaAdmin;
+use App\Notifications\OrdenAplazadaAdmin;
+use Illuminate\Support\Facades\Notification;
 
 class OrdenTrabajoController extends Controller
 {
@@ -42,7 +47,7 @@ class OrdenTrabajoController extends Controller
         }
 
         $clientes = Cliente::all();
-        $tecnicos = User::where('role', 'tecnico')->get();
+        $tecnicos = User::where('role', 'tecnico')->where('is_approved', true)->get();
 
         return view('admin.rutas', compact('clientes', 'tecnicos'));
     }
@@ -64,6 +69,8 @@ class OrdenTrabajoController extends Controller
                 'prioridad'          => 'required|in:baja,media,alta',
                 'horario_preferido'  => 'required|in:mañana,mediodia,tarde,sin_preferencia',
                 'direccion_servicio' => 'nullable|string|max:500',
+                'fotos'              => 'nullable|array|max:5',
+                'fotos.*'            => 'image|mimes:jpg,jpeg,png,webp|max:5120',
             ]);
 
             // Límite de 3 solicitudes por día
@@ -122,17 +129,24 @@ class OrdenTrabajoController extends Controller
             default           => null,
         };
 
-        OrdenTrabajo::create([
-            'uuid'                   => (string) Str::uuid(),
-            'cliente_id'             => $cliente_id,
-            'usuario_id'             => $usuario_id,
-            'titulo'                 => $validated['titulo'],
-            'descripcion'            => $validated['descripcion'],
-            'prioridad'              => $validated['prioridad'],
-            'estado'                 => $usuario_id ? 'asignada' : 'pendiente',
-            'fecha_asignacion'       => $usuario_id ? now() : null,
-            'observaciones'          => $horarioLabel ? 'Horario preferido: ' . $horarioLabel : null,
+        $orden = OrdenTrabajo::create([
+            'uuid'             => (string) Str::uuid(),
+            'cliente_id'       => $cliente_id,
+            'usuario_id'       => $usuario_id,
+            'titulo'           => $validated['titulo'],
+            'descripcion'      => $validated['descripcion'],
+            'prioridad'        => $validated['prioridad'],
+            'estado'           => $usuario_id ? 'asignada' : 'pendiente',
+            'fecha_asignacion' => $usuario_id ? now() : null,
+            'observaciones'    => $horarioLabel ? 'Horario preferido: ' . $horarioLabel : null,
         ]);
+
+        if ($request->hasFile('fotos')) {
+            foreach ($request->file('fotos') as $foto) {
+                $path = $foto->store('orden_fotos', 'public');
+                OrdenFoto::create(['orden_trabajo_id' => $orden->id, 'path' => $path]);
+            }
+        }
 
         return redirect()->route('dashboard')->with('success', 'Orden de trabajo creada correctamente.');
     }
@@ -187,7 +201,7 @@ class OrdenTrabajoController extends Controller
             abort(403, 'No tienes permiso para ver esta orden.');
         }
 
-        $orden->load('cliente');
+        $orden->load(['cliente', 'fotos']);
         return view('tecnico.detalle', compact('orden'));
     }
 
@@ -198,26 +212,20 @@ class OrdenTrabajoController extends Controller
             abort(403, 'No autorizado');
         }
 
+        if (in_array($orden->estado, ['pendiente_valoracion', 'finalizada', 'cancelada'])) {
+            return redirect()->route('dashboard')->with('info', 'Esta orden ya fue procesada.');
+        }
+
         $request->validate([
-            'observaciones'    => 'required|string',
-            'recomendaciones'  => 'nullable|string',
-            'satisfaccion'     => 'nullable|integer|min:1|max:5',
-            'hora_inicio'      => 'nullable|date_format:H:i',
-            'hora_fin'         => 'nullable|date_format:H:i',
-            'firma_base64'     => 'nullable|string',
-            'materiales'       => 'nullable|array',
+            'observaciones'       => 'required|string',
+            'recomendaciones'     => 'nullable|string',
+            'satisfaccion_tecnico'=> 'nullable|integer|min:1|max:5',
+            'hora_inicio'         => 'nullable|date_format:H:i',
+            'hora_fin'            => 'nullable|date_format:H:i',
+            'materiales'          => 'nullable|array',
             'materiales.*.nombre'   => 'required_with:materiales|string|max:255',
             'materiales.*.cantidad' => 'required_with:materiales|integer|min:1',
         ]);
-
-        // Firma digital desde canvas (base64) o archivo subido
-        $pathFirma = null;
-        if ($request->filled('firma_base64')) {
-            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->firma_base64));
-            $filename = 'firmas/' . Str::uuid() . '.png';
-            Storage::disk('public')->put($filename, $imageData);
-            $pathFirma = $filename;
-        }
 
         // Prefixar las tareas realizadas en las observaciones
         $observaciones = $request->observaciones;
@@ -231,13 +239,12 @@ class OrdenTrabajoController extends Controller
         }
 
         $orden->update([
-            'estado'          => 'finalizada',
-            'observaciones'   => $observaciones,
-            'recomendaciones' => $request->recomendaciones,
-            'satisfaccion'    => $request->satisfaccion,
-            'hora_inicio'     => $request->hora_inicio ?: null,
-            'hora_fin'        => $request->hora_fin ?: null,
-            'firma_path'      => $pathFirma,
+            'estado'               => 'pendiente_valoracion',
+            'observaciones'        => $observaciones,
+            'recomendaciones'      => $request->recomendaciones,
+            'satisfaccion_tecnico' => $request->satisfaccion_tecnico ?: null,
+            'hora_inicio'          => $request->hora_inicio ?: null,
+            'hora_fin'             => $request->hora_fin ?: null,
         ]);
 
         // Guardar materiales
@@ -254,7 +261,148 @@ class OrdenTrabajoController extends Controller
             }
         }
 
-        return redirect()->route('dashboard')->with('success', 'Orden finalizada correctamente.');
+        return redirect()->route('dashboard')->with('success', 'Informe enviado. El cliente recibirá la solicitud de valoración.');
+    }
+
+    // Muestra el formulario de valoración del cliente
+    public function showValoracion(OrdenTrabajo $orden)
+    {
+        $user = Auth::user();
+        if ($user->role !== 'cliente' || $orden->cliente_id !== $user->cliente_id) {
+            abort(403);
+        }
+        if ($orden->estado !== 'pendiente_valoracion') {
+            return redirect()->route('dashboard');
+        }
+        $orden->load(['tecnico', 'cliente']);
+        return view('cliente.valoracion', compact('orden'));
+    }
+
+    // Procesa la valoración del cliente y finaliza la orden
+    public function submitValoracion(Request $request, OrdenTrabajo $orden)
+    {
+        $user = Auth::user();
+        if ($user->role !== 'cliente' || $orden->cliente_id !== $user->cliente_id) {
+            abort(403);
+        }
+        if ($orden->estado !== 'pendiente_valoracion') {
+            return redirect()->route('dashboard');
+        }
+
+        $request->validate([
+            'satisfaccion'       => 'required|integer|min:1|max:5',
+            'comentario_cliente' => 'nullable|string|max:1000',
+            'firma_base64'       => 'nullable|string',
+        ]);
+
+        $pathFirma = $orden->firma_path;
+        if ($request->filled('firma_base64')) {
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->firma_base64));
+            $filename = 'firmas/' . Str::uuid() . '.png';
+            Storage::disk('public')->put($filename, $imageData);
+            $pathFirma = $filename;
+        }
+
+        $orden->update([
+            'estado'             => 'finalizada',
+            'satisfaccion'       => $request->satisfaccion,
+            'comentario_cliente' => $request->comentario_cliente,
+            'firma_path'         => $pathFirma,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', '¡Gracias por tu valoración! El servicio ha quedado finalizado.');
+    }
+
+    // Cancela la orden por parte del técnico con un motivo
+    public function cancelarPorTecnico(Request $request, OrdenTrabajo $orden)
+    {
+        if (Auth::user()->role !== 'tecnico' || $orden->usuario_id !== Auth::id()) {
+            abort(403, 'No autorizado');
+        }
+
+        if (in_array($orden->estado, ['finalizada', 'cancelada', 'pendiente_valoracion'])) {
+            return redirect()->route('dashboard')->with('info', 'Esta orden ya fue procesada.');
+        }
+
+        $request->validate([
+            'motivo' => 'required|string|max:1000',
+        ]);
+
+        $orden->update([
+            'estado'        => 'cancelada',
+            'observaciones' => '[Cancelado por técnico ' . now()->format('d/m/Y H:i') . ']: ' . $request->motivo,
+        ]);
+
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new OrdenCanceladaAdmin($orden->fresh(), 'tecnico', $request->motivo));
+
+        return redirect()->route('dashboard')->with('success', 'Servicio cancelado. El administrador ha sido notificado.');
+    }
+
+    // Aplazar la orden por parte del técnico (no cancela, queda pendiente de reagendar)
+    public function aplazarOrden(Request $request, OrdenTrabajo $orden)
+    {
+        if (Auth::user()->role !== 'tecnico' || $orden->usuario_id !== Auth::id()) {
+            abort(403, 'No autorizado');
+        }
+
+        if (in_array($orden->estado, ['finalizada', 'cancelada', 'pendiente_valoracion', 'pendiente_reprogramacion'])) {
+            return redirect()->route('dashboard')->with('info', 'Esta orden ya fue procesada o está pendiente de reagendar.');
+        }
+
+        $request->validate([
+            'motivo' => 'required|string|max:500',
+            'nota'   => 'nullable|string|max:1000',
+        ]);
+
+        $observacion = '[Aplazado por técnico ' . now()->format('d/m/Y H:i') . '] Motivo: ' . $request->motivo;
+        if ($request->filled('nota')) {
+            $observacion .= ' - ' . $request->nota;
+        }
+
+        $orden->update([
+            'estado'        => 'pendiente_reprogramacion',
+            'observaciones' => $observacion,
+        ]);
+
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new OrdenAplazadaAdmin($orden->fresh(), $request->motivo, $request->nota));
+
+        return redirect()->route('dashboard')->with('success', 'Servicio aplazado. El administrador ha sido notificado para reagendarlo.');
+    }
+
+    // Reagendar una orden aplazada (solo admin)
+    public function reagendarOrden(Request $request, OrdenTrabajo $orden)
+    {
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'No autorizado');
+        }
+
+        if ($orden->estado !== 'pendiente_reprogramacion') {
+            return back()->with('info', 'Esta orden no está pendiente de reagendación.');
+        }
+
+        $request->validate([
+            'usuario_id'           => 'required|exists:users,id',
+            'fecha_entrega_prevista' => 'required|date|after_or_equal:today',
+        ]);
+
+        $tecnico = User::findOrFail($request->usuario_id);
+        if ($tecnico->role !== 'tecnico') {
+            return back()->withErrors(['usuario_id' => 'El usuario seleccionado no es un técnico.']);
+        }
+
+        $orden->update([
+            'estado'                 => 'asignada',
+            'usuario_id'             => $tecnico->id,
+            'fecha_entrega_prevista' => $request->fecha_entrega_prevista,
+            'fecha_asignacion'       => now(),
+        ]);
+
+        $tecnico->notify(new AsignacionOrdenTecnico($orden->fresh()));
+
+        return redirect()->route('admin.orden.show', $orden->id)
+            ->with('success', 'Orden reagendada correctamente. Se ha notificado al técnico.');
     }
 
     // Cancelar/eliminar una orden
@@ -278,35 +426,54 @@ class OrdenTrabajoController extends Controller
 
         $orden->update(['estado' => 'cancelada']);
 
+        if ($user->role === 'cliente') {
+            $admins = User::where('role', 'admin')->get();
+            Notification::send($admins, new OrdenCanceladaAdmin($orden->fresh(), 'cliente'));
+        }
+
         return redirect()->route('dashboard')->with('success', 'Solicitud cancelada correctamente.');
     }
 
-    // Asignar o cambiar técnico a una orden existente
+    // Asignar o reasignar técnico a una orden existente
     public function assignTecnico(Request $request, OrdenTrabajo $orden)
     {
-        // Solo admin puede asignar técnicos
         if (Auth::user()->role !== 'admin') {
             abort(403, 'No autorizado');
         }
 
+        $esReasignacion = $orden->usuario_id !== null;
+
         $validated = $request->validate([
             'usuario_id' => 'required|exists:users,id',
+            'motivo'     => $esReasignacion ? 'required|string|max:500' : 'nullable|string|max:500',
         ]);
 
-        // Verificar que el usuario seleccionado sea técnico
         $tecnico = User::findOrFail($validated['usuario_id']);
         if ($tecnico->role !== 'tecnico') {
             return back()->withErrors(['usuario_id' => 'El usuario seleccionado no es un técnico.']);
         }
 
-        // Actualizar la orden
-        $orden->update([
-            'usuario_id' => $validated['usuario_id'],
-            'estado' => 'asignada',
-            'fecha_asignacion' => now(),
-        ]);
+        // Si es reasignación, registrar el motivo en observaciones
+        if ($esReasignacion && !empty($validated['motivo'])) {
+            $tecnicoAnterior = $orden->tecnico?->name ?? 'anterior';
+            $nota = "\n[Reasignación " . now()->format('d/m/Y H:i') . "] "
+                  . "Técnico anterior: {$tecnicoAnterior}. Motivo: " . $validated['motivo'];
+            $orden->observaciones = ($orden->observaciones ?? '') . $nota;
+        }
 
-        return back()->with('success', 'Técnico ' . $tecnico->name . ' asignado correctamente a la orden.');
+        $orden->usuario_id      = $tecnico->id;
+        $orden->estado          = 'asignada';
+        $orden->fecha_asignacion = now();
+        $orden->save();
+
+        $orden->load('cliente');
+        $tecnico->notify(new AsignacionOrdenTecnico($orden));
+
+        $msg = $esReasignacion
+            ? 'Orden reasignada a ' . $tecnico->name . ' correctamente.'
+            : 'Técnico ' . $tecnico->name . ' asignado correctamente.';
+
+        return back()->with('success', $msg);
     }
 
     // Asignar técnico a múltiples órdenes a la vez
@@ -327,13 +494,23 @@ class OrdenTrabajoController extends Controller
             return back()->withErrors(['usuario_id' => 'El usuario seleccionado no es un técnico.']);
         }
 
-        $count = OrdenTrabajo::whereIn('id', $validated['orden_ids'])
+        $ordenes = OrdenTrabajo::with('cliente')
+            ->whereIn('id', $validated['orden_ids'])
             ->whereNotIn('estado', ['finalizada', 'cancelada'])
+            ->get();
+
+        $count = $ordenes->count();
+
+        OrdenTrabajo::whereIn('id', $ordenes->pluck('id'))
             ->update([
                 'usuario_id'       => $tecnico->id,
                 'estado'           => 'asignada',
                 'fecha_asignacion' => now(),
             ]);
+
+        foreach ($ordenes as $orden) {
+            $tecnico->notify(new AsignacionOrdenTecnico($orden));
+        }
 
         return back()->with('success', $count . ' orden(es) asignada(s) a ' . $tecnico->name . '.');
     }

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -8,7 +8,7 @@
 
         {{-- Header --}}
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3 justify-between flex-shrink-0 flex-wrap">
-            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
             <div class="min-w-0 flex-1">
@@ -17,10 +17,10 @@
                     <span class="text-gray-300">·</span>
                     <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-[#D1FAE5] text-[#065F46]">Finalizado</span>
                 </div>
-                <h1 class="text-2xl font-medium text-[#1E3A5F] mt-1">{{ $orden->titulo }}</h1>
+                <h1 class="text-2xl font-medium text-brand-dark mt-1">{{ $orden->titulo }}</h1>
             </div>
             <a href="{{ route('dashboard') }}#historial"
-               class="flex items-center gap-2 text-sm font-medium text-[#1E3A5F] border border-gray-200 hover:border-[#1E3A5F] px-4 py-2 rounded-xl transition-colors">
+               class="flex items-center gap-2 text-sm font-medium text-brand-dark border border-gray-200 hover:border-brand-dark px-4 py-2 rounded-xl transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
@@ -36,15 +36,15 @@
 
                     {{-- Descripción --}}
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6">
-                        <h2 class="text-sm font-semibold text-[#1E3A5F] mb-3">Descripción del problema</h2>
+                        <h2 class="text-sm font-semibold text-brand-dark mb-3">Descripción del problema</h2>
                         <p class="text-sm text-gray-600 leading-relaxed">{{ $orden->descripcion ?: 'Sin descripción.' }}</p>
                     </div>
 
                     {{-- Comentarios del técnico --}}
                     @if($orden->observaciones)
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6">
-                        <h2 class="text-sm font-semibold text-[#1E3A5F] mb-3 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <h2 class="text-sm font-semibold text-brand-dark mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             Informe del técnico
                         </h2>
                         <p class="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{{ $orden->observaciones }}</p>
@@ -65,14 +65,14 @@
                     {{-- Materiales utilizados --}}
                     @if($orden->Material->count())
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6">
-                        <h2 class="text-sm font-semibold text-[#1E3A5F] mb-4 flex items-center gap-2">
+                        <h2 class="text-sm font-semibold text-brand-dark mb-4 flex items-center gap-2">
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                             Material utilizado
                         </h2>
                         <div class="space-y-2">
                             @foreach($orden->Material as $mat)
                             <div class="flex items-center justify-between bg-[#F5F7FA] rounded-xl px-4 py-2.5">
-                                <span class="text-sm text-[#1E3A5F]">{{ $mat->nombre }}</span>
+                                <span class="text-sm text-brand-dark">{{ $mat->nombre }}</span>
                                 <span class="text-xs font-semibold text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200">
                                     x{{ $mat->cantidad }}
                                 </span>
@@ -92,11 +92,11 @@
                     <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
                         <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Técnico</h2>
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-[#1E3A5F] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                            <div class="w-10 h-10 rounded-full bg-brand-dark flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                                 {{ substr($orden->tecnico->name, 0, 1) }}
                             </div>
                             <div>
-                                <p class="text-sm font-semibold text-[#1E3A5F]">
+                                <p class="text-sm font-semibold text-brand-dark">
                                     {{ $orden->tecnico->name }}
                                     @if($orden->tecnico->perfil?->apellidos)
                                         {{ $orden->tecnico->perfil->apellidos }}
@@ -116,16 +116,16 @@
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-gray-500">Fecha</span>
-                                <span class="font-medium text-[#1E3A5F]">{{ $orden->updated_at->format('d/m/Y') }}</span>
+                                <span class="font-medium text-brand-dark">{{ $orden->updated_at->format('d/m/Y') }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-500">Prioridad</span>
-                                <span class="font-medium text-[#1E3A5F] capitalize">{{ $orden->prioridad }}</span>
+                                <span class="font-medium text-brand-dark capitalize">{{ $orden->prioridad }}</span>
                             </div>
                             @if($orden->hora_inicio && $orden->hora_fin)
                             <div class="flex justify-between">
                                 <span class="text-gray-500">Horario</span>
-                                <span class="font-medium text-[#1E3A5F]">{{ $orden->hora_inicio }} – {{ $orden->hora_fin }}</span>
+                                <span class="font-medium text-brand-dark">{{ $orden->hora_inicio }} – {{ $orden->hora_fin }}</span>
                             </div>
                             @php
                                 [$hi,$mi] = explode(':', $orden->hora_inicio);
@@ -135,7 +135,7 @@
                             @endphp
                             <div class="flex justify-between bg-[#D1FAE5] rounded-lg px-3 py-2">
                                 <span class="text-[#065F46] font-medium">Duración</span>
-                                <span class="font-bold text-[#10B981]">{{ ($h ? $h.'h ' : '') . ($m ? $m.'min' : '') }}</span>
+                                <span class="font-bold text-brand-green">{{ ($h ? $h.'h ' : '') . ($m ? $m.'min' : '') }}</span>
                             </div>
                             @endif
                         </div>

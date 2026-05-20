@@ -15,6 +15,7 @@ class Tecnico extends Model
         'direccion',
         'foto_perfil',
         'experiencia',
+        'cv_path',
     ];
 
     public function user()

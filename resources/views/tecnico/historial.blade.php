@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="flex h-screen bg-[#F5F7FA]">
@@ -6,11 +6,11 @@
 
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center gap-3">
-            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-[#1E3A5F] hover:bg-gray-100 transition-colors flex-shrink-0">
+            <button onclick="toggleSidebar()" class="md:hidden p-1.5 rounded-lg text-brand-dark hover:bg-gray-100 transition-colors flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
             <div>
-                <h1 class="text-2xl md:text-4xl font-medium text-[#1E3A5F]">Mi Historial</h1>
+                <h1 class="text-2xl md:text-4xl font-medium text-brand-dark">Mi Historial</h1>
                 <p class="text-sm md:text-base text-gray-500 mt-0.5">Órdenes finalizadas y canceladas</p>
             </div>
         </header>
@@ -21,11 +21,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-6">
                 <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
                     <p class="text-sm text-gray-500 mb-1">Total trabajos</p>
-                    <p class="text-3xl font-bold text-[#1E3A5F]">{{ $stats['total'] }}</p>
+                    <p class="text-3xl font-bold text-brand-dark">{{ $stats['total'] }}</p>
                 </div>
                 <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
                     <p class="text-sm text-gray-500 mb-1">Finalizadas</p>
-                    <p class="text-3xl font-bold text-[#10B981]">{{ $stats['finalizadas'] }}</p>
+                    <p class="text-3xl font-bold text-brand-green">{{ $stats['finalizadas'] }}</p>
                 </div>
                 <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5">
                     <p class="text-sm text-gray-500 mb-1">Canceladas</p>
@@ -43,7 +43,7 @@
                     <div class="flex items-center gap-4 min-w-0">
                         <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 {{ $finalizada ? 'bg-[#D1FAE5]' : 'bg-red-100' }}">
                             @if($finalizada)
-                            <svg class="w-5 h-5 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <svg class="w-5 h-5 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             @else
                             <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                             @endif
@@ -55,7 +55,7 @@
                                     {{ $finalizada ? 'Finalizada' : 'Cancelada' }}
                                 </span>
                             </div>
-                            <p class="text-sm font-medium text-[#1E3A5F] truncate">{{ $orden->titulo }}</p>
+                            <p class="text-sm font-medium text-brand-dark truncate">{{ $orden->titulo }}</p>
                             <p class="text-xs text-gray-400 mt-0.5">{{ $orden->cliente->nombre ?? '—' }}</p>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                         @if($orden->hora_inicio && $orden->hora_fin)
                         <div>
                             <p class="text-xs text-gray-400">Duración</p>
-                            <p class="text-sm font-medium text-[#1E3A5F]">
+                            <p class="text-sm font-medium text-brand-dark">
                                 @php
                                     [$hi,$mi] = explode(':', $orden->hora_inicio);
                                     [$hf,$mf] = explode(':', $orden->hora_fin);
@@ -77,7 +77,7 @@
                         @endif
                         <div>
                             <p class="text-xs text-gray-400">Fecha</p>
-                            <p class="text-sm font-medium text-[#1E3A5F]">{{ $orden->updated_at->format('d/m/Y') }}</p>
+                            <p class="text-sm font-medium text-brand-dark">{{ $orden->updated_at->format('d/m/Y') }}</p>
                         </div>
                         @if($finalizada)
                         <a href="{{ route('ordenes.show', $orden) }}"
