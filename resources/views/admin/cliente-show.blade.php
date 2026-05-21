@@ -170,6 +170,50 @@
                     </div>
                 </div>
 
+                <!-- Valoraciones recibidas del cliente -->
+                <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-5">
+                        <div>
+                            <h3 class="text-xl font-medium text-brand-dark">Valoraciones recibidas</h3>
+                            <p class="text-sm text-gray-400 mt-0.5">Opiniones de técnicos sobre este cliente</p>
+                        </div>
+                        <div class="text-right">
+                            <x-star-rating :rating="$ratingAvg" :count="$ratingCount" size="md" />
+                        </div>
+                    </div>
+
+                    @if($valoraciones->isEmpty())
+                        <div class="text-center py-8">
+                            <svg class="w-10 h-10 text-gray-200 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <p class="text-sm text-gray-400">Este cliente aún no tiene valoraciones</p>
+                        </div>
+                    @else
+                        <div class="space-y-3">
+                            @foreach($valoraciones as $val)
+                            <div class="border border-gray-100 rounded-xl p-4 hover:border-brand-green transition-colors">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <x-star-rating :rating="$val->satisfaccion_tecnico" :count="0" size="sm" />
+                                        </div>
+                                        <p class="text-sm font-medium text-brand-dark truncate">{{ $val->titulo }}</p>
+                                        <p class="text-xs text-gray-400 mt-1.5">
+                                            Valorado por: <strong>{{ $val->tecnico->name ?? '—' }}</strong>
+                                            · {{ $val->updated_at->format('d/m/Y') }}
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl font-bold flex-shrink-0 {{ $val->satisfaccion_tecnico >= 4 ? 'text-green-500' : ($val->satisfaccion_tecnico >= 3 ? 'text-yellow-500' : 'text-red-400') }}">
+                                        {{ $val->satisfaccion_tecnico }}
+                                    </span>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
             </div>
         </main>
     </div>
