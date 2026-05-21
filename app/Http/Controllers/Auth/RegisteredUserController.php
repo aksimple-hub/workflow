@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\NuevoTecnicoRegistrado;
 use App\Notifications\TecnicoRegistrado;
+use App\Notifications\ClienteRegistrado;
+use App\Notifications\NuevoClienteRegistrado;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,16 +43,8 @@ class RegisteredUserController extends Controller
             'direccion' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'cliente',
-            'is_approved' => false,
-        ]);
-
-        \App\Models\Cliente::create([
-            'id' => $user->id,
+        // Crear el registro de cliente primero para obtener su id
+        $cliente = \App\Models\Cliente::create([
             'nombre' => $request->name,
             'dni_cif' => $request->dni_cif,
             'email' => $request->email,
@@ -58,13 +52,26 @@ class RegisteredUserController extends Controller
             'direccion' => $request->direccion,
         ]);
 
-        $user->update(['cliente_id' => $user->id]);
+        // Crear el usuario con el cliente_id ya enlazado
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'cliente',
+            'is_approved' => false,
+            'cliente_id' => $cliente->id,
+        ]);
 
         event(new Registered($user));
 
-        // Auth::login($user); // No auto-login until approved
+        // El cliente puede entrar pero con acceso limitado
+        Auth::login($user);
 
-        return redirect(route('login', absolute: false))->with('status', 'Tu cuenta ha sido registrada y está pendiente de validación por un administrador.');
+        // Notificar al cliente y a los admins
+        $user->notify(new ClienteRegistrado());
+        User::where('role', 'admin')->each(fn($admin) => $admin->notify(new NuevoClienteRegistrado($user)));
+
+        return redirect()->route('dashboard');
     }
     public function createTecnico(): View
     {
