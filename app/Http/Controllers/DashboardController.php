@@ -164,7 +164,7 @@ class DashboardController extends Controller
     public function clienteShow($id)
     {
         $cliente = \App\Models\Cliente::findOrFail($id);
-        $user    = \App\Models\User::where('cliente_id', $cliente->id)->orWhere('id', $cliente->id)->first();
+        $user    = \App\Models\User::where('cliente_id', $cliente->id)->first();
         $ordenes = OrdenTrabajo::where('cliente_id', $cliente->id)->latest()->get();
         return view('admin.cliente-show', compact('cliente', 'user', 'ordenes'));
     }
@@ -172,7 +172,7 @@ class DashboardController extends Controller
     public function updateCliente(\Illuminate\Http\Request $request, $id)
     {
         $cliente = \App\Models\Cliente::findOrFail($id);
-        $user    = \App\Models\User::where('cliente_id', $cliente->id)->orWhere('id', $cliente->id)->first();
+        $user    = \App\Models\User::where('cliente_id', $cliente->id)->first();
 
         $validated = $request->validate([
             'nombre'    => 'required|string|max:255',
@@ -194,7 +194,7 @@ class DashboardController extends Controller
     public function destroyCliente($id)
     {
         $cliente = \App\Models\Cliente::findOrFail($id);
-        $user    = \App\Models\User::where('cliente_id', $cliente->id)->orWhere('id', $cliente->id)->first();
+        $user    = \App\Models\User::where('cliente_id', $cliente->id)->first();
 
         if ($user) {
             $user->update(['is_approved' => false]);
