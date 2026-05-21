@@ -252,8 +252,16 @@ class DashboardController extends Controller
     {
         $user = \App\Models\User::findOrFail($id);
         $user->update(['is_approved' => true]);
-        $user->notify(new \App\Notifications\TecnicoAprobado());
-        return redirect()->back()->with('success', 'Técnico "' . $user->name . '" activado correctamente. Se le ha notificado.');
+
+        if ($user->role === 'tecnico') {
+            $user->notify(new \App\Notifications\TecnicoAprobado());
+            $msg = 'Técnico "' . $user->name . '" activado correctamente. Se le ha notificado.';
+        } else {
+            $user->notify(new \App\Notifications\ClienteAprobado());
+            $msg = 'Cliente "' . $user->name . '" activado correctamente. Se le ha notificado.';
+        }
+
+        return redirect()->back()->with('success', $msg);
     }
 
     public function createCliente()
@@ -272,16 +280,7 @@ class DashboardController extends Controller
             'direccion' => 'nullable|string',
         ]);
 
-        $user = \App\Models\User::create([
-            'name' => $request->nombre,
-            'email' => $request->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-            'role' => 'cliente',
-            'is_approved' => true,
-        ]);
-
-        \App\Models\Cliente::create([
-            'id' => $user->id,
+        $cliente = \App\Models\Cliente::create([
             'nombre' => $request->nombre,
             'dni_cif' => $request->dni_cif,
             'email' => $request->email,
@@ -289,7 +288,14 @@ class DashboardController extends Controller
             'direccion' => $request->direccion,
         ]);
 
-        $user->update(['cliente_id' => $user->id]);
+        \App\Models\User::create([
+            'name' => $request->nombre,
+            'email' => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role' => 'cliente',
+            'is_approved' => true,
+            'cliente_id' => $cliente->id,
+        ]);
 
         return redirect()->route('admin.clientes')->with('success', 'Cliente creado correctamente.');
     }
@@ -304,6 +310,11 @@ class DashboardController extends Controller
         // Nuevo técnico registrado → ir a lista de técnicos pendientes
         if (isset($data['tecnico_id']) && !isset($data['orden_id']) && !isset($data['mensaje'])) {
             return redirect()->route('admin.tecnicos');
+        }
+
+        // Nuevo cliente registrado → ir al detalle del cliente
+        if (isset($data['cliente_id']) && !isset($data['orden_id']) && !isset($data['mensaje'])) {
+            return redirect()->route('admin.cliente.show', $data['cliente_id']);
         }
 
         // Técnico aprobado → ir al dashboard del técnico

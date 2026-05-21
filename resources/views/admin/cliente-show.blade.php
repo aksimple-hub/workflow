@@ -27,6 +27,12 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
                     Dar de baja
                 </button>
+                @elseif($user && !$user->is_approved)
+                <button onclick="document.getElementById('modal-activar-cliente').classList.remove('hidden')"
+                    class="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-300 rounded-xl text-sm font-semibold text-green-700 hover:bg-green-100 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Activar cliente
+                </button>
                 @else
                 <span class="px-4 py-2 bg-red-50 border border-red-200 rounded-xl text-sm font-medium text-red-400">
                     Cuenta inactiva
@@ -168,6 +174,85 @@
         </main>
     </div>
 </div>
+
+<!-- Modal activar cliente (2 pasos) -->
+@if($user && !$user->is_approved)
+<div id="modal-activar-cliente" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-gray-900/60" onclick="cerrarModalCliente()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-8">
+
+        <div id="cliente-paso-1">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Activar cuenta de cliente</h2>
+                    <p class="text-sm text-gray-500">{{ $cliente->nombre }} · {{ $cliente->email }}</p>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-2">Al activar esta cuenta el cliente podrá realizar solicitudes de servicio. Se le enviará una notificación automáticamente.</p>
+            <p class="text-sm font-medium text-gray-700 mb-6">¿Has verificado sus datos (DNI/CIF, teléfono, dirección) antes de continuar?</p>
+            <div class="flex gap-3 justify-end">
+                <button type="button" onclick="cerrarModalCliente()"
+                    class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" onclick="clientePaso2()"
+                    class="px-5 py-2.5 text-sm font-semibold text-white bg-[#214371] rounded-xl hover:bg-[#1a3560] transition-colors">
+                    Sí, datos verificados →
+                </button>
+            </div>
+        </div>
+
+        <div id="cliente-paso-2" class="hidden">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Confirmación final</h2>
+                    <p class="text-sm text-gray-500">Esta acción activará la cuenta</p>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-6">
+                <strong>{{ $cliente->nombre }}</strong> recibirá acceso completo para realizar solicitudes. ¿Confirmas la activación?
+            </p>
+            <form method="POST" action="{{ route('admin.users.validate', $user->id) }}">
+                @csrf
+                <div class="flex gap-3 justify-end">
+                    <button type="button" onclick="clientePaso1()"
+                        class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
+                        ← Volver
+                    </button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl transition-colors">
+                        Activar cliente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function cerrarModalCliente() {
+        document.getElementById('modal-activar-cliente').classList.add('hidden');
+        clientePaso1();
+    }
+    function clientePaso2() {
+        document.getElementById('cliente-paso-1').classList.add('hidden');
+        document.getElementById('cliente-paso-2').classList.remove('hidden');
+    }
+    function clientePaso1() {
+        document.getElementById('cliente-paso-2').classList.add('hidden');
+        document.getElementById('cliente-paso-1').classList.remove('hidden');
+    }
+</script>
+@endif
 
 <!-- Modal dar de baja -->
 <div id="modal-baja" class="hidden fixed inset-0 z-50 flex items-center justify-center">
