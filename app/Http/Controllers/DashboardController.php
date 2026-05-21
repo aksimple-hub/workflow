@@ -82,14 +82,15 @@ class DashboardController extends Controller
 
         $ordenes = OrdenTrabajo::with('cliente')
             ->where('usuario_id', $user->id)
-            ->whereIn('estado', ['finalizada', 'cancelada'])
+            ->whereIn('estado', ['finalizada', 'cancelada', 'pendiente_valoracion'])
             ->orderBy('updated_at', 'desc')
             ->get();
 
         $stats = [
-            'finalizadas' => $ordenes->where('estado', 'finalizada')->count(),
-            'canceladas'  => $ordenes->where('estado', 'cancelada')->count(),
-            'total'       => $ordenes->count(),
+            'finalizadas'          => $ordenes->where('estado', 'finalizada')->count(),
+            'canceladas'           => $ordenes->where('estado', 'cancelada')->count(),
+            'pendiente_valoracion' => $ordenes->where('estado', 'pendiente_valoracion')->count(),
+            'total'                => $ordenes->count(),
         ];
 
         return view('tecnico.historial', compact('ordenes', 'stats'));
@@ -123,7 +124,17 @@ class DashboardController extends Controller
         $tecnico = \App\Models\User::where('role', 'tecnico')->findOrFail($id);
         $perfil  = \App\Models\Tecnico::find($id);
         $ordenes = OrdenTrabajo::where('usuario_id', $tecnico->id)->latest()->get();
-        return view('admin.tecnico-show', compact('tecnico', 'perfil', 'ordenes'));
+
+        // Valoraciones recibidas por el técnico (cliente → técnico)
+        $valoraciones = OrdenTrabajo::with('cliente')
+            ->where('usuario_id', $tecnico->id)
+            ->whereNotNull('satisfaccion')
+            ->orderByDesc('updated_at')
+            ->get(['id', 'satisfaccion', 'comentario_cliente', 'cliente_id', 'titulo', 'updated_at']);
+        $ratingAvg   = $valoraciones->count() ? round($valoraciones->avg('satisfaccion'), 1) : null;
+        $ratingCount = $valoraciones->count();
+
+        return view('admin.tecnico-show', compact('tecnico', 'perfil', 'ordenes', 'valoraciones', 'ratingAvg', 'ratingCount'));
     }
 
     public function updateTecnico(\Illuminate\Http\Request $request, $id)
@@ -166,7 +177,17 @@ class DashboardController extends Controller
         $cliente = \App\Models\Cliente::findOrFail($id);
         $user    = \App\Models\User::where('cliente_id', $cliente->id)->first();
         $ordenes = OrdenTrabajo::where('cliente_id', $cliente->id)->latest()->get();
-        return view('admin.cliente-show', compact('cliente', 'user', 'ordenes'));
+
+        // Valoraciones recibidas por el cliente (técnico → cliente)
+        $valoraciones = OrdenTrabajo::with('tecnico')
+            ->where('cliente_id', $cliente->id)
+            ->whereNotNull('satisfaccion_tecnico')
+            ->orderByDesc('updated_at')
+            ->get(['id', 'satisfaccion_tecnico', 'usuario_id', 'titulo', 'updated_at']);
+        $ratingAvg   = $valoraciones->count() ? round($valoraciones->avg('satisfaccion_tecnico'), 1) : null;
+        $ratingCount = $valoraciones->count();
+
+        return view('admin.cliente-show', compact('cliente', 'user', 'ordenes', 'valoraciones', 'ratingAvg', 'ratingCount'));
     }
 
     public function updateCliente(\Illuminate\Http\Request $request, $id)
