@@ -26,7 +26,8 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        if (!Auth::user()->is_approved) {
+        // Técnicos sin aprobar no pueden entrar en absoluto
+        if (Auth::user()->role === 'tecnico' && !Auth::user()->is_approved) {
             Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
