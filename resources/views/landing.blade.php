@@ -42,6 +42,17 @@
             width: 24px;
             border-radius: 4px;
         }
+        .play-pause-btn {
+            width: 28px; height: 28px;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.4);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            backdrop-filter: blur(4px);
+        }
+        .play-pause-btn:hover { background: rgba(255,255,255,0.3); }
 
         @keyframes kenBurns {
             from { transform: scale(1.0); }
@@ -147,13 +158,38 @@
             </div>
         </div>
 
-        {{-- Navigation dots --}}
-        <div class="absolute bottom-44 left-0 right-0 flex justify-center items-center gap-2 z-20">
-            <div class="dot active" data-slide="0" onclick="goToSlide(0)"></div>
-            <div class="dot" data-slide="1" onclick="goToSlide(1)"></div>
-            <div class="dot" data-slide="2" onclick="goToSlide(2)"></div>
-            <div class="dot" data-slide="3" onclick="goToSlide(3)"></div>
-            <div class="dot" data-slide="4" onclick="goToSlide(4)"></div>
+        {{-- Flecha izquierda --}}
+        <button onclick="userGoTo(current - 1)"
+            class="absolute left-4 top-1/2 -translate-y-1/2 z-20 hidden sm:flex items-center justify-center w-11 h-11 rounded-full bg-black/25 hover:bg-black/45 backdrop-blur-sm border border-white/20 transition-colors">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+
+        {{-- Flecha derecha --}}
+        <button onclick="userGoTo(current + 1)"
+            class="absolute right-4 top-1/2 -translate-y-1/2 z-20 hidden sm:flex items-center justify-center w-11 h-11 rounded-full bg-black/25 hover:bg-black/45 backdrop-blur-sm border border-white/20 transition-colors">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
+
+        {{-- Navigation dots + play/pause --}}
+        <div class="absolute bottom-44 left-0 right-0 flex justify-center items-center gap-3 z-20">
+            <div class="dot active" data-slide="0" onclick="userGoTo(0)"></div>
+            <div class="dot" data-slide="1" onclick="userGoTo(1)"></div>
+            <div class="dot" data-slide="2" onclick="userGoTo(2)"></div>
+            <div class="dot" data-slide="3" onclick="userGoTo(3)"></div>
+            <div class="dot" data-slide="4" onclick="userGoTo(4)"></div>
+            <button class="play-pause-btn ms-1" id="toggleBtn" onclick="togglePlayPause()" title="Pausar / Reanudar">
+                <svg id="iconPause" class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="5" y="4" width="4" height="16" rx="1"/>
+                    <rect x="15" y="4" width="4" height="16" rx="1"/>
+                </svg>
+                <svg id="iconPlay" class="w-3.5 h-3.5 text-white hidden" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </button>
         </div>
 
         {{-- CTA panel --}}
@@ -187,32 +223,64 @@
     </div>
 
 <script>
-    const slides = document.querySelectorAll('.slide');
-    const dots   = document.querySelectorAll('.dot');
-    let current  = 0;
-    let timer;
+    const slides    = document.querySelectorAll('.slide');
+    const dots      = document.querySelectorAll('.dot');
+    const iconPause = document.getElementById('iconPause');
+    const iconPlay  = document.getElementById('iconPlay');
+    let current = 0;
+    let timer   = null;
+    let paused  = false;
+    const INTERVAL = 8000;
 
+    // Cambia al slide n (sin tocar el estado paused/play)
     function goToSlide(n) {
         slides[current].classList.remove('active');
         dots[current].classList.remove('active');
         current = (n + slides.length) % slides.length;
         slides[current].classList.add('active');
         dots[current].classList.add('active');
-        clearInterval(timer);
-        timer = setInterval(nextSlide, 5000);
     }
 
-    function nextSlide() { goToSlide(current + 1); }
+    // Avance automático (solo llamado por el timer)
+    function autoNext() { goToSlide(current + 1); }
 
-    // Swipe support for mobile
+    // El usuario hace clic en punto o flecha → ir al slide y pausar
+    function userGoTo(n) {
+        goToSlide(n);
+        pause();
+    }
+
+    function pause() {
+        paused = true;
+        clearInterval(timer);
+        timer = null;
+        iconPause.classList.add('hidden');
+        iconPlay.classList.remove('hidden');
+    }
+
+    function resume() {
+        paused = false;
+        iconPlay.classList.add('hidden');
+        iconPause.classList.remove('hidden');
+        timer = setInterval(autoNext, INTERVAL);
+    }
+
+    function togglePlayPause() {
+        paused ? resume() : pause();
+    }
+
+    // Swipe móvil → navegar y pausar
     let touchStartX = 0;
-    document.getElementById('slideshow').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.getElementById('slideshow').addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+    });
     document.getElementById('slideshow').addEventListener('touchend', e => {
         const diff = touchStartX - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 50) goToSlide(diff > 0 ? current + 1 : current - 1);
+        if (Math.abs(diff) > 50) userGoTo(diff > 0 ? current + 1 : current - 1);
     });
 
-    timer = setInterval(nextSlide, 5000);
+    // Arrancar
+    timer = setInterval(autoNext, INTERVAL);
 </script>
 </body>
 </html>
