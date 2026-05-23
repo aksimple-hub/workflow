@@ -23,9 +23,9 @@
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(0,0,0,0.45) 0%,
-                rgba(0,0,0,0.25) 40%,
-                rgba(0,0,0,0.65) 100%
+                rgba(0,0,0,0.55) 0%,
+                rgba(0,0,0,0.50) 40%,
+                rgba(0,0,0,0.72) 100%
             );
         }
 
@@ -66,6 +66,12 @@
             inset: 0;
             background-size: cover;
             background-position: center;
+        }
+
+        .slide-content h1,
+        .slide-content p,
+        .slide-content span {
+            text-shadow: 0 2px 8px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.9);
         }
 
         @keyframes fadeUp {
@@ -143,9 +149,9 @@
             </div>
         </div>
 
-        {{-- ── Slide 5: Oficina moderna / tecnología ── --}}
+        {{-- ── Slide 5: Técnico reparando instalación ── --}}
         <div class="slide">
-            <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1920&q=80');"></div>
             <div class="slide-overlay"></div>
             <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-48 pointer-events-none">
                 <span class="text-sm font-semibold uppercase tracking-widest text-purple-300 mb-4">Tu plataforma</span>
@@ -194,28 +200,28 @@
 
         {{-- CTA panel --}}
         <div class="absolute bottom-0 left-0 right-0 z-20 px-4 pb-6">
-            <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-5 max-w-sm mx-auto">
+            <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-6 max-w-sm mx-auto">
                 <div class="flex items-center justify-center mb-3">
-                    <div class="bg-[#214371] px-5 py-2 rounded-xl">
-                        <span class="text-white text-2xl font-extrabold tracking-tight">Workflow</span>
+                    <div class="bg-[#214371] px-6 py-2.5 rounded-xl">
+                        <span class="text-white text-3xl font-extrabold tracking-tight">Workflow</span>
                     </div>
                 </div>
-                <p class="text-center text-gray-500 text-xs mb-4 uppercase tracking-wide font-medium">Sistema de gestión de servicios</p>
+                <p class="text-center text-gray-500 text-sm mb-5 uppercase tracking-wide font-medium">Sistema de gestión de servicios</p>
                 <a href="{{ route('login') }}"
-                   class="flex items-center justify-center w-full py-3.5 bg-[#214371] hover:bg-[#1a3560] text-white text-base font-bold rounded-2xl shadow-lg transition-all duration-200 mb-3 gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   class="flex items-center justify-center w-full py-4 bg-[#214371] hover:bg-[#1a3560] text-white text-lg font-bold rounded-2xl shadow-lg transition-all duration-200 mb-4 gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                     </svg>
                     Iniciar sesión
                 </a>
-                <div class="flex gap-2">
+                <div class="flex gap-3">
                     <a href="{{ route('register') }}"
-                       class="flex-1 py-2.5 border-2 border-[#214371] text-[#214371] text-sm font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200 text-center">
-                        Registrarme como cliente
+                       class="flex-1 py-3.5 border-2 border-[#214371] text-[#214371] text-base font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200 text-center leading-tight">
+                        Registrarme como<br>cliente
                     </a>
                     <a href="{{ route('register.tecnico') }}"
-                       class="flex-1 py-2.5 border-2 border-gray-300 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200 text-center">
-                        Registrarme como técnico
+                       class="flex-1 py-3.5 border-2 border-[#214371] text-[#214371] text-base font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200 text-center leading-tight">
+                        Registrarme como<br>técnico
                     </a>
                 </div>
             </div>
