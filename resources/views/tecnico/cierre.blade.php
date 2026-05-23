@@ -83,16 +83,16 @@
                             <h2 class="text-base font-semibold text-brand-dark mb-4">Resumen</h2>
                             <div class="space-y-2">
                                 <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                                    <span class="text-sm text-gray-500">Hora de inicio:</span>
+                                    <span class="text-sm text-gray-500">Hora de inicio: <span class="text-red-500">*</span></span>
                                     <input type="time" name="hora_inicio" id="hora_inicio"
                                         class="text-sm font-medium text-brand-dark bg-transparent border-none outline-none text-right"
-                                        onchange="calcularTiempo()">
+                                        onchange="calcularTiempo()" required>
                                 </div>
                                 <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                                    <span class="text-sm text-gray-500">Hora de finalización:</span>
+                                    <span class="text-sm text-gray-500">Hora de finalización: <span class="text-red-500">*</span></span>
                                     <input type="time" name="hora_fin" id="hora_fin"
                                         class="text-sm font-medium text-brand-dark bg-transparent border-none outline-none text-right"
-                                        onchange="calcularTiempo()">
+                                        onchange="calcularTiempo()" required>
                                 </div>
                                 <div class="flex items-center justify-between py-2 bg-[#D1FAE5] rounded-xl px-3">
                                     <span class="text-sm font-medium text-[#065F46]">Tiempo total:</span>
