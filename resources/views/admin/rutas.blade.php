@@ -12,7 +12,7 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
             <div>
-                <h1 class="text-2xl md:text-4xl font-medium text-brand-dark">Asignación de Rutas</h1>
+                <h1 class="text-2xl md:text-4xl font-medium text-brand-dark">Crear Orden</h1>
                 <p class="text-sm md:text-base text-gray-500 mt-0.5">Crear y asignar órdenes de trabajo a los técnicos</p>
             </div>
         </header>
@@ -36,7 +36,7 @@
                 <div class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-6 overflow-y-auto">
                     <h2 class="text-xl font-medium text-brand-dark mb-6 border-b pb-2 flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        Nueva Orden de Trabajo
+                        Crear Orden
                     </h2>
                     
                     <form action="{{ route('ordenes.store') }}" method="POST" class="space-y-5">

@@ -28,11 +28,11 @@
         </a>
 
         @if(auth()->user()->role === 'admin')
-        <!-- Link Asignar Rutas (Admin) -->
+        <!-- Link Crear Orden (Admin) -->
         <a href="{{ route('ordenes.create') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('ordenes.create') ? 'bg-brand-green text-white' : 'text-gray-300 hover:bg-brand-dark-mid hover:text-white' }}">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
-            <span class="font-medium text-sm">Asignar Rutas</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <span class="font-medium text-sm">Crear Orden</span>
         </a>
 
         <!-- Link Técnicos -->
