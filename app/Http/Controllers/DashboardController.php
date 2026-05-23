@@ -82,14 +82,15 @@ class DashboardController extends Controller
 
         $ordenes = OrdenTrabajo::with('cliente')
             ->where('usuario_id', $user->id)
-            ->whereIn('estado', ['finalizada', 'cancelada'])
+            ->whereIn('estado', ['finalizada', 'cancelada', 'pendiente_valoracion'])
             ->orderBy('updated_at', 'desc')
             ->get();
 
         $stats = [
-            'finalizadas' => $ordenes->where('estado', 'finalizada')->count(),
-            'canceladas'  => $ordenes->where('estado', 'cancelada')->count(),
-            'total'       => $ordenes->count(),
+            'finalizadas'          => $ordenes->where('estado', 'finalizada')->count(),
+            'canceladas'           => $ordenes->where('estado', 'cancelada')->count(),
+            'pendiente_valoracion' => $ordenes->where('estado', 'pendiente_valoracion')->count(),
+            'total'                => $ordenes->count(),
         ];
 
         return view('tecnico.historial', compact('ordenes', 'stats'));
@@ -123,7 +124,17 @@ class DashboardController extends Controller
         $tecnico = \App\Models\User::where('role', 'tecnico')->findOrFail($id);
         $perfil  = \App\Models\Tecnico::find($id);
         $ordenes = OrdenTrabajo::where('usuario_id', $tecnico->id)->latest()->get();
-        return view('admin.tecnico-show', compact('tecnico', 'perfil', 'ordenes'));
+
+        // Valoraciones recibidas por el técnico (cliente → técnico)
+        $valoraciones = OrdenTrabajo::with('cliente')
+            ->where('usuario_id', $tecnico->id)
+            ->whereNotNull('satisfaccion')
+            ->orderByDesc('updated_at')
+            ->get(['id', 'satisfaccion', 'comentario_cliente', 'cliente_id', 'titulo', 'updated_at']);
+        $ratingAvg   = $valoraciones->count() ? round($valoraciones->avg('satisfaccion'), 1) : null;
+        $ratingCount = $valoraciones->count();
+
+        return view('admin.tecnico-show', compact('tecnico', 'perfil', 'ordenes', 'valoraciones', 'ratingAvg', 'ratingCount'));
     }
 
     public function updateTecnico(\Illuminate\Http\Request $request, $id)
@@ -164,15 +175,25 @@ class DashboardController extends Controller
     public function clienteShow($id)
     {
         $cliente = \App\Models\Cliente::findOrFail($id);
-        $user    = \App\Models\User::where('cliente_id', $cliente->id)->orWhere('id', $cliente->id)->first();
+        $user    = \App\Models\User::where('cliente_id', $cliente->id)->first();
         $ordenes = OrdenTrabajo::where('cliente_id', $cliente->id)->latest()->get();
-        return view('admin.cliente-show', compact('cliente', 'user', 'ordenes'));
+
+        // Valoraciones recibidas por el cliente (técnico → cliente)
+        $valoraciones = OrdenTrabajo::with('tecnico')
+            ->where('cliente_id', $cliente->id)
+            ->whereNotNull('satisfaccion_tecnico')
+            ->orderByDesc('updated_at')
+            ->get(['id', 'satisfaccion_tecnico', 'usuario_id', 'titulo', 'updated_at']);
+        $ratingAvg   = $valoraciones->count() ? round($valoraciones->avg('satisfaccion_tecnico'), 1) : null;
+        $ratingCount = $valoraciones->count();
+
+        return view('admin.cliente-show', compact('cliente', 'user', 'ordenes', 'valoraciones', 'ratingAvg', 'ratingCount'));
     }
 
     public function updateCliente(\Illuminate\Http\Request $request, $id)
     {
         $cliente = \App\Models\Cliente::findOrFail($id);
-        $user    = \App\Models\User::where('cliente_id', $cliente->id)->orWhere('id', $cliente->id)->first();
+        $user    = \App\Models\User::where('cliente_id', $cliente->id)->first();
 
         $validated = $request->validate([
             'nombre'    => 'required|string|max:255',
@@ -194,7 +215,7 @@ class DashboardController extends Controller
     public function destroyCliente($id)
     {
         $cliente = \App\Models\Cliente::findOrFail($id);
-        $user    = \App\Models\User::where('cliente_id', $cliente->id)->orWhere('id', $cliente->id)->first();
+        $user    = \App\Models\User::where('cliente_id', $cliente->id)->first();
 
         if ($user) {
             $user->update(['is_approved' => false]);
@@ -252,8 +273,16 @@ class DashboardController extends Controller
     {
         $user = \App\Models\User::findOrFail($id);
         $user->update(['is_approved' => true]);
-        $user->notify(new \App\Notifications\TecnicoAprobado());
-        return redirect()->back()->with('success', 'Técnico "' . $user->name . '" activado correctamente. Se le ha notificado.');
+
+        if ($user->role === 'tecnico') {
+            $user->notify(new \App\Notifications\TecnicoAprobado());
+            $msg = 'Técnico "' . $user->name . '" activado correctamente. Se le ha notificado.';
+        } else {
+            $user->notify(new \App\Notifications\ClienteAprobado());
+            $msg = 'Cliente "' . $user->name . '" activado correctamente. Se le ha notificado.';
+        }
+
+        return redirect()->back()->with('success', $msg);
     }
 
     public function createCliente()
@@ -272,16 +301,7 @@ class DashboardController extends Controller
             'direccion' => 'nullable|string',
         ]);
 
-        $user = \App\Models\User::create([
-            'name' => $request->nombre,
-            'email' => $request->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-            'role' => 'cliente',
-            'is_approved' => true,
-        ]);
-
-        \App\Models\Cliente::create([
-            'id' => $user->id,
+        $cliente = \App\Models\Cliente::create([
             'nombre' => $request->nombre,
             'dni_cif' => $request->dni_cif,
             'email' => $request->email,
@@ -289,7 +309,14 @@ class DashboardController extends Controller
             'direccion' => $request->direccion,
         ]);
 
-        $user->update(['cliente_id' => $user->id]);
+        \App\Models\User::create([
+            'name' => $request->nombre,
+            'email' => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role' => 'cliente',
+            'is_approved' => true,
+            'cliente_id' => $cliente->id,
+        ]);
 
         return redirect()->route('admin.clientes')->with('success', 'Cliente creado correctamente.');
     }
@@ -304,6 +331,11 @@ class DashboardController extends Controller
         // Nuevo técnico registrado → ir a lista de técnicos pendientes
         if (isset($data['tecnico_id']) && !isset($data['orden_id']) && !isset($data['mensaje'])) {
             return redirect()->route('admin.tecnicos');
+        }
+
+        // Nuevo cliente registrado → ir al detalle del cliente
+        if (isset($data['cliente_id']) && !isset($data['orden_id']) && !isset($data['mensaje'])) {
+            return redirect()->route('admin.cliente.show', $data['cliente_id']);
         }
 
         // Técnico aprobado → ir al dashboard del técnico

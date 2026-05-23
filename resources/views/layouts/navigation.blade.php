@@ -72,9 +72,21 @@
                                     $etiqueta = $data['tecnico_nombre'] . ' · ' . ($data['tecnico_email'] ?? '');
                                     $dotColor = 'bg-blue-500';
                                     $accion   = route('admin.tecnicos');
+                                } elseif (!empty($data['cliente_id']) && !empty($data['cliente_nombre']) && empty($data['orden_id'])) {
+                                    // NuevoClienteRegistrado
+                                    $titulo   = 'Nuevo cliente registrado';
+                                    $etiqueta = $data['cliente_nombre'] . ' · ' . ($data['cliente_email'] ?? '');
+                                    $dotColor = 'bg-purple-500';
+                                    $accion   = route('admin.cliente.show', $data['cliente_id']);
+                                } elseif (!empty($data['mensaje']) && ($data['tipo'] ?? '') === 'cliente_aprobado') {
+                                    // ClienteAprobado
+                                    $titulo   = '¡Cuenta activada!';
+                                    $etiqueta = $data['mensaje'];
+                                    $dotColor = 'bg-green-500';
+                                    $accion   = route('solicitud.nueva');
                                 } elseif (!empty($data['mensaje'])) {
                                     // TecnicoAprobado
-                                    $titulo   = 'Cuenta activada';
+                                    $titulo   = '¡Cuenta activada!';
                                     $etiqueta = $data['mensaje'];
                                     $dotColor = 'bg-green-500';
                                     $accion   = route('dashboard');

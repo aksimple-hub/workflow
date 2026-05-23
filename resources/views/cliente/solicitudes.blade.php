@@ -16,14 +16,36 @@
                     <p class="text-sm md:text-base text-gray-500 mt-0.5">Portal del Cliente</p>
                 </div>
             </div>
+            @if(auth()->user()->is_approved)
             <a href="{{ route('solicitud.nueva') }}"
                class="flex-shrink-0 bg-brand-green hover:bg-brand-green-dark text-white px-5 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-[0px_2px_8px_rgba(16,185,129,0.25)] transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Nueva Solicitud
             </a>
+            @else
+            <span class="flex-shrink-0 bg-gray-200 text-gray-400 px-5 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 cursor-not-allowed" title="Cuenta pendiente de validación">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Nueva Solicitud
+            </span>
+            @endif
         </header>
 
         <main class="flex-1 overflow-y-auto p-6 space-y-8">
+
+            {{-- Banner cuenta pendiente --}}
+            @if(!auth()->user()->is_approved)
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-amber-800">Cuenta pendiente de validación</p>
+                    <p class="text-sm text-amber-700 mt-0.5">Un administrador está revisando tus datos. Una vez que tu cuenta sea activada podrás realizar solicitudes de servicio. Te avisaremos por correo electrónico.</p>
+                </div>
+            </div>
+            @endif
 
             {{-- ── SERVICIO ACTIVO ─────────────────────────────────────────── --}}
             <section>

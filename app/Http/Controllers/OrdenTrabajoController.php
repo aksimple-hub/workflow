@@ -29,6 +29,9 @@ class OrdenTrabajoController extends Controller
         if ($user->role !== 'cliente') {
             abort(403);
         }
+        if (!$user->is_approved) {
+            return redirect()->route('dashboard')->with('pendiente', 'Tu cuenta está pendiente de validación. No puedes realizar solicitudes hasta que un administrador la active.');
+        }
 
         $hoyCount = OrdenTrabajo::where('cliente_id', $user->cliente_id)
             ->whereDate('created_at', today())
@@ -59,6 +62,9 @@ class OrdenTrabajoController extends Controller
         // Permitir acceso a admin y cliente
         if ($user->role !== 'admin' && $user->role !== 'cliente') {
             abort(403, 'No autorizado');
+        }
+        if ($user->role === 'cliente' && !$user->is_approved) {
+            return back()->with('pendiente', 'Tu cuenta está pendiente de validación. No puedes realizar solicitudes hasta que un administrador la active.');
         }
 
         // Para clientes, asignar automáticamente su cliente_id

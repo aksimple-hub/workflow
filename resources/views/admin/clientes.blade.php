@@ -44,22 +44,18 @@
                             </td>
                             <td class="px-6 py-4 text-gray-500 max-w-xs truncate">{{ $cliente->direccion ?? 'No especificada' }}</td>
                             @php
-                                $user = \App\Models\User::find($cliente->id);
+                                $user = \App\Models\User::where('cliente_id', $cliente->id)->first();
                             @endphp
                             <td class="px-6 py-4">
                                 @if($user && $user->is_approved)
                                     <span class="px-3 py-1 text-xs font-semibold rounded-full bg-[#D1FAE5] text-[#065F46]">Aprobado</span>
-                                @else
+                                @elseif($user && !$user->is_approved)
                                     <span class="px-3 py-1 text-xs font-semibold rounded-full bg-[#FEF3C7] text-[#92400E]">Pendiente</span>
+                                @else
+                                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">Sin cuenta</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-right flex items-center justify-end gap-3">
-                                @if($user && !$user->is_approved)
-                                    <form method="POST" action="{{ route('admin.users.validate', $user->id) }}">
-                                        @csrf
-                                        <button type="submit" class="text-white bg-brand-green hover:bg-brand-green-dark px-3 py-1 rounded text-xs font-medium">Validar</button>
-                                    </form>
-                                @endif
+                            <td class="px-6 py-4 text-right">
                                 <a href="{{ route('admin.cliente.show', $cliente->id) }}" class="text-[#1D4ED8] hover:underline font-medium">Ver detalles</a>
                             </td>
                         </tr>
