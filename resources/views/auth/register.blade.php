@@ -1,6 +1,6 @@
 ﻿<x-guest-layout>
     <div class="flex min-h-screen bg-white relative">
-        <a href="{{ route('login') }}" class="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-brand-green font-medium transition-colors z-50 bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-gray-100 lg:bg-transparent lg:border-none lg:shadow-none lg:text-white lg:hover:text-blue-200">
+        <a href="{{ route('landing') }}" class="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-brand-green font-medium transition-colors z-50 bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-gray-100 lg:bg-transparent lg:border-none lg:shadow-none lg:text-white lg:hover:text-blue-200">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Volver
         </a>
