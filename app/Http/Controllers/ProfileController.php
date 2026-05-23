@@ -45,7 +45,7 @@ class ProfileController extends Controller
             $memberSince = $anios . ($anios === 1 ? ' año' : ' años');
         }
 
-        // Valoración real desde el campo satisfaccion (1-5)
+        // Valoración real desde el campo satisfaccion (1-5) — el admin no tiene valoración
         if ($user->role === 'tecnico') {
             $avgRaw = OrdenTrabajo::where('usuario_id', $user->id)
                 ->whereNotNull('satisfaccion')->avg('satisfaccion');
@@ -53,7 +53,7 @@ class ProfileController extends Controller
             $avgRaw = OrdenTrabajo::where('cliente_id', $user->cliente_id)
                 ->whereNotNull('satisfaccion')->avg('satisfaccion');
         } else {
-            $avgRaw = OrdenTrabajo::whereNotNull('satisfaccion')->avg('satisfaccion');
+            $avgRaw = null; // admin no es valorado por nadie
         }
         $rating = $avgRaw ? round($avgRaw, 1) : null;
 

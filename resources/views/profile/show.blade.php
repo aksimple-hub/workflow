@@ -110,6 +110,7 @@
                                     <p class="text-4xl font-bold text-gray-900">{{ $memberSince }}</p>
                                     <p class="text-gray-600 text-sm mt-2">Miembro desde</p>
                                 </div>
+                                @if(auth()->user()->role !== 'admin')
                                 <div class="text-center">
                                     @if($rating)
                                         <p class="text-4xl font-bold text-green-600">{{ $rating }}</p>
@@ -123,6 +124,7 @@
                                         Valoración media
                                     </p>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>

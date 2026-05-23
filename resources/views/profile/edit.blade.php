@@ -193,6 +193,7 @@
                             <div class="text-xs text-gray-500 uppercase tracking-wide font-medium">Miembro desde</div>
                         </div>
 
+                        @if(auth()->user()->role !== 'admin')
                         <div class="bg-gray-50 rounded-xl p-6 text-center border border-gray-100">
                             <div class="text-3xl font-bold text-brand-green mb-1 flex items-center justify-center gap-1">
                                 @php
@@ -200,7 +201,7 @@
                                     $avgRaw = match($u->role) {
                                         'tecnico'  => \App\Models\OrdenTrabajo::where('usuario_id', $u->id)->whereNotNull('satisfaccion')->avg('satisfaccion'),
                                         'cliente'  => \App\Models\OrdenTrabajo::where('cliente_id', $u->cliente_id)->whereNotNull('satisfaccion')->avg('satisfaccion'),
-                                        default    => \App\Models\OrdenTrabajo::whereNotNull('satisfaccion')->avg('satisfaccion'),
+                                        default    => null,
                                     };
                                     $rating = $avgRaw ? round($avgRaw, 1) : null;
                                 @endphp
@@ -213,6 +214,7 @@
                             </div>
                             <div class="text-xs text-gray-500 uppercase tracking-wide font-medium">Valoración</div>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
