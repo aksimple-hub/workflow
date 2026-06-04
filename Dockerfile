@@ -27,8 +27,10 @@ RUN npm ci && npm run build
 RUN chmod -R 775 storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 
-COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+# Apuntar el DocumentRoot de Apache a /app/public via symlink
+RUN rm -rf /var/www/html && ln -sf /app/public /var/www/html
 
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+# Permitir .htaccess en /var/www
+RUN sed -i 's|AllowOverride None|AllowOverride All|g' /etc/apache2/apache2.conf
 
 CMD ["sh", "-c", "php artisan migrate --force && php artisan storage:link && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground"]
