@@ -9,8 +9,6 @@ return new class extends Migration
     {
         if (DB::getDriverName() === 'mysql') {
             DB::statement("ALTER TABLE orden_trabajos MODIFY COLUMN estado ENUM('asignada','pendiente','en_curso','en_camino','en_proceso','completada','finalizada','cancelada','pendiente_valoracion') NOT NULL DEFAULT 'pendiente'");
-        } else {
-            DB::statement("ALTER TYPE orden_trabajos_estado_enum ADD VALUE IF NOT EXISTS 'pendiente_valoracion'");
         }
     }
 
