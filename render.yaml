@@ -2,6 +2,7 @@ services:
   - type: web
     name: workflow-app
     env: docker
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /up
     envVars:
       - key: APP_ENV

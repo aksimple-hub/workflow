@@ -1,9 +1,14 @@
-FROM php:8.3-cli
+FROM php:8.3-apache
+
+RUN a2enmod rewrite headers
 
 RUN apt-get update && apt-get install -y \
     git curl libpq-dev libzip-dev zip unzip \
-    && docker-php-ext-install pdo pdo_pgsql zip \
+    && docker-php-ext-install pdo pdo_pgsql zip opcache \
     && rm -rf /var/lib/apt/lists/*
+
+RUN printf "opcache.enable=1\nopcache.memory_consumption=256\nopcache.max_accelerated_files=10000\nopcache.revalidate_freq=0\nopcache.validate_timestamps=0\n" \
+    > /usr/local/etc/php/conf.d/opcache.ini
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -19,6 +24,12 @@ RUN composer install --no-dev --optimize-autoloader
 
 RUN npm ci && npm run build
 
-RUN chmod -R 775 storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan storage:link && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+RUN sed -i 's|/var/www/html|/app/public|g' /etc/apache2/sites-available/000-default.conf \
+    && echo '<Directory /app/public>\n    AllowOverride All\n    Options -Indexes +FollowSymLinks\n</Directory>' \
+       >> /etc/apache2/sites-available/000-default.conf \
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+CMD ["sh", "-c", "php artisan migrate --force && php artisan storage:link && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground"]
