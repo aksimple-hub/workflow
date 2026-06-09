@@ -16,10 +16,39 @@
 
         <!-- Dark Mode Global Settings -->
         <script>
-            // Leer preferencia al instante para evitar parpadeos
             if (localStorage.getItem('theme') === 'dark') {
                 document.documentElement.classList.add('dark-theme');
             }
+
+            function toggleTheme() {
+                const html = document.documentElement;
+                const isDark = html.classList.toggle('dark-theme');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                _syncThemeIcons();
+            }
+
+            function setTheme(theme) {
+                const html = document.documentElement;
+                if (theme === 'dark') {
+                    html.classList.add('dark-theme');
+                } else {
+                    html.classList.remove('dark-theme');
+                }
+                localStorage.setItem('theme', theme);
+                _syncThemeIcons();
+            }
+
+            function _syncThemeIcons() {
+                const isDark = document.documentElement.classList.contains('dark-theme');
+                document.querySelectorAll('.theme-icon-sun').forEach(el => el.classList.toggle('hidden', !isDark));
+                document.querySelectorAll('.theme-icon-moon').forEach(el => el.classList.toggle('hidden', isDark));
+                document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+                    btn.classList.toggle('border-brand-green', btn.dataset.themeBtn === (isDark ? 'dark' : 'light'));
+                    btn.classList.toggle('text-brand-green', btn.dataset.themeBtn === (isDark ? 'dark' : 'light'));
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', _syncThemeIcons);
         </script>
         <style>
             /* Sistema de Dark Mode Global simplificado */
