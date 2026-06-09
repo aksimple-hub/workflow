@@ -15,7 +15,7 @@
                 </a>
                 <h1 class="text-xl md:text-2xl font-medium text-brand-dark">Perfil del Técnico</h1>
             </div>
-            <div class="flex items-center gap-3 flex-wrap flex-shrink-0">
+            <div class="flex items-center gap-2 flex-wrap">
                 <button onclick="toggleEdit()"
                     class="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -47,13 +47,13 @@
             <div class="max-w-5xl mx-auto space-y-6">
 
                 <!-- Vista de datos -->
-                <div id="view-mode" class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-8 flex items-start gap-6">
-                    <div class="w-20 h-20 rounded-full bg-brand-dark text-white flex items-center justify-center font-bold text-3xl flex-shrink-0">
+                <div id="view-mode" class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-4 sm:p-8 flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+                    <div class="w-20 h-20 rounded-full bg-brand-dark text-white flex items-center justify-center font-bold text-3xl flex-shrink-0 self-center sm:self-start">
                         {{ substr($tecnico->name, 0, 1) }}
                     </div>
                     <div class="flex-1">
                         <div class="flex items-center gap-3 mb-1">
-                            <h2 class="text-3xl font-medium text-brand-dark">{{ $tecnico->name }} {{ $perfil->apellidos ?? '' }}</h2>
+                            <h2 class="text-xl sm:text-3xl font-medium text-brand-dark break-words">{{ $tecnico->name }} {{ $perfil->apellidos ?? '' }}</h2>
                             @if($tecnico->is_approved)
                                 <span class="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Activo</span>
                             @else
@@ -193,13 +193,13 @@
                                 default                  => 'bg-gray-100 text-gray-600',
                             };
                         @endphp
-                        <div class="border border-gray-100 rounded-xl p-4 flex justify-between items-center hover:border-brand-green transition-colors">
-                            <div>
+                        <div class="border border-gray-100 rounded-xl p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 hover:border-brand-green transition-colors">
+                            <div class="min-w-0">
                                 <span class="text-xs font-bold text-gray-400 uppercase">#OT-{{ $orden->id }}</span>
-                                <h4 class="text-base font-medium text-brand-dark">{{ $orden->titulo }}</h4>
+                                <h4 class="text-base font-medium text-brand-dark truncate">{{ $orden->titulo }}</h4>
                                 <p class="text-xs text-gray-500 mt-0.5">{{ $orden->cliente->nombre ?? '—' }} · {{ $orden->created_at->format('d/m/Y') }}</p>
                             </div>
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-3 flex-shrink-0">
                                 <span class="px-3 py-1 text-xs font-medium rounded-full {{ $bg }}">
                                     {{ ucfirst(str_replace('_', ' ', $orden->estado)) }}
                                 </span>
