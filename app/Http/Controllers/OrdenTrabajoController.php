@@ -149,7 +149,7 @@ class OrdenTrabajoController extends Controller
 
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $foto) {
-                $path = $foto->store('orden_fotos', 'public');
+                $path = $foto->store('orden_fotos');
                 OrdenFoto::create(['orden_trabajo_id' => $orden->id, 'path' => $path]);
             }
         }
@@ -305,7 +305,7 @@ class OrdenTrabajoController extends Controller
         if ($request->filled('firma_base64')) {
             $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->firma_base64));
             $filename = 'firmas/' . Str::uuid() . '.png';
-            Storage::disk('public')->put($filename, $imageData);
+            Storage::put($filename, $imageData);
             $pathFirma = $filename;
         }
 

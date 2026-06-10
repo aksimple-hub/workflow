@@ -20,7 +20,7 @@ services:
       - key: QUEUE_CONNECTION
         value: database
       - key: FILESYSTEM_DISK
-        value: public
+        value: supabase
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_PORT

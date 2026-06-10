@@ -60,6 +60,20 @@ return [
             'report' => false,
         ],
 
+        'supabase' => [
+            'driver'                  => 's3',
+            'key'                     => env('SUPABASE_S3_ACCESS_KEY'),
+            'secret'                  => env('SUPABASE_S3_SECRET_KEY'),
+            'region'                  => env('SUPABASE_S3_REGION', 'eu-west-1'),
+            'bucket'                  => env('SUPABASE_S3_BUCKET', 'workflow'),
+            'endpoint'                => env('SUPABASE_S3_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            'url'                     => env('SUPABASE_S3_URL'),
+            'visibility'              => 'public',
+            'throw'                   => false,
+            'report'                  => false,
+        ],
+
     ],
 
     /*

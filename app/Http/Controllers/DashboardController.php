@@ -226,7 +226,7 @@ class DashboardController extends Controller
 
     public function ordenShow($id)
     {
-        $orden = OrdenTrabajo::with(['cliente', 'tecnico'])->findOrFail($id);
+        $orden = OrdenTrabajo::with(['cliente', 'tecnico', 'fotos'])->findOrFail($id);
         return view('admin.orden-show', compact('orden'));
     }
 
