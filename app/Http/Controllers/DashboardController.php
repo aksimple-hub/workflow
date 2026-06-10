@@ -275,10 +275,10 @@ class DashboardController extends Controller
         $user->update(['is_approved' => true]);
 
         if ($user->role === 'tecnico') {
-            $user->notify(new \App\Notifications\TecnicoAprobado());
+            try { $user->notify(new \App\Notifications\TecnicoAprobado()); } catch (\Throwable $e) { \Log::error('Email TecnicoAprobado: ' . $e->getMessage()); }
             $msg = 'Técnico "' . $user->name . '" activado correctamente. Se le ha notificado.';
         } else {
-            $user->notify(new \App\Notifications\ClienteAprobado());
+            try { $user->notify(new \App\Notifications\ClienteAprobado()); } catch (\Throwable $e) { \Log::error('Email ClienteAprobado: ' . $e->getMessage()); }
             $msg = 'Cliente "' . $user->name . '" activado correctamente. Se le ha notificado.';
         }
 
