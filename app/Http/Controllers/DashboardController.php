@@ -55,7 +55,12 @@ class DashboardController extends Controller
             $startOfWeek  = $today->copy()->startOfWeek(\Carbon\Carbon::MONDAY);
             $weekDays     = collect(range(0, 4))->map(fn($i) => $startOfWeek->copy()->addDays($i));
 
-            return view('tecnico.agenda', compact('ordenes', 'today', 'weekDays'));
+            $completadosHoy = OrdenTrabajo::where('usuario_id', $user->id)
+                ->whereIn('estado', ['finalizada', 'pendiente_valoracion'])
+                ->whereDate('updated_at', $today)
+                ->count();
+
+            return view('tecnico.agenda', compact('ordenes', 'today', 'weekDays', 'completadosHoy'));
         }
 
         if ($user->role === 'cliente') {

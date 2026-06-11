@@ -38,11 +38,7 @@
         <main class="flex-1 overflow-y-auto p-4 md:p-6">
 
             @php
-                $serviciosHoy  = $ordenes->count();
-                $siguienteOrden = $ordenes->filter(fn($o) => $o->fecha_asignacion)->sortBy('fecha_asignacion')->first();
-                $siguienteHora  = $siguienteOrden
-                    ? \Carbon\Carbon::parse($siguienteOrden->fecha_asignacion)->format('H:i')
-                    : '--:--';
+                $serviciosHoy = $ordenes->count();
             @endphp
 
             {{-- Stats --}}
@@ -52,8 +48,8 @@
                     <p class="text-3xl font-bold text-brand-dark">{{ $serviciosHoy }}</p>
                 </div>
                 <div class="bg-white rounded-xl p-4 md:p-5 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
-                    <p class="text-xs md:text-sm text-gray-500 mb-1">Siguiente</p>
-                    <p class="text-3xl font-bold text-brand-green">{{ $siguienteHora }}</p>
+                    <p class="text-xs md:text-sm text-gray-500 mb-1">Completados</p>
+                    <p class="text-3xl font-bold text-brand-green">{{ $completadosHoy }}</p>
                 </div>
             </div>
 
