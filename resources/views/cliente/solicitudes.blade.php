@@ -173,7 +173,7 @@
                         $pasos = [
                             ['key' => 'pendiente',            'label' => 'Solicitud recibida'],
                             ['key' => 'asignada',             'label' => 'Técnico asignado'],
-                            ['key' => 'en_proceso',           'label' => 'En reparación'],
+                            ['key' => 'en_proceso',           'label' => 'En proceso'],
                             ['key' => 'pendiente_valoracion', 'label' => 'Finalizado'],
                         ];
                         $ordenEstados = ['pendiente', 'asignada', 'en_proceso', 'pendiente_valoracion'];
