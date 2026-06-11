@@ -39,9 +39,9 @@
         </div>
 
         <!-- Right Column -->
-        <div class="w-full lg:w-7/12 flex flex-col justify-center items-center p-10 bg-gray-50">
-            
-            <div class="w-full max-w-2xl bg-white p-10 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100">
+        <div class="w-full lg:w-7/12 flex flex-col justify-center items-center p-4 md:p-10 bg-gray-50">
+
+            <div class="w-full max-w-2xl bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100">
                 <div class="mb-8">
                     <h2 id="step-title" class="text-3xl font-bold text-brand-dark">Datos Personales</h2>
                     <p id="step-subtitle" class="text-gray-500">Ingresa tu información básica y de contacto</p>
@@ -97,9 +97,11 @@
                             <input type="text" name="direccion" value="{{ old('direccion') }}" class="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-green" required />
                         </div>
 
-                        <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
-                            <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-900 font-medium">¿Ya tienes cuenta? Inicia sesión</a>
-                            <button type="button" onclick="goToStep(2)" class="bg-brand-green hover:bg-brand-green-dark text-white px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2">
+                        <div class="flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between mt-8 pt-6 border-t border-gray-100">
+                            <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-900 font-medium text-center md:text-left">
+                                ¿Ya tienes cuenta? <span class="font-bold text-brand-green">Inicia sesión</span>
+                            </a>
+                            <button type="button" onclick="goToStep(2)" class="w-full md:w-auto bg-brand-green hover:bg-brand-green-dark text-white px-8 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2">
                                 Siguiente <span class="text-xl leading-none">&rarr;</span>
                             </button>
                         </div>
@@ -125,11 +127,11 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
-                            <button type="button" onclick="goToStep(1)" class="text-sm font-medium text-gray-600 hover:text-brand-dark">
+                        <div class="flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between mt-8 pt-6 border-t border-gray-100">
+                            <button type="button" onclick="goToStep(1)" class="w-full md:w-auto flex items-center justify-center gap-2 py-3 px-6 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:text-brand-dark hover:border-gray-300 transition-all">
                                 &larr; Volver
                             </button>
-                            <button type="submit" class="bg-[#214371] hover:bg-[#152e50] text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl">
+                            <button type="submit" class="w-full md:w-auto bg-[#214371] hover:bg-[#152e50] text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl">
                                 Registrar Cuenta
                             </button>
                         </div>
