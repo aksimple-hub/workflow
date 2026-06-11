@@ -43,9 +43,7 @@
                                 <div class="text-xs text-gray-400">{{ $cliente->email }}</div>
                             </td>
                             <td class="px-6 py-4 text-gray-500 max-w-xs truncate">{{ $cliente->direccion ?? 'No especificada' }}</td>
-                            @php
-                                $user = \App\Models\User::where('cliente_id', $cliente->id)->first();
-                            @endphp
+                            @php $user = $cliente->usuario; @endphp
                             <td class="px-6 py-4">
                                 @if($user && $user->is_approved)
                                     <span class="px-3 py-1 text-xs font-semibold rounded-full bg-[#D1FAE5] text-[#065F46]">Aprobado</span>

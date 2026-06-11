@@ -83,6 +83,7 @@ class OrdenTrabajoController extends Controller
             // Límite de 3 solicitudes por día
             $hoyCount = OrdenTrabajo::where('cliente_id', $user->cliente_id)
                 ->whereDate('created_at', today())
+                ->where('estado', '!=', 'cancelada')
                 ->count();
 
             if ($hoyCount >= 3) {

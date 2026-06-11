@@ -106,7 +106,7 @@ class DashboardController extends Controller
 
     public function clientes()
     {
-        $clientes = \App\Models\Cliente::paginate(20)->withQueryString();
+        $clientes = \App\Models\Cliente::with('usuario')->paginate(20)->withQueryString();
         return view('admin.clientes', compact('clientes'));
     }
 
@@ -302,7 +302,7 @@ class DashboardController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:users',
+            'email' => 'required|string|lowercase|email|max:255|unique:users|unique:clientes,email',
             'password' => 'required|string|min:8|confirmed',
             'dni_cif' => 'required|string|unique:clientes',
             'telefono' => 'required|string',
