@@ -39,7 +39,7 @@
         </div>
 
         <!-- Right Column -->
-        <div class="w-full lg:w-7/12 flex flex-col justify-center items-center p-4 md:p-10 bg-gray-50">
+        <div class="w-full lg:w-7/12 flex flex-col justify-center items-center pt-20 pb-6 px-4 md:p-10 bg-gray-50">
 
             <div class="w-full max-w-2xl bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100">
                 <div class="mb-8">
