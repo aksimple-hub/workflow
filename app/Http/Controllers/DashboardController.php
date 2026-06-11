@@ -353,39 +353,7 @@ class DashboardController extends Controller
         $notification = Auth::user()->notifications()->findOrFail($id);
         $notification->markAsRead();
 
-        $data = $notification->data;
-        $tipo = $data['tipo'] ?? null;
-
-        // Routing by tipo (new format)
-        if ($tipo === 'nuevo_usuario') {
-            if (isset($data['tecnico_id'])) return redirect()->route('admin.tecnicos');
-            if (isset($data['cliente_id'])) return redirect()->route('admin.cliente.show', $data['cliente_id']);
-        }
-        if (in_array($tipo, ['orden_cancelada', 'orden_aplazada']) && isset($data['orden_id'])) {
-            return redirect()->route('admin.orden.show', $data['orden_id']);
-        }
-        if ($tipo === 'nueva_orden' && isset($data['orden_id'])) {
-            return redirect()->route('ordenes.show', $data['orden_id']);
-        }
-        if ($tipo === 'orden_estado' && isset($data['orden_id'])) {
-            return redirect()->route('cliente.orden.show', $data['orden_id']);
-        }
-        if (in_array($tipo, ['aprobacion', 'baja'])) {
-            return redirect()->route('dashboard');
-        }
-
-        // Fallback: legacy format without tipo
-        if (isset($data['tecnico_id']) && !isset($data['orden_id'])) {
-            return redirect()->route('admin.tecnicos');
-        }
-        if (isset($data['cliente_id']) && !isset($data['orden_id'])) {
-            return redirect()->route('admin.cliente.show', $data['cliente_id']);
-        }
-        if (isset($data['orden_id'])) {
-            return redirect()->route('admin.orden.show', $data['orden_id']);
-        }
-
-        return redirect()->route('dashboard');
+        return redirect()->back();
     }
 
     public function markAllNotificationsRead()
