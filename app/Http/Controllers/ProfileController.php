@@ -97,16 +97,16 @@ class ProfileController extends Controller
     public function updatePhoto(Request $request): RedirectResponse
     {
         $request->validate([
-            'foto_perfil' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'foto_perfil' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         $user = $request->user();
 
         if ($user->foto_perfil) {
-            Storage::disk('public')->delete($user->foto_perfil);
+            Storage::delete($user->foto_perfil);
         }
 
-        $path = $request->file('foto_perfil')->store('fotos-perfil', 'public');
+        $path = $request->file('foto_perfil')->store('fotos-perfil');
         $user->foto_perfil = $path;
         $user->save();
 

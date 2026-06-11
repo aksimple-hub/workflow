@@ -89,12 +89,12 @@ class RegisteredUserController extends Controller
             'direccion' => ['required', 'string', 'max:255'],
             'experiencia' => ['nullable', 'string'],
             'cv_pdf'      => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
-            'foto_perfil' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'foto_perfil' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         $fotoPerfil = null;
         if ($request->hasFile('foto_perfil')) {
-            $fotoPerfil = $request->file('foto_perfil')->store('fotos-perfil', 'public');
+            $fotoPerfil = $request->file('foto_perfil')->store('fotos-perfil');
         }
 
         $user = User::create([
@@ -108,7 +108,7 @@ class RegisteredUserController extends Controller
 
         $cvPath = null;
         if ($request->hasFile('cv_pdf')) {
-            $cvPath = $request->file('cv_pdf')->store('cvs', 'public');
+            $cvPath = $request->file('cv_pdf')->store('cvs');
         }
 
         \App\Models\Tecnico::create([
