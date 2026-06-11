@@ -67,8 +67,10 @@ class RegisteredUserController extends Controller
         // El cliente puede entrar pero con acceso limitado
         Auth::login($user);
 
-        try { $user->notify(new ClienteRegistrado()); } catch (\Throwable $e) { \Log::error('Email ClienteRegistrado: ' . $e->getMessage()); }
-        try { User::where('role', 'admin')->each(fn($admin) => $admin->notify(new NuevoClienteRegistrado($user))); } catch (\Throwable $e) { \Log::error('Email NuevoClienteRegistrado: ' . $e->getMessage()); }
+        app()->terminating(function() use ($user) {
+            try { $user->notify(new ClienteRegistrado()); } catch (\Throwable $e) { \Log::error('Email ClienteRegistrado: ' . $e->getMessage()); }
+            try { User::where('role', 'admin')->each(fn($admin) => $admin->notify(new NuevoClienteRegistrado($user))); } catch (\Throwable $e) { \Log::error('Email NuevoClienteRegistrado: ' . $e->getMessage()); }
+        });
 
         return redirect()->route('dashboard');
     }
@@ -125,8 +127,10 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        try { $user->notify(new TecnicoRegistrado()); } catch (\Throwable $e) { \Log::error('Email TecnicoRegistrado: ' . $e->getMessage()); }
-        try { User::where('role', 'admin')->each(fn($admin) => $admin->notify(new NuevoTecnicoRegistrado($user))); } catch (\Throwable $e) { \Log::error('Email NuevoTecnicoRegistrado: ' . $e->getMessage()); }
+        app()->terminating(function() use ($user) {
+            try { $user->notify(new TecnicoRegistrado()); } catch (\Throwable $e) { \Log::error('Email TecnicoRegistrado: ' . $e->getMessage()); }
+            try { User::where('role', 'admin')->each(fn($admin) => $admin->notify(new NuevoTecnicoRegistrado($user))); } catch (\Throwable $e) { \Log::error('Email NuevoTecnicoRegistrado: ' . $e->getMessage()); }
+        });
 
         return redirect(route('login', absolute: false))->with('status', 'Tu solicitud ha sido enviada. Un administrador revisará tus datos y activará tu cuenta. Te avisaremos cuando esté lista.');
     }
