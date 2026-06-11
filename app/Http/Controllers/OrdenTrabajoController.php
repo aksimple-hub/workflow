@@ -149,8 +149,16 @@ class OrdenTrabajoController extends Controller
 
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $foto) {
-                $path = $foto->store('orden_fotos');
-                OrdenFoto::create(['orden_trabajo_id' => $orden->id, 'path' => $path]);
+                try {
+                    $path = $foto->store('orden_fotos');
+                    if ($path) {
+                        OrdenFoto::create(['orden_trabajo_id' => $orden->id, 'path' => $path]);
+                    } else {
+                        \Log::error('Foto upload devolvió false para orden ' . $orden->id . ' - disco: ' . config('filesystems.default'));
+                    }
+                } catch (\Throwable $e) {
+                    \Log::error('Foto upload excepción orden ' . $orden->id . ': ' . $e->getMessage());
+                }
             }
         }
 
@@ -196,7 +204,7 @@ class OrdenTrabajoController extends Controller
             abort(403);
         }
 
-        $orden->load(['tecnico.perfil', 'cliente', 'Material']);
+        $orden->load(['tecnico.perfil', 'cliente', 'Material', 'fotos']);
         return view('cliente.orden-detalle', compact('orden'));
     }
 
