@@ -304,8 +304,11 @@
 
                     document.getElementById('fotos-input').addEventListener('change', function() {
                         addFiles(this.files);
-                        // Limpiar el input para que el mismo archivo pueda reseleccionarse si fue eliminado
                         this.value = '';
+                    });
+
+                    document.querySelector('form').addEventListener('submit', function() {
+                        syncInput();
                     });
 
                     const dropZone = document.getElementById('drop-zone');
