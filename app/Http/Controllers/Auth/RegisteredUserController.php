@@ -34,6 +34,8 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $request->merge(['email' => strtolower(trim((string) $request->email))]);
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
@@ -83,6 +85,8 @@ class RegisteredUserController extends Controller
 
     public function storeTecnico(Request $request): RedirectResponse
     {
+        $request->merge(['email' => strtolower(trim((string) $request->email))]);
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'apellidos' => ['required', 'string', 'max:255'],
