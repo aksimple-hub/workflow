@@ -112,7 +112,7 @@
                         </div>
 
                         {{-- Botones --}}
-                        <div class="flex items-center gap-3 flex-shrink-0 flex-wrap">
+                        <div class="flex items-center gap-3 flex-shrink-0 flex-wrap" x-data="{ confirmCancel: false }">
                             @if($ordenActiva->estado === 'pendiente_valoracion')
                             <a href="{{ route('cliente.orden.valorar', $ordenActiva) }}"
                                class="px-5 py-2.5 rounded-xl bg-brand-green hover:bg-brand-green-dark text-white text-sm font-semibold transition-all shadow-[0px_2px_8px_rgba(16,185,129,0.3)] flex items-center gap-2">
@@ -125,6 +125,42 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 Ver detalle
                             </a>
+                            @endif
+
+                            @if(in_array($ordenActiva->estado, ['pendiente', 'asignada']))
+                            <button type="button" @click="confirmCancel = true"
+                                class="px-4 py-2 rounded-xl border border-red-200 hover:border-red-400 text-sm font-semibold text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                Cancelar
+                            </button>
+
+                            <div x-show="confirmCancel" x-cloak @keydown.escape.window="confirmCancel = false"
+                                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+                                 @click.self="confirmCancel = false">
+                                <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full">
+                                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-base font-semibold text-brand-dark text-center mb-1">¿Cancelar esta solicitud?</h3>
+                                    <p class="text-sm text-gray-500 text-center mb-5">Esta acción no se puede deshacer. La solicitud quedará cancelada y se notificará al equipo.</p>
+                                    <div class="flex gap-3">
+                                        <button type="button" @click="confirmCancel = false"
+                                            class="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-brand-dark hover:bg-gray-50 transition-colors">
+                                            Volver
+                                        </button>
+                                        <form action="{{ route('ordenes.destroy', $ordenActiva) }}" method="POST" class="flex-1">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="w-full px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors">
+                                                Sí, cancelar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                             @endif
                         </div>
                     </div>
