@@ -169,8 +169,8 @@ class OrdenTrabajoController extends Controller
 
     public function updateEstado(Request $request, OrdenTrabajo $orden)
     {
-        // Pendiente -> En Camino -> En Proceso -> Finalizada
-        $estadosValidos = ['pendiente', 'en_camino', 'en_proceso', 'finalizada'];
+        // Pendiente -> En Proceso -> Finalizada
+        $estadosValidos = ['pendiente', 'en_proceso', 'finalizada'];
         
         $request->validate([
             'estado' => 'required|in:' . implode(',', $estadosValidos),
@@ -449,7 +449,7 @@ class OrdenTrabajoController extends Controller
         }
 
         // Solo se pueden cancelar órdenes que no están en progreso
-        if ($orden->estado === 'en_proceso' || $orden->estado === 'en_camino' || $orden->estado === 'finalizada') {
+        if ($orden->estado === 'en_proceso' || $orden->estado === 'finalizada') {
             abort(403, 'No puedes cancelar una orden en progreso o finalizada.');
         }
 

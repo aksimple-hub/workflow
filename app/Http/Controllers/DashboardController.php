@@ -16,7 +16,8 @@ class DashboardController extends Controller
             $counts = OrdenTrabajo::selectRaw("
                 count(*) as total,
                 count(case when estado = 'pendiente' then 1 end) as pendientes,
-                count(case when estado in ('en_camino','en_proceso','asignada') then 1 end) as en_curso,
+                count(case when estado = 'asignada' then 1 end) as asignadas,
+                count(case when estado in ('en_proceso','en_camino') then 1 end) as en_curso,
                 count(case when estado = 'finalizada' then 1 end) as finalizadas,
                 count(case when estado = 'cancelada' then 1 end) as canceladas
             ")->first();
@@ -46,7 +47,7 @@ class DashboardController extends Controller
         if ($user->role === 'tecnico') {
             $ordenes = OrdenTrabajo::with('cliente')
                 ->where('usuario_id', $user->id)
-                ->whereIn('estado', ['asignada', 'pendiente', 'en_camino', 'en_proceso'])
+                ->whereIn('estado', ['asignada', 'pendiente', 'en_proceso'])
                 ->orderBy('fecha_asignacion', 'asc')
                 ->orderBy('prioridad', 'desc')
                 ->get();

@@ -81,7 +81,7 @@
                     <div>
                         <label class="block text-xs font-medium text-gray-500 mb-1.5">Estado</label>
                         <div class="flex flex-wrap gap-2">
-                            @foreach(['pendiente' => 'Pendiente', 'asignada' => 'Asignada', 'en_camino' => 'En camino', 'en_proceso' => 'En proceso', 'finalizada' => 'Finalizada', 'cancelada' => 'Cancelada'] as $val => $label)
+                            @foreach(['pendiente' => 'Pendiente', 'asignada' => 'Asignada', 'en_proceso' => 'En proceso', 'finalizada' => 'Finalizada', 'cancelada' => 'Cancelada'] as $val => $label)
                             <button type="button" onclick="setFiltro('estado', '{{ $val }}')"
                                 class="px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors
                                 {{ $estado === $val ? 'bg-[#214371] text-white border-[#214371]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#214371]' }}">
@@ -108,7 +108,7 @@
             </form>
 
             <!-- Stats Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-8">
                 <a href="{{ route('dashboard') }}"
                     class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ !$estado ? 'border-brand-dark ring-2 ring-brand-dark/20' : 'border-gray-100 hover:border-gray-300' }} transition-colors group block">
                     <p class="text-sm font-medium text-gray-500 mb-1">Total Órdenes</p>
@@ -121,8 +121,13 @@
                 </button>
                 <button type="button" onclick="filtrarPorEstado('asignada')"
                     class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'asignada' ? 'border-[#D97706] ring-2 ring-[#D97706]/20' : 'border-gray-100 hover:border-[#D97706]/40' }} transition-colors text-left group">
-                    <p class="text-sm font-medium text-gray-500 mb-1">En Curso</p>
-                    <p class="text-3xl font-bold text-[#D97706]">{{ $stats['en_curso'] ?? 0 }}</p>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Asignadas</p>
+                    <p class="text-3xl font-bold text-[#D97706]">{{ $stats['asignadas'] ?? 0 }}</p>
+                </button>
+                <button type="button" onclick="filtrarPorEstado('en_proceso')"
+                    class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'en_proceso' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-gray-100 hover:border-purple-400/40' }} transition-colors text-left group">
+                    <p class="text-sm font-medium text-gray-500 mb-1">En Proceso</p>
+                    <p class="text-3xl font-bold text-purple-600">{{ $stats['en_curso'] ?? 0 }}</p>
                 </button>
                 <button type="button" onclick="filtrarPorEstado('finalizada')"
                     class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ $estado === 'finalizada' ? 'border-brand-green ring-2 ring-brand-green/20' : 'border-gray-100 hover:border-brand-green/40' }} transition-colors text-left group">
@@ -173,7 +178,7 @@
                                 @php
                                     $asignable = $orden->estado === 'pendiente';
                                     $bg = 'bg-gray-100 text-gray-600';
-                                    if(in_array($orden->estado, ['en_camino', 'en_curso', 'en_proceso'])) $bg = 'bg-blue-500 text-white';
+                                    if(in_array($orden->estado, ['en_proceso', 'en_camino'])) $bg = 'bg-blue-500 text-white';
                                     if($orden->estado == 'finalizada') $bg = 'bg-brand-green text-white';
                                     if(in_array($orden->estado, ['pendiente', 'asignada'])) $bg = 'bg-gray-400 text-white';
                                     if($orden->estado === 'cancelada') $bg = 'bg-red-100 text-red-700';
