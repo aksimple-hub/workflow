@@ -1,5 +1,11 @@
 ﻿<x-guest-layout>
-    <div class="flex h-screen overflow-hidden bg-white">
+    <div class="flex h-screen overflow-hidden bg-white relative">
+
+        {{-- Botón volver (solo móvil) --}}
+        <a href="{{ route('landing') }}" class="lg:hidden absolute top-4 left-4 z-50 flex items-center gap-1.5 text-gray-600 hover:text-brand-green font-medium transition-colors bg-white/90 backdrop-blur-md px-3 py-2 rounded-xl shadow-sm border border-gray-100">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Volver
+        </a>
 
         <div class="hidden lg:flex lg:w-7/12 relative flex-col justify-center items-center text-white overflow-hidden"
              style="background: linear-gradient(145deg, #0f2349 0%, #214371 55%, #1a5c8a 100%);">
