@@ -93,7 +93,7 @@
         <div class="slide active">
             <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=1920&q=80');"></div>
             <div class="slide-overlay"></div>
-            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-44 sm:pb-48 pointer-events-none">
+            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-56 sm:pb-48 pointer-events-none">
                 <span class="text-sm font-semibold uppercase tracking-widest text-blue-300 mb-4">Gestión inteligente</span>
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-3 sm:mb-5 drop-shadow-lg">
                     Optimiza tu<br>flujo de trabajo
@@ -108,7 +108,7 @@
         <div class="slide">
             <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&w=1920&q=80');"></div>
             <div class="slide-overlay"></div>
-            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-44 sm:pb-48 pointer-events-none">
+            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-56 sm:pb-48 pointer-events-none">
                 <span class="text-sm font-semibold uppercase tracking-widest text-green-300 mb-4">Siempre conectados</span>
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-3 sm:mb-5 drop-shadow-lg">
                     Técnicos siempre<br>coordinados
@@ -123,7 +123,7 @@
         <div class="slide">
             <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1920&q=80');"></div>
             <div class="slide-overlay"></div>
-            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-44 sm:pb-48 pointer-events-none">
+            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-56 sm:pb-48 pointer-events-none">
                 <span class="text-sm font-semibold uppercase tracking-widest text-yellow-300 mb-4">Calidad garantizada</span>
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-3 sm:mb-5 drop-shadow-lg">
                     Clientes<br>satisfechos
@@ -138,7 +138,7 @@
         <div class="slide">
             <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=1920&q=80');"></div>
             <div class="slide-overlay"></div>
-            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-44 sm:pb-48 pointer-events-none">
+            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-56 sm:pb-48 pointer-events-none">
                 <span class="text-sm font-semibold uppercase tracking-widest text-orange-300 mb-4">Profesionalidad</span>
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-3 sm:mb-5 drop-shadow-lg">
                     Servicios de<br>alta calidad
@@ -153,7 +153,7 @@
         <div class="slide">
             <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1920&q=80');"></div>
             <div class="slide-overlay"></div>
-            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-44 sm:pb-48 pointer-events-none">
+            <div class="slide-content relative h-full flex flex-col items-center justify-center text-white text-center px-8 pb-56 sm:pb-48 pointer-events-none">
                 <span class="text-sm font-semibold uppercase tracking-widest text-purple-300 mb-4">Tu plataforma</span>
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-3 sm:mb-5 drop-shadow-lg">
                     Todo bajo<br>control
@@ -181,7 +181,7 @@
         </button>
 
         {{-- Navigation dots + play/pause --}}
-        <div class="absolute bottom-44 sm:bottom-44 left-0 right-0 flex justify-center items-center gap-3 z-20">
+        <div class="absolute bottom-52 sm:bottom-44 left-0 right-0 flex justify-center items-center gap-3 z-20">
             <div class="dot active" data-slide="0" onclick="userGoTo(0)"></div>
             <div class="dot" data-slide="1" onclick="userGoTo(1)"></div>
             <div class="dot" data-slide="2" onclick="userGoTo(2)"></div>
@@ -199,7 +199,7 @@
         </div>
 
         {{-- CTA panel --}}
-        <div class="absolute bottom-0 left-0 right-0 z-20 px-4 sm:pb-6" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem))">
+        <div class="absolute bottom-0 left-0 right-0 z-20 px-4 pb-10 sm:pb-6">
             <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-3 sm:p-6 max-w-sm mx-auto">
                 <div class="flex items-center justify-center mb-1 sm:mb-3">
                     <div class="bg-[#214371] px-5 py-1.5 sm:px-6 sm:py-2.5 rounded-xl">
