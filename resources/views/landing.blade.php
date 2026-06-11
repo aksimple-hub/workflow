@@ -199,7 +199,7 @@
         </div>
 
         {{-- CTA panel --}}
-        <div class="absolute bottom-0 left-0 right-0 z-20 px-4 pb-10 sm:pb-6">
+        <div class="absolute bottom-0 left-0 right-0 z-20 px-4 pb-20 sm:pb-6">
             <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-3 sm:p-6 max-w-sm mx-auto">
                 <div class="flex items-center justify-center mb-1 sm:mb-3">
                     <div class="bg-[#214371] px-5 py-1.5 sm:px-6 sm:py-2.5 rounded-xl">
