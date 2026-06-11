@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('clientes', ClienteController::class)->middleware('admin');
 
     // Rutas para Admin + Cliente (store/destroy tienen validaciones de rol internas)
-    Route::resource('ordenes', OrdenTrabajoController::class)->except(['show', 'edit']);
+    Route::resource('ordenes', OrdenTrabajoController::class)->except(['show', 'edit', 'update']);
 
     // Rutas exclusivas de Admin
     Route::middleware('admin')->group(function () {
