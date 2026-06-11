@@ -108,7 +108,7 @@
             </form>
 
             <!-- Stats Grid -->
-            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
                 <a href="{{ route('dashboard') }}"
                     class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-6 border {{ !$estado ? 'border-brand-dark ring-2 ring-brand-dark/20' : 'border-gray-100 hover:border-gray-300' }} transition-colors group block">
                     <p class="text-sm font-medium text-gray-500 mb-1">Total Órdenes</p>
@@ -212,7 +212,7 @@
                 </form>
 
                 @if($ordenes->hasPages())
-                <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap gap-2 items-center justify-between">
                     <p class="text-sm text-gray-500">
                         Mostrando {{ $ordenes->firstItem() }}–{{ $ordenes->lastItem() }} de {{ $ordenes->total() }} órdenes
                     </p>

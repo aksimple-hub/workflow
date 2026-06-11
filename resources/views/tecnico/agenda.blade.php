@@ -58,7 +58,7 @@
                     </div>
 
                     <!-- Acciones -->
-                    <div class="flex flex-row md:flex-col gap-2 md:w-48">
+                    <div class="flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-48">
                         @if($orden->estado === 'asignada' || $orden->estado === 'pendiente')
                             <a href="{{ route('ordenes.show', $orden) }}" class="w-full bg-gray-100 hover:bg-gray-200 text-brand-dark px-6 py-3 rounded-xl transition-all duration-200 ease-in-out text-center font-medium text-sm">
                                 Ver Detalle

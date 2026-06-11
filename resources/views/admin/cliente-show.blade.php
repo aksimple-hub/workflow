@@ -51,7 +51,7 @@
             <div class="max-w-5xl mx-auto space-y-6">
 
                 <!-- Info Cliente (vista) -->
-                <div id="view-mode" class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-8 flex items-start gap-6">
+                <div id="view-mode" class="bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 p-4 md:p-8 flex flex-col md:flex-row items-start gap-4 md:gap-6">
                     <div class="w-20 h-20 rounded-xl bg-[#F5F7FA] border-2 border-gray-200 text-brand-dark flex items-center justify-center font-bold text-3xl flex-shrink-0">
                         {{ substr($cliente->nombre, 0, 1) }}
                     </div>
@@ -88,7 +88,7 @@
                 </div>
 
                 <!-- Formulario de edición (oculto por defecto) -->
-                <div id="edit-mode" class="hidden bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-brand-green p-8">
+                <div id="edit-mode" class="hidden bg-white rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-brand-green p-4 md:p-8">
                     <h3 class="text-lg font-semibold text-brand-dark mb-6">Editar datos del cliente</h3>
                     <form method="POST" action="{{ route('admin.cliente.update', $cliente->id) }}">
                         @csrf

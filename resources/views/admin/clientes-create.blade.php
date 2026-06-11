@@ -18,8 +18,8 @@
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-8 flex justify-center">
-            <div class="w-full max-w-3xl bg-white p-10 rounded-[2rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-gray-100 h-fit">
+        <main class="flex-1 overflow-y-auto p-4 md:p-8 flex justify-center">
+            <div class="w-full max-w-3xl bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-gray-100 h-fit">
                 
                 <div class="mb-8 flex items-center gap-4">
                     <div class="bg-[#214371] px-6 py-2 rounded-xl">

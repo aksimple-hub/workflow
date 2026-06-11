@@ -117,7 +117,7 @@
                         </div>
 
                         {{-- Botones --}}
-                        <div class="flex items-center gap-3 flex-shrink-0 flex-wrap" x-data="{ confirmCancel: false }">
+                        <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto" x-data="{ confirmCancel: false }">
                             @if($ordenActiva->estado === 'pendiente_valoracion')
                             <a href="{{ route('cliente.orden.valorar', $ordenActiva) }}"
                                class="px-5 py-2.5 rounded-xl bg-brand-green hover:bg-brand-green-dark text-white text-sm font-semibold transition-all shadow-[0px_2px_8px_rgba(16,185,129,0.3)] flex items-center gap-2">
