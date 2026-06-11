@@ -7,6 +7,7 @@ use App\Models\Tecnico;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,10 +16,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Administrador
-        User::factory()->create([
+        User::create([
             'name'        => 'Admin Workflow',
             'email'       => 'admin@test.com',
-            'password'    => 'password',
+            'password'    => Hash::make('password'),
             'role'        => 'admin',
             'is_approved' => true,
         ]);
@@ -61,10 +62,10 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($tecnicos as $data) {
-            $user = User::factory()->create([
+            $user = User::create([
                 'name'        => $data['user']['name'],
                 'email'       => $data['user']['email'],
-                'password'    => 'password',
+                'password'    => Hash::make('password'),
                 'role'        => 'tecnico',
                 'is_approved' => true,
             ]);
@@ -114,34 +115,22 @@ class DatabaseSeeder extends Seeder
                 ],
                 'user' => ['name' => 'Laura Romero', 'email' => 'cliente4@test.com'],
             ],
-            [
-                'cliente' => [
-                    'nombre'    => 'Miguel Ángel Torres Pardo',
-                    'dni_cif'   => '56789012E',
-                    'email'     => 'cliente5@test.com',
-                    'telefono'  => '687555555',
-                    'direccion' => 'Paseo de la Independencia 8, Zaragoza',
-                ],
-                'user' => ['name' => 'Miguel Torres', 'email' => 'cliente5@test.com'],
-            ],
         ];
 
         foreach ($clientes as $data) {
-            $user = User::factory()->create([
-                'name'        => $data['user']['name'],
-                'email'       => $data['user']['email'],
-                'password'    => 'password',
-                'role'        => 'cliente',
-                'is_approved' => true,
-            ]);
-
-            DB::table('clientes')->insert(array_merge($data['cliente'], [
-                'id'         => $user->id,
+            $cliente = DB::table('clientes')->insertGetId(array_merge($data['cliente'], [
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
 
-            $user->update(['cliente_id' => $user->id]);
+            User::create([
+                'name'        => $data['user']['name'],
+                'email'       => $data['user']['email'],
+                'password'    => Hash::make('password'),
+                'role'        => 'cliente',
+                'is_approved' => true,
+                'cliente_id'  => $cliente,
+            ]);
         }
     }
 }
