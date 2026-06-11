@@ -80,7 +80,7 @@ class OrdenTrabajoController extends Controller
                 'horario_preferido'  => 'required|in:mañana,mediodia,tarde,sin_preferencia',
                 'direccion_servicio' => 'nullable|string|max:500',
                 'fotos'              => 'nullable|array|max:5',
-                'fotos.*'            => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+                'fotos.*'            => 'image|mimes:jpg,jpeg,png,webp|max:20480',
             ]);
 
             // Límite de 3 solicitudes por día
