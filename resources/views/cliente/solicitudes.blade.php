@@ -231,7 +231,8 @@
                         default      => [ucfirst($otraOrden->estado), 'bg-gray-100 text-gray-600'],
                     };
                 @endphp
-                <div class="mt-3 bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
+                <div class="mt-3 bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] px-5 py-4 flex items-center justify-between gap-4 flex-wrap"
+                     x-data="{ confirmCancel: false }">
                     <div class="flex items-center gap-3 min-w-0">
                         <div class="w-9 h-9 rounded-full bg-[#F5F7FA] flex items-center justify-center flex-shrink-0">
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
@@ -249,8 +250,44 @@
                             </div>
                         </div>
                     </div>
-                    <a href="{{ route('cliente.orden.show', $otraOrden) }}"
-                       class="flex-shrink-0 text-xs font-medium text-brand-green hover:underline">Ver detalle</a>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <a href="{{ route('cliente.orden.show', $otraOrden) }}"
+                           class="text-xs font-medium text-brand-green hover:underline">Ver detalle</a>
+                        @if(in_array($otraOrden->estado, ['pendiente', 'asignada']))
+                        <button type="button" @click="confirmCancel = true"
+                            class="text-xs font-semibold text-red-500 hover:text-red-600 border border-red-200 hover:border-red-400 hover:bg-red-50 px-3 py-1 rounded-lg transition-colors flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            Cancelar
+                        </button>
+                        <div x-show="confirmCancel" x-cloak @keydown.escape.window="confirmCancel = false"
+                             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+                             @click.self="confirmCancel = false">
+                            <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full">
+                                <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="text-base font-semibold text-brand-dark text-center mb-1">¿Cancelar esta solicitud?</h3>
+                                <p class="text-sm text-gray-500 text-center mb-5">Esta acción no se puede deshacer. La solicitud quedará cancelada y se notificará al equipo.</p>
+                                <div class="flex gap-3">
+                                    <button type="button" @click="confirmCancel = false"
+                                        class="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-brand-dark hover:bg-gray-50 transition-colors">
+                                        Volver
+                                    </button>
+                                    <form action="{{ route('ordenes.destroy', $otraOrden) }}" method="POST" class="flex-1">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="w-full px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors">
+                                            Sí, cancelar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
                 </div>
                 @endforeach
 
