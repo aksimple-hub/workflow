@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
 RUN printf "opcache.enable=1\nopcache.memory_consumption=256\nopcache.max_accelerated_files=10000\nopcache.revalidate_freq=0\nopcache.validate_timestamps=0\n" \
     > /usr/local/etc/php/conf.d/opcache.ini
 
+RUN printf "upload_max_filesize=20M\npost_max_size=60M\n" \
+    > /usr/local/etc/php/conf.d/uploads.ini
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
