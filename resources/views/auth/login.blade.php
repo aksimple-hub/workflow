@@ -178,7 +178,7 @@
                             <p id="error-password" class="hidden mt-1.5 text-xs text-red-500 font-medium pl-1">La contraseña es obligatoria.</p>
                         </div>
 
-                        <div class="flex items-center justify-between mb-6">
+                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-6">
                             <label class="flex items-center">
                                 <input type="checkbox" name="remember" class="w-4 h-4 rounded border-gray-300 text-brand-green focus:ring-brand-green">
                                 <span class="ml-2 text-sm text-gray-600 font-medium">Recordarme</span>
