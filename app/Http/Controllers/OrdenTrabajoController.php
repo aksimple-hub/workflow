@@ -185,15 +185,6 @@ class OrdenTrabajoController extends Controller
             'estado' => $request->estado,
         ]);
 
-        if ($request->estado === 'en_camino') {
-            $clienteUser = \App\Models\User::where('cliente_id', $orden->cliente_id)->first();
-            if ($clienteUser) {
-                app()->terminating(function() use ($clienteUser, $orden, $request) {
-                    try { $clienteUser->notify(new \App\Notifications\OrdenEstadoCambiada($orden, $request->estado)); } catch (\Throwable $e) { \Log::error('Notif OrdenEstadoCambiada: ' . $e->getMessage()); }
-                });
-            }
-        }
-
         return back()->with('success', 'Estado de la orden actualizado a ' . ucfirst(str_replace('_', ' ', $request->estado)));
     }
 
