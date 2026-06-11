@@ -7,7 +7,7 @@ use App\Models\Tecnico;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name'        => 'Admin Workflow',
             'email'       => 'admin@test.com',
-            'password'    => Hash::make('password'),
+            'password'    => 'password',
             'role'        => 'admin',
             'is_approved' => true,
         ]);
@@ -65,7 +65,7 @@ class DatabaseSeeder extends Seeder
             $user = User::create([
                 'name'        => $data['user']['name'],
                 'email'       => $data['user']['email'],
-                'password'    => Hash::make('password'),
+                'password'    => 'password',
                 'role'        => 'tecnico',
                 'is_approved' => true,
             ]);
@@ -126,7 +126,7 @@ class DatabaseSeeder extends Seeder
             User::create([
                 'name'        => $data['user']['name'],
                 'email'       => $data['user']['email'],
-                'password'    => Hash::make('password'),
+                'password'    => 'password',
                 'role'        => 'cliente',
                 'is_approved' => true,
                 'cliente_id'  => $cliente,
