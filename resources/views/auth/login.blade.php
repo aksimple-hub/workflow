@@ -2,9 +2,8 @@
     <div class="flex h-screen overflow-hidden bg-white relative">
 
         {{-- Botón volver (solo móvil) --}}
-        <a href="{{ route('landing') }}" class="lg:hidden absolute top-4 left-4 z-50 flex items-center gap-1.5 text-gray-600 hover:text-brand-green font-medium transition-colors bg-white/90 backdrop-blur-md px-3 py-2 rounded-xl shadow-sm border border-gray-100">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            Volver
+        <a href="{{ route('landing') }}" class="lg:hidden absolute top-4 left-4 z-50 flex items-center justify-center w-9 h-9 rounded-full text-gray-500 hover:text-[#214371] transition-colors bg-white/90 backdrop-blur-md shadow border border-gray-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
         </a>
 
         <div class="hidden lg:flex lg:w-7/12 relative flex-col justify-center items-center text-white overflow-hidden"
