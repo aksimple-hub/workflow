@@ -57,6 +57,10 @@ class OrdenTrabajoController extends Controller
 
     public function store(Request $request)
     {
+        \Log::error('DEBUG store: hasFile=' . ($request->hasFile('fotos') ? 'SI' : 'NO')
+            . ' files=' . json_encode(array_keys($request->allFiles()))
+            . ' contentLength=' . $request->header('Content-Length'));
+
         $user = Auth::user();
 
         // Permitir acceso a admin y cliente
