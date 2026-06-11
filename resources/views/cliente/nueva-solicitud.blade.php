@@ -116,7 +116,7 @@
             @enderror
 
             <div class="bg-white p-8 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
-                <form action="{{ route('ordenes.store') }}" method="POST" enctype="multipart/form-data" {{ $hoyCount >= 3 ? 'onsubmit=return false' : '' }}>
+                <form id="solicitud-form" action="{{ route('ordenes.store') }}" method="POST" enctype="multipart/form-data" {{ $hoyCount >= 3 ? 'onsubmit=return false' : '' }}>
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Título (Ocupa 2 columnas) -->
@@ -233,12 +233,6 @@
                     const MAX_FOTOS = 5;
                     let allFiles = []; // acumula los File objects seleccionados
 
-                    function syncInput() {
-                        const dt = new DataTransfer();
-                        allFiles.forEach(f => dt.items.add(f));
-                        document.getElementById('fotos-input').files = dt.files;
-                    }
-
                     function renderPreviews() {
                         const preview = document.getElementById('fotos-preview');
                         const dropZone = document.getElementById('drop-zone');
@@ -307,8 +301,21 @@
                         this.value = '';
                     });
 
-                    document.querySelector('form').addEventListener('submit', function() {
-                        syncInput();
+                    document.getElementById('solicitud-form').addEventListener('submit', function(e) {
+                        if (allFiles.length === 0) return;
+                        e.preventDefault();
+
+                        const form = this;
+                        const fd = new FormData(form);
+                        fd.delete('fotos[]');
+                        allFiles.forEach(f => fd.append('fotos[]', f));
+
+                        const btn = form.querySelector('button[type=submit]');
+                        if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+
+                        fetch(form.action, { method: 'POST', body: fd })
+                            .then(r => { window.location.href = r.url; })
+                            .catch(() => { if (btn) { btn.disabled = false; btn.textContent = 'Enviar Solicitud'; } });
                     });
 
                     const dropZone = document.getElementById('drop-zone');
