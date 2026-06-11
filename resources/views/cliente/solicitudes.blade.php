@@ -47,9 +47,14 @@
             </div>
             @endif
 
-            {{-- ── SERVICIO ACTIVO ─────────────────────────────────────────── --}}
+            {{-- ── SERVICIOS ACTIVOS ───────────────────────────────────────── --}}
             <section>
-                <h2 class="text-lg font-semibold text-brand-dark mb-3">Servicio Activo</h2>
+                <h2 class="text-lg font-semibold text-brand-dark mb-3">
+                    Servicios Activos
+                    @if($ordenesActivas->count() > 1)
+                    <span class="ml-2 text-xs font-semibold bg-brand-green text-white px-2 py-0.5 rounded-full">{{ $ordenesActivas->count() }}</span>
+                    @endif
+                </h2>
 
                 @if($ordenActiva)
                 @php
@@ -215,6 +220,40 @@
                     </div>
                 </div>
 
+                {{-- Otras órdenes activas (2ª en adelante) --}}
+                @foreach($ordenesActivas->skip(1) as $otraOrden)
+                @php
+                    $oBadge = match($otraOrden->estado) {
+                        'pendiente'  => ['Pendiente',  'bg-gray-100 text-gray-600'],
+                        'asignada'   => ['Asignada',   'bg-[#FEF3C7] text-[#D97706]'],
+                        'en_camino'  => ['En camino',  'bg-[#D1FAE5] text-[#065F46]'],
+                        'en_proceso' => ['En proceso', 'bg-[#DBEAFE] text-[#1D4ED8]'],
+                        default      => [ucfirst($otraOrden->estado), 'bg-gray-100 text-gray-600'],
+                    };
+                @endphp
+                <div class="mt-3 bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-[#F5F7FA] flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                        </div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="text-sm font-semibold text-brand-dark truncate">{{ $otraOrden->titulo }}</span>
+                                <span class="text-xs font-bold text-gray-400">#OT-{{ str_pad($otraOrden->id, 3, '0', STR_PAD_LEFT) }}</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                <span class="px-2 py-0.5 text-xs font-semibold rounded-full {{ $oBadge[1] }}">{{ $oBadge[0] }}</span>
+                                @if($otraOrden->tecnico)
+                                <span class="text-xs text-gray-500">{{ $otraOrden->tecnico->name }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{ route('cliente.orden.show', $otraOrden) }}"
+                       class="flex-shrink-0 text-xs font-medium text-brand-green hover:underline">Ver detalle</a>
+                </div>
+                @endforeach
+
                 @else
                 <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-8 text-center">
                     <svg class="w-10 h-10 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -228,7 +267,7 @@
                 <div class="flex items-center justify-between mb-3">
                     <div>
                         <h2 class="text-lg font-semibold text-brand-dark">Historial de Servicios</h2>
-                        <p class="text-xs text-gray-400">Servicios completados anteriormente</p>
+                        <p class="text-xs text-gray-400">Servicios completados y cancelados</p>
                     </div>
                 </div>
 
@@ -240,19 +279,30 @@
                 @else
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach($historial as $orden)
-                    @php $stars = (int)($orden->satisfaccion ?? 0); @endphp
-                    <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5 hover:border-brand-green transition-colors">
+                    @php
+                        $cancelada = $orden->estado === 'cancelada';
+                        $stars = (int)($orden->satisfaccion ?? 0);
+                    @endphp
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-[0px_1px_3px_rgba(0,0,0,0.05)] p-5 {{ $cancelada ? '' : 'hover:border-brand-green' }} transition-colors">
                         <div class="flex items-start justify-between gap-2 mb-3">
                             <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-[#D1FAE5] flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <div class="w-8 h-8 rounded-full {{ $cancelada ? 'bg-red-100' : 'bg-[#D1FAE5]' }} flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    @if($cancelada)
+                                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    @else
                                     <svg class="w-4 h-4 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    @endif
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-semibold text-brand-dark leading-tight">{{ $orden->titulo }}</h3>
                                     <span class="text-xs text-gray-400">#OT-{{ str_pad($orden->id, 3, '0', STR_PAD_LEFT) }}</span>
                                 </div>
                             </div>
+                            @if($cancelada)
+                            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-700 flex-shrink-0">Cancelada</span>
+                            @else
                             <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-[#D1FAE5] text-[#065F46] flex-shrink-0">Finalizado</span>
+                            @endif
                         </div>
 
                         <div class="space-y-1 text-xs text-gray-500 mb-3">
@@ -269,6 +319,7 @@
                         </div>
 
                         <div class="flex items-center justify-between">
+                            @if(!$cancelada)
                             <div class="flex items-center gap-0.5">
                                 @for($s = 1; $s <= 5; $s++)
                                 <svg class="w-4 h-4 {{ $s <= $stars ? 'text-[#F59E0B]' : 'text-gray-200' }}" fill="currentColor" viewBox="0 0 20 20">
@@ -278,6 +329,9 @@
                             </div>
                             <a href="{{ route('cliente.orden.show', $orden) }}"
                                class="text-xs font-medium text-brand-green hover:underline">Ver detalles</a>
+                            @else
+                            <span class="text-xs text-gray-400">Solicitud cancelada</span>
+                            @endif
                         </div>
                     </div>
                     @endforeach

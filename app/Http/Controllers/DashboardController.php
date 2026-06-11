@@ -61,16 +61,17 @@ class DashboardController extends Controller
                 ->latest()
                 ->get();
 
-            $ordenActiva = $todas->whereNotIn('estado', ['finalizada', 'cancelada'])->first();
-            $historial   = $todas->where('estado', 'finalizada')->values();
+            $ordenesActivas = $todas->whereNotIn('estado', ['finalizada', 'cancelada'])->values();
+            $ordenActiva    = $ordenesActivas->first();
+            $historial      = $todas->whereIn('estado', ['finalizada', 'cancelada'])->values();
 
             $stats = [
                 'total'      => $todas->count(),
-                'en_proceso' => $todas->whereNotIn('estado', ['finalizada', 'cancelada'])->count(),
-                'finalizadas' => $historial->count(),
+                'en_proceso' => $ordenesActivas->count(),
+                'finalizadas' => $todas->where('estado', 'finalizada')->count(),
             ];
 
-            return view('cliente.solicitudes', compact('todas', 'ordenActiva', 'historial', 'stats'));
+            return view('cliente.solicitudes', compact('todas', 'ordenActiva', 'ordenesActivas', 'historial', 'stats'));
         }
     }
 
