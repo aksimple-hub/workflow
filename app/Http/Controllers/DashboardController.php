@@ -136,7 +136,7 @@ class DashboardController extends Controller
     {
         $tecnico = \App\Models\User::where('role', 'tecnico')->findOrFail($id);
         $perfil  = \App\Models\Tecnico::find($id);
-        $ordenes = OrdenTrabajo::where('usuario_id', $tecnico->id)->latest()->get();
+        $ordenes = OrdenTrabajo::with('cliente')->where('usuario_id', $tecnico->id)->latest()->get();
 
         // Valoraciones recibidas por el técnico (cliente → técnico)
         $valoraciones = OrdenTrabajo::with('cliente')
@@ -192,7 +192,7 @@ class DashboardController extends Controller
     {
         $cliente = \App\Models\Cliente::findOrFail($id);
         $user    = \App\Models\User::where('cliente_id', $cliente->id)->first();
-        $ordenes = OrdenTrabajo::where('cliente_id', $cliente->id)->latest()->get();
+        $ordenes = OrdenTrabajo::with('tecnico')->where('cliente_id', $cliente->id)->latest()->get();
 
         // Valoraciones recibidas por el cliente (técnico → cliente)
         $valoraciones = OrdenTrabajo::with('tecnico')

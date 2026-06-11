@@ -97,9 +97,9 @@ class OrdenTrabajoController extends Controller
                 $cliente = Cliente::create([
                     'nombre'   => $user->name,
                     'email'    => $user->email,
-                    'dni_cif'  => 'AUTO_' . $user->id, // Valor por defecto
-                    'telefono' => 'N/A',
-                    'direccion' => 'N/A',
+                    'dni_cif'  => 'AUTO_' . $user->id,
+                    'telefono' => null,
+                    'direccion' => null,
                 ]);
                 $user->update(['cliente_id' => $cliente->id]);
                 $cliente_id = $cliente->id;
@@ -320,7 +320,7 @@ class OrdenTrabajoController extends Controller
 
         $pathFirma = $orden->firma_path;
         if ($request->filled('firma_base64')) {
-            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->firma_base64));
+            $imageData = base64_decode(preg_replace('#^data:image/(png|jpeg);base64,#i', '', $request->firma_base64));
             $filename = 'firmas/' . Str::uuid() . '.png';
             Storage::put($filename, $imageData);
             $pathFirma = $filename;
@@ -358,7 +358,7 @@ class OrdenTrabajoController extends Controller
 
         $admins = User::where('role', 'admin')->get();
         app()->terminating(function() use ($orden, $admins, $request) {
-            try { Notification::send($admins, new OrdenCanceladaAdmin($orden->fresh(), 'tecnico', $request->motivo)); } catch (\Throwable $e) { \Log::error('Email OrdenCancelada tecnico: ' . $e->getMessage()); }
+            try { Notification::send($admins, new OrdenCanceladaAdmin($orden, 'tecnico', $request->motivo)); } catch (\Throwable $e) { \Log::error('Email OrdenCancelada tecnico: ' . $e->getMessage()); }
         });
 
         return redirect()->route('dashboard')->with('success', 'Servicio cancelado. El administrador ha sido notificado.');
@@ -392,7 +392,7 @@ class OrdenTrabajoController extends Controller
 
         $admins = User::where('role', 'admin')->get();
         app()->terminating(function() use ($orden, $admins, $request) {
-            try { Notification::send($admins, new OrdenAplazadaAdmin($orden->fresh(), $request->motivo, $request->nota)); } catch (\Throwable $e) { \Log::error('Email OrdenAplazada: ' . $e->getMessage()); }
+            try { Notification::send($admins, new OrdenAplazadaAdmin($orden, $request->motivo, $request->nota)); } catch (\Throwable $e) { \Log::error('Email OrdenAplazada: ' . $e->getMessage()); }
         });
 
         return redirect()->route('dashboard')->with('success', 'Servicio aplazado. El administrador ha sido notificado para reagendarlo.');
@@ -427,7 +427,7 @@ class OrdenTrabajoController extends Controller
         ]);
 
         app()->terminating(function() use ($tecnico, $orden) {
-            try { $tecnico->notify(new AsignacionOrdenTecnico($orden->fresh())); } catch (\Throwable $e) { \Log::error('Email AsignacionOrden reagendar: ' . $e->getMessage()); }
+            try { $tecnico->notify(new AsignacionOrdenTecnico($orden)); } catch (\Throwable $e) { \Log::error('Email AsignacionOrden reagendar: ' . $e->getMessage()); }
         });
 
         return redirect()->route('admin.orden.show', $orden->id)
@@ -458,7 +458,7 @@ class OrdenTrabajoController extends Controller
         if ($user->role === 'cliente') {
             $admins = User::where('role', 'admin')->get();
             app()->terminating(function() use ($orden, $admins) {
-                try { Notification::send($admins, new OrdenCanceladaAdmin($orden->fresh(), 'cliente')); } catch (\Throwable $e) { \Log::error('Email OrdenCancelada cliente: ' . $e->getMessage()); }
+                try { Notification::send($admins, new OrdenCanceladaAdmin($orden, 'cliente')); } catch (\Throwable $e) { \Log::error('Email OrdenCancelada cliente: ' . $e->getMessage()); }
             });
         }
 
