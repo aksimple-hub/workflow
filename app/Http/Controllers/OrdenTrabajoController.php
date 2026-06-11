@@ -35,6 +35,7 @@ class OrdenTrabajoController extends Controller
 
         $hoyCount = OrdenTrabajo::where('cliente_id', $user->cliente_id)
             ->whereDate('created_at', today())
+            ->where('estado', '!=', 'cancelada')
             ->count();
 
         $cliente = Cliente::find($user->cliente_id ?? $user->id);
