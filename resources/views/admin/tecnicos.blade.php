@@ -61,6 +61,9 @@
                         @endforelse
                     </tbody>
                 </table>
+                @if($tecnicos->hasPages())
+                <div class="px-6 py-4 border-t border-gray-100">{{ $tecnicos->links() }}</div>
+                @endif
             </div>
         </main>
     </div>

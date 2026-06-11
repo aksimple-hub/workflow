@@ -13,13 +13,14 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'admin') {
-            $stats = [
-                'total'      => OrdenTrabajo::count(),
-                'pendientes' => OrdenTrabajo::where('estado', 'pendiente')->count(),
-                'en_curso'   => OrdenTrabajo::whereIn('estado', ['en_camino', 'en_proceso', 'asignada'])->count(),
-                'finalizadas' => OrdenTrabajo::where('estado', 'finalizada')->count(),
-                'canceladas'  => OrdenTrabajo::where('estado', 'cancelada')->count(),
-            ];
+            $counts = OrdenTrabajo::selectRaw("
+                count(*) as total,
+                count(case when estado = 'pendiente' then 1 end) as pendientes,
+                count(case when estado in ('en_camino','en_proceso','asignada') then 1 end) as en_curso,
+                count(case when estado = 'finalizada' then 1 end) as finalizadas,
+                count(case when estado = 'cancelada' then 1 end) as canceladas
+            ")->first();
+            $stats = (array) $counts->getAttributes();
 
             $search   = request('search', '');
             $estado   = request('estado', '');
@@ -98,19 +99,19 @@ class DashboardController extends Controller
 
     public function tecnicos()
     {
-        $tecnicos = \App\Models\User::where('role', 'tecnico')->get();
+        $tecnicos = \App\Models\User::where('role', 'tecnico')->paginate(20)->withQueryString();
         return view('admin.tecnicos', compact('tecnicos'));
     }
 
     public function clientes()
     {
-        $clientes = \App\Models\Cliente::all();
+        $clientes = \App\Models\Cliente::paginate(20)->withQueryString();
         return view('admin.clientes', compact('clientes'));
     }
 
     public function historial()
     {
-        $ordenes = OrdenTrabajo::with(['cliente', 'tecnico'])->orderBy('updated_at', 'desc')->get();
+        $ordenes = OrdenTrabajo::with(['cliente', 'tecnico'])->orderBy('updated_at', 'desc')->paginate(20)->withQueryString();
         return view('admin.historial', compact('ordenes'));
     }
 
@@ -275,10 +276,14 @@ class DashboardController extends Controller
         $user->update(['is_approved' => true]);
 
         if ($user->role === 'tecnico') {
-            try { $user->notify(new \App\Notifications\TecnicoAprobado()); } catch (\Throwable $e) { \Log::error('Email TecnicoAprobado: ' . $e->getMessage()); }
+            app()->terminating(function() use ($user) {
+                try { $user->notify(new \App\Notifications\TecnicoAprobado()); } catch (\Throwable $e) { \Log::error('Email TecnicoAprobado: ' . $e->getMessage()); }
+            });
             $msg = 'Técnico "' . $user->name . '" activado correctamente. Se le ha notificado.';
         } else {
-            try { $user->notify(new \App\Notifications\ClienteAprobado()); } catch (\Throwable $e) { \Log::error('Email ClienteAprobado: ' . $e->getMessage()); }
+            app()->terminating(function() use ($user) {
+                try { $user->notify(new \App\Notifications\ClienteAprobado()); } catch (\Throwable $e) { \Log::error('Email ClienteAprobado: ' . $e->getMessage()); }
+            });
             $msg = 'Cliente "' . $user->name . '" activado correctamente. Se le ha notificado.';
         }
 

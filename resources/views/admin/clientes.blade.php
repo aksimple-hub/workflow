@@ -66,6 +66,9 @@
                         @endforelse
                     </tbody>
                 </table>
+                @if($clientes->hasPages())
+                <div class="px-6 py-4 border-t border-gray-100">{{ $clientes->links() }}</div>
+                @endif
             </div>
         </main>
     </div>

@@ -103,6 +103,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    @if($ordenes->hasPages())
+                    <div class="px-6 py-4 border-t border-gray-100">{{ $ordenes->links() }}</div>
+                    @endif
                 </div>
             </form>
         </main>
