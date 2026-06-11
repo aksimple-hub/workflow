@@ -16,6 +16,7 @@ class TecnicoAprobado extends Notification
     {
         return [
             'mensaje' => 'Tu cuenta de técnico ha sido aprobada. Ya puedes iniciar sesión y empezar a trabajar.',
+            'tipo'    => 'aprobacion',
         ];
     }
 

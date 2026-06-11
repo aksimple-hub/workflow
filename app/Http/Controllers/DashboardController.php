@@ -171,6 +171,9 @@ class DashboardController extends Controller
     {
         $tecnico = \App\Models\User::where('role', 'tecnico')->findOrFail($id);
         $tecnico->update(['is_approved' => false]);
+        app()->terminating(function() use ($tecnico) {
+            try { $tecnico->notify(new \App\Notifications\TecnicoDadoDeBaja()); } catch (\Throwable $e) { \Log::error('Email TecnicoDadoDeBaja: ' . $e->getMessage()); }
+        });
         return redirect()->route('admin.tecnicos')->with('success', 'Técnico "' . $tecnico->name . '" dado de baja correctamente.');
     }
 
@@ -223,6 +226,9 @@ class DashboardController extends Controller
 
         if ($user) {
             $user->update(['is_approved' => false]);
+            app()->terminating(function() use ($user) {
+                try { $user->notify(new \App\Notifications\ClienteDadoDeBaja()); } catch (\Throwable $e) { \Log::error('Email ClienteDadoDeBaja: ' . $e->getMessage()); }
+            });
         }
 
         return redirect()->route('admin.clientes')->with('success', 'Cliente "' . $cliente->nombre . '" dado de baja correctamente.');
@@ -337,23 +343,33 @@ class DashboardController extends Controller
         $notification->markAsRead();
 
         $data = $notification->data;
+        $tipo = $data['tipo'] ?? null;
 
-        // Nuevo técnico registrado → ir a lista de técnicos pendientes
-        if (isset($data['tecnico_id']) && !isset($data['orden_id']) && !isset($data['mensaje'])) {
-            return redirect()->route('admin.tecnicos');
+        // Routing by tipo (new format)
+        if ($tipo === 'nuevo_usuario') {
+            if (isset($data['tecnico_id'])) return redirect()->route('admin.tecnicos');
+            if (isset($data['cliente_id'])) return redirect()->route('admin.cliente.show', $data['cliente_id']);
         }
-
-        // Nuevo cliente registrado → ir al detalle del cliente
-        if (isset($data['cliente_id']) && !isset($data['orden_id']) && !isset($data['mensaje'])) {
-            return redirect()->route('admin.cliente.show', $data['cliente_id']);
+        if (in_array($tipo, ['orden_cancelada', 'orden_aplazada']) && isset($data['orden_id'])) {
+            return redirect()->route('admin.orden.show', $data['orden_id']);
         }
-
-        // Técnico aprobado → ir al dashboard del técnico
-        if (isset($data['mensaje'])) {
+        if ($tipo === 'nueva_orden' && isset($data['orden_id'])) {
+            return redirect()->route('ordenes.show', $data['orden_id']);
+        }
+        if ($tipo === 'orden_estado' && isset($data['orden_id'])) {
+            return redirect()->route('cliente.orden.show', $data['orden_id']);
+        }
+        if (in_array($tipo, ['aprobacion', 'baja'])) {
             return redirect()->route('dashboard');
         }
 
-        // Cancelación o aplazamiento de orden
+        // Fallback: legacy format without tipo
+        if (isset($data['tecnico_id']) && !isset($data['orden_id'])) {
+            return redirect()->route('admin.tecnicos');
+        }
+        if (isset($data['cliente_id']) && !isset($data['orden_id'])) {
+            return redirect()->route('admin.cliente.show', $data['cliente_id']);
+        }
         if (isset($data['orden_id'])) {
             return redirect()->route('admin.orden.show', $data['orden_id']);
         }

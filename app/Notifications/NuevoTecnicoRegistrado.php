@@ -21,6 +21,8 @@ class NuevoTecnicoRegistrado extends Notification
             'tecnico_id'     => $this->tecnico->id,
             'tecnico_nombre' => $this->tecnico->name,
             'tecnico_email'  => $this->tecnico->email,
+            'mensaje'        => 'Nuevo técnico pendiente de validación: ' . $this->tecnico->name,
+            'tipo'           => 'nuevo_usuario',
         ];
     }
 

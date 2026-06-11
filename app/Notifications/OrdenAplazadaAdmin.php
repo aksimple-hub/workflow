@@ -22,13 +22,14 @@ class OrdenAplazadaAdmin extends Notification
     public function toDatabase(object $notifiable): array
     {
         return [
-            'tipo'          => 'aplazamiento',
+            'tipo'          => 'orden_aplazada',
             'orden_id'      => $this->orden->id,
             'orden_titulo'  => $this->orden->titulo,
             'motivo'        => $this->motivo,
             'nota'          => $this->nota,
             'tecnico_nombre'=> optional($this->orden->tecnico)->name,
             'cliente_nombre'=> optional($this->orden->cliente)->nombre,
+            'mensaje'       => 'El técnico ' . optional($this->orden->tecnico)->name . ' ha aplazado: ' . $this->orden->titulo,
         ];
     }
 

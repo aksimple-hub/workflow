@@ -21,6 +21,8 @@ class NuevoClienteRegistrado extends Notification
             'cliente_id'     => $this->cliente->id,
             'cliente_nombre' => $this->cliente->name,
             'cliente_email'  => $this->cliente->email,
+            'mensaje'        => 'Nuevo cliente pendiente de validación: ' . $this->cliente->name,
+            'tipo'           => 'nuevo_usuario',
         ];
     }
 

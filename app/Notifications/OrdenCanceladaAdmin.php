@@ -21,6 +21,10 @@ class OrdenCanceladaAdmin extends Notification
 
     public function toDatabase(object $notifiable): array
     {
+        $quien = $this->canceladoPor === 'tecnico'
+            ? (optional($this->orden->tecnico)->name . ' (técnico)')
+            : (optional($this->orden->cliente)->nombre . ' (cliente)');
+
         return [
             'orden_id'      => $this->orden->id,
             'orden_titulo'  => $this->orden->titulo,
@@ -28,6 +32,8 @@ class OrdenCanceladaAdmin extends Notification
             'motivo'        => $this->motivo,
             'cliente_nombre'=> optional($this->orden->cliente)->nombre,
             'tecnico_nombre'=> optional($this->orden->tecnico)->name,
+            'mensaje'       => 'Orden cancelada por ' . $quien . ': ' . $this->orden->titulo,
+            'tipo'          => 'orden_cancelada',
         ];
     }
 
