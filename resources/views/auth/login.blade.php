@@ -146,10 +146,11 @@
                                 <span class="absolute inset-y-0 left-0 pl-4 flex items-center @error('email') text-red-400 @else text-gray-400 @enderror">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                 </span>
-                                <input type="email" name="email" value="{{ old('email') }}"
+                                <input type="email" id="login-email" name="email" value="{{ old('email') }}"
                                        class="w-full h-12 pl-12 bg-gray-50 border @error('email') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-brand-green"
-                                       placeholder="usuario@empresa.com" required />
+                                       placeholder="usuario@empresa.com" />
                             </div>
+                            <p id="error-email" class="hidden mt-1.5 text-xs text-red-500 font-medium pl-1">El correo electrónico es obligatorio.</p>
                         </div>
 
                         <div class="mb-4">
@@ -160,7 +161,7 @@
                                 </span>
                                 <input type="password" id="login-password" name="password"
                                        class="w-full h-12 pl-12 pr-12 bg-gray-50 border @error('password') border-red-500 @else border-gray-200 @enderror rounded-2xl focus:ring-2 focus:ring-brand-green focus:outline-none"
-                                       placeholder="••••••••" required />
+                                       placeholder="••••••••" />
                                 <button type="button" onclick="toggleLoginPassword()"
                                     class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
                                     <svg id="eye-login" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,6 +170,7 @@
                                     </svg>
                                 </button>
                             </div>
+                            <p id="error-password" class="hidden mt-1.5 text-xs text-red-500 font-medium pl-1">La contraseña es obligatoria.</p>
                         </div>
 
                         <div class="flex items-center justify-between mb-6">
@@ -183,6 +185,36 @@
                             Iniciar Sesión
                         </button>
                     </form>
+
+                    <script>
+                    document.querySelector('form[action="{{ route('login') }}"]').addEventListener('submit', function(e) {
+                        const email    = document.getElementById('login-email');
+                        const password = document.getElementById('login-password');
+                        const errEmail    = document.getElementById('error-email');
+                        const errPassword = document.getElementById('error-password');
+                        let valid = true;
+
+                        if (!email.value.trim()) {
+                            errEmail.classList.remove('hidden');
+                            email.classList.add('border-red-500');
+                            valid = false;
+                        } else {
+                            errEmail.classList.add('hidden');
+                            email.classList.remove('border-red-500');
+                        }
+
+                        if (!password.value) {
+                            errPassword.classList.remove('hidden');
+                            password.classList.add('border-red-500');
+                            valid = false;
+                        } else {
+                            errPassword.classList.add('hidden');
+                            password.classList.remove('border-red-500');
+                        }
+
+                        if (!valid) e.preventDefault();
+                    });
+                    </script>
                 </div>
 
                 <p class="mt-4 text-center text-gray-600 text-sm">
