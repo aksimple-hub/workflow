@@ -147,14 +147,14 @@ class DashboardController extends Controller
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
             'apellidos'   => 'required|string|max:255',
-            'email'       => 'required|email|max:255|unique:users,email,' . $tecnico->id,
+            'email'       => 'required|string|lowercase|email|max:255|unique:users,email,' . $tecnico->id,
             'telefono'    => 'required|string|max:20',
             'direccion'   => 'required|string|max:255',
             'dni_nie'     => 'required|string|max:20|unique:tecnicos,dni_nie,' . $id,
             'experiencia' => 'nullable|string',
         ]);
 
-        $tecnico->update(['name' => $validated['name'], 'email' => $validated['email']]);
+        $tecnico->update(['name' => $validated['name'], 'email' => strtolower(trim($validated['email']))]);
         $perfil->update([
             'nombre'      => $validated['name'],
             'apellidos'   => $validated['apellidos'],
@@ -199,11 +199,13 @@ class DashboardController extends Controller
 
         $validated = $request->validate([
             'nombre'    => 'required|string|max:255',
-            'email'     => 'required|email|max:255|unique:clientes,email,' . $cliente->id,
+            'email'     => 'required|string|lowercase|email|max:255|unique:clientes,email,' . $cliente->id,
             'telefono'  => 'required|string|max:20',
             'direccion' => 'nullable|string|max:255',
             'dni_cif'   => 'required|string|max:20|unique:clientes,dni_cif,' . $cliente->id,
         ]);
+
+        $validated['email'] = strtolower(trim($validated['email']));
 
         $cliente->update($validated);
 
@@ -252,7 +254,7 @@ class DashboardController extends Controller
 
         $user = \App\Models\User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            'email' => strtolower(trim($request->email)),
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'role' => 'tecnico',
             'is_approved' => true,
@@ -300,24 +302,26 @@ class DashboardController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|lowercase|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'dni_cif' => 'required|string|unique:clientes',
             'telefono' => 'required|string',
             'direccion' => 'nullable|string',
         ]);
 
+        $emailCliente = strtolower(trim($request->email));
+
         $cliente = \App\Models\Cliente::create([
             'nombre' => $request->nombre,
             'dni_cif' => $request->dni_cif,
-            'email' => $request->email,
+            'email' => $emailCliente,
             'telefono' => $request->telefono,
             'direccion' => $request->direccion,
         ]);
 
         \App\Models\User::create([
             'name' => $request->nombre,
-            'email' => $request->email,
+            'email' => $emailCliente,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'role' => 'cliente',
             'is_approved' => true,

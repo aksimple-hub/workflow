@@ -192,9 +192,17 @@
                         const password = document.getElementById('login-password');
                         const errEmail    = document.getElementById('error-email');
                         const errPassword = document.getElementById('error-password');
+                        const emailRegex  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         let valid = true;
 
-                        if (!email.value.trim()) {
+                        const emailVal = email.value.trim();
+                        if (!emailVal) {
+                            errEmail.textContent = 'El correo electrónico es obligatorio.';
+                            errEmail.classList.remove('hidden');
+                            email.classList.add('border-red-500');
+                            valid = false;
+                        } else if (!emailRegex.test(emailVal)) {
+                            errEmail.textContent = 'Introduce un correo electrónico válido.';
                             errEmail.classList.remove('hidden');
                             email.classList.add('border-red-500');
                             valid = false;

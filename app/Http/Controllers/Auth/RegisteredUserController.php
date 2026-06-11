@@ -44,10 +44,12 @@ class RegisteredUserController extends Controller
         ]);
 
         // Crear el registro de cliente primero para obtener su id
+        $email = strtolower(trim($request->email));
+
         $cliente = \App\Models\Cliente::create([
             'nombre' => $request->name,
             'dni_cif' => $request->dni_cif,
-            'email' => $request->email,
+            'email' => $email,
             'telefono' => $request->telefono,
             'direccion' => $request->direccion,
         ]);
@@ -55,7 +57,7 @@ class RegisteredUserController extends Controller
         // Crear el usuario con el cliente_id ya enlazado
         $user = User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            'email' => $email,
             'password' => Hash::make($request->password),
             'role' => 'cliente',
             'is_approved' => false,
@@ -99,9 +101,11 @@ class RegisteredUserController extends Controller
             $fotoPerfil = $request->file('foto_perfil')->store('fotos-perfil');
         }
 
+        $emailTecnico = strtolower(trim($request->email));
+
         $user = User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            'email' => $emailTecnico,
             'password' => Hash::make($request->password),
             'role' => 'tecnico',
             'is_approved' => false,

@@ -33,6 +33,11 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge(['email' => strtolower(trim((string) $this->email))]);
+    }
+
     /**
      * Attempt to authenticate the request's credentials.
      *
