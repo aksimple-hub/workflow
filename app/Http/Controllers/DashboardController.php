@@ -44,13 +44,18 @@ class DashboardController extends Controller
         }
 
         if ($user->role === 'tecnico') {
-            // Filtrar por el usuario_id del técnico autenticado
-            $ordenes = OrdenTrabajo::where('usuario_id', $user->id)
+            $ordenes = OrdenTrabajo::with('cliente')
+                ->where('usuario_id', $user->id)
                 ->whereIn('estado', ['asignada', 'pendiente', 'en_camino', 'en_proceso'])
+                ->orderBy('fecha_asignacion', 'asc')
                 ->orderBy('prioridad', 'desc')
                 ->get();
 
-            return view('tecnico.agenda', compact('ordenes'));
+            $today        = \Carbon\Carbon::today();
+            $startOfWeek  = $today->copy()->startOfWeek(\Carbon\Carbon::MONDAY);
+            $weekDays     = collect(range(0, 4))->map(fn($i) => $startOfWeek->copy()->addDays($i));
+
+            return view('tecnico.agenda', compact('ordenes', 'today', 'weekDays'));
         }
 
         if ($user->role === 'cliente') {
