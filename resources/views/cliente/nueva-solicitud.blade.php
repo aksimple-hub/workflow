@@ -115,12 +115,12 @@
             </div>
             @enderror
 
-            <div class="bg-white p-8 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
+            <div class="bg-white p-4 md:p-8 rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] border border-gray-100">
                 <form id="solicitud-form" action="{{ route('ordenes.store') }}" method="POST" enctype="multipart/form-data" {{ $hoyCount >= 3 ? 'onsubmit=return false' : '' }}>
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Título (Ocupa 2 columnas) -->
-                        <div class="col-span-2">
+                        <div class="md:col-span-2">
                             <label for="titulo" class="block text-sm font-medium text-brand-dark mb-2">Asunto de la solicitud *</label>
                             <input type="text" id="titulo" name="titulo" required
                                 class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 focus:outline-none transition-colors text-base"
@@ -130,28 +130,38 @@
                         <!-- Prioridad -->
                         <div>
                             <label for="prioridad" class="block text-sm font-medium text-brand-dark mb-2">Prioridad Estimada *</label>
-                            <select id="prioridad" name="prioridad" required
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
-                                <option value="" disabled selected>Selecciona una opción...</option>
-                                <option value="baja">Baja - Puede esperar</option>
-                                <option value="media">Media - Necesita atención pronta</option>
-                                <option value="alta">Alta - Urgente</option>
-                            </select>
+                            <div class="relative">
+                                <select id="prioridad" name="prioridad" required
+                                    class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 pr-10 focus:outline-none transition-colors text-base appearance-none">
+                                    <option value="" disabled selected>Selecciona una opción...</option>
+                                    <option value="baja">Baja - Puede esperar</option>
+                                    <option value="media">Media - Necesita atención pronta</option>
+                                    <option value="alta">Alta - Urgente</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Tipo de Servicio (Simulado, no está en la BD actual pero es común) -->
+                        <!-- Tipo de Servicio -->
                         <div>
                             <label for="tipo_servicio" class="block text-sm font-medium text-brand-dark mb-2">Tipo de Servicio</label>
-                            <select id="tipo_servicio" name="tipo_servicio"
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
-                                <option value="mantenimiento">Mantenimiento Preventivo</option>
-                                <option value="reparacion">Reparación de Avería</option>
-                                <option value="instalacion">Nueva Instalación</option>
-                            </select>
+                            <div class="relative">
+                                <select id="tipo_servicio" name="tipo_servicio"
+                                    class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 pr-10 focus:outline-none transition-colors text-base appearance-none">
+                                    <option value="mantenimiento">Mantenimiento Preventivo</option>
+                                    <option value="reparacion">Reparación de Avería</option>
+                                    <option value="instalacion">Nueva Instalación</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Descripción (Ocupa 2 columnas) -->
-                        <div class="col-span-2">
+                        <div class="md:col-span-2">
                             <label for="descripcion" class="block text-sm font-medium text-brand-dark mb-2">Descripción detallada *</label>
                             <textarea id="descripcion" name="descripcion" required rows="6"
                                 class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl p-4 resize-none focus:outline-none transition-colors text-base"
@@ -159,7 +169,7 @@
                         </div>
 
                         <!-- Fotos de la avería -->
-                        <div class="col-span-2">
+                        <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-brand-dark mb-2">
                                 Fotos de la avería <span class="text-gray-400 font-normal">(opcional, máx. 5)</span>
                             </label>
@@ -189,22 +199,27 @@
                         </div>
 
                         <!-- Separador cita -->
-                        <div class="col-span-2 border-t border-gray-100 pt-4">
+                        <div class="md:col-span-2 border-t border-gray-100 pt-4">
                             <p class="text-sm font-semibold text-brand-dark mb-1">Preferencia de horario</p>
                             <p class="text-xs text-gray-500">El administrador asignará la fecha definitiva de la visita</p>
                         </div>
 
                         <!-- Horario de preferencia -->
-                        <div class="col-span-2">
+                        <div class="md:col-span-2">
                             <label for="horario_preferido" class="block text-sm font-medium text-brand-dark mb-2">Horario de preferencia *</label>
-                            <select id="horario_preferido" name="horario_preferido" required
-                                class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 focus:outline-none transition-colors text-base appearance-none">
-                                <option value="" disabled selected>Selecciona un horario...</option>
-                                <option value="mañana" {{ old('horario_preferido') === 'mañana' ? 'selected' : '' }}>Mañana (8:00 – 13:00)</option>
-                                <option value="mediodia" {{ old('horario_preferido') === 'mediodia' ? 'selected' : '' }}>Mediodía (13:00 – 16:00)</option>
-                                <option value="tarde" {{ old('horario_preferido') === 'tarde' ? 'selected' : '' }}>Tarde (16:00 – 21:00)</option>
-                                <option value="sin_preferencia" {{ old('horario_preferido') === 'sin_preferencia' ? 'selected' : '' }}>Sin preferencia</option>
-                            </select>
+                            <div class="relative">
+                                <select id="horario_preferido" name="horario_preferido" required
+                                    class="w-full bg-[#F5F7FA] border-2 border-transparent focus:border-brand-green rounded-xl px-4 py-3 pr-10 focus:outline-none transition-colors text-base appearance-none">
+                                    <option value="" disabled selected>Selecciona un horario...</option>
+                                    <option value="mañana" {{ old('horario_preferido') === 'mañana' ? 'selected' : '' }}>Mañana (8:00 – 13:00)</option>
+                                    <option value="mediodia" {{ old('horario_preferido') === 'mediodia' ? 'selected' : '' }}>Mediodía (13:00 – 16:00)</option>
+                                    <option value="tarde" {{ old('horario_preferido') === 'tarde' ? 'selected' : '' }}>Tarde (16:00 – 21:00)</option>
+                                    <option value="sin_preferencia" {{ old('horario_preferido') === 'sin_preferencia' ? 'selected' : '' }}>Sin preferencia</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -286,13 +301,11 @@
                             if (!existe) allFiles.push(file);
                         });
 
-                        syncInput();
                         renderPreviews();
                     }
 
                     function removeFile(index) {
                         allFiles.splice(index, 1);
-                        syncInput();
                         renderPreviews();
                     }
 
